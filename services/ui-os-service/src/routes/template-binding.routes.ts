@@ -227,10 +227,8 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
     sql: `SELECT
             node_id AS id,
             sort_order AS "sortOrder",
-            jsonb_build_object(
-              'label', COALESCE(label_en, label_ar),
-              'fallback', COALESCE(label_en, label_ar)
-            ) AS label,
+            label_en,
+            label_ar,
             node_type AS "nodeType",
             owner,
             risk_level AS "riskLevel",
@@ -254,10 +252,8 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
     sql: `SELECT
             scenario_id AS id,
             sort_order AS "sortOrder",
-            jsonb_build_object(
-              'label', COALESCE(title_en, title_ar),
-              'fallback', COALESCE(title_en, title_ar)
-            ) AS title,
+            title_en,
+            title_ar,
             assumption_json AS assumptions,
             impact_json AS impacts,
             recommended_action AS "recommendedAction",
@@ -269,14 +265,10 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
     sql: `SELECT
             block_id AS id,
             sort_order AS "sortOrder",
-            jsonb_build_object(
-              'label', COALESCE(title_en, title_ar),
-              'fallback', COALESCE(title_en, title_ar)
-            ) AS title,
-            jsonb_build_object(
-              'label', COALESCE(rationale_en, rationale_ar),
-              'fallback', COALESCE(rationale_en, rationale_ar)
-            ) AS rationale,
+            title_en,
+            title_ar,
+            rationale_en,
+            rationale_ar,
             confidence,
             status,
             action_json AS action
@@ -448,6 +440,7 @@ async function loadProps(
   pool: DbPool,
   route: string,
   archetype: string | null | undefined,
+  locale: 'en' | 'ar',
   errors: SubQueryError[],
 ): Promise<Record<string, unknown>> {
   const [kpis, cols, tabs, nbas, sections, reports, groups, axes, filters, tableActions] = await Promise.all([
@@ -537,7 +530,53 @@ async function loadProps(
       ext.map(e => safeQuery(`props.ext.${archetype}.${e.key}`, errors, () => pool.query(e.sql, [route]))),
     );
     ext.forEach((e, i) => {
-      if (results[i].rows.length) base[e.key] = results[i].rows;
+      if (!results[i].rows.length) return;
+      const rows = results[i].rows as Array<Record<string, unknown>>;
+      const pick = (row: Record<string, unknown>, enKey: string, arKey: string): string =>
+        String(locale === 'ar'
+          ? (row[arKey] ?? row[enKey] ?? '')
+          : (row[enKey] ?? row[arKey] ?? ''));
+      const label = (row: Record<string, unknown>, enKey: string, arKey: string) => {
+        const text = pick(row, enKey, arKey);
+        return { label: text, fallback: text };
+      };
+      if (e.key === 'workflowTimelineSteps') {
+        base[e.key] = rows.map((row) => ({
+          ...row,
+          label: pick(row, 'label_en', 'label_ar'),
+        }));
+        return;
+      }
+      if (e.key === 'exportArtifacts') {
+        base[e.key] = rows.map((row) => ({
+          ...row,
+          title: pick(row, 'title_en', 'title_ar'),
+        }));
+        return;
+      }
+      if (e.key === 'identityGraphNodes') {
+        base[e.key] = rows.map((row) => ({
+          ...row,
+          label: label(row, 'label_en', 'label_ar'),
+        }));
+        return;
+      }
+      if (e.key === 'policySimulationScenarios') {
+        base[e.key] = rows.map((row) => ({
+          ...row,
+          title: label(row, 'title_en', 'title_ar'),
+        }));
+        return;
+      }
+      if (e.key === 'aiExplainabilityBlocks') {
+        base[e.key] = rows.map((row) => ({
+          ...row,
+          title: label(row, 'title_en', 'title_ar'),
+          rationale: label(row, 'rationale_en', 'rationale_ar'),
+        }));
+        return;
+      }
+      base[e.key] = rows;
     });
   }
   return base;
@@ -620,7 +659,7 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
       // this resolver returns 404 above. Do not synthesize starter
       // KPIs/nbaActions on the FE's behalf.
       const [dynamicProps, layers] = await Promise.all([
-        loadProps(pool, route, row.archetype, errors),
+        loadProps(pool, route, row.archetype, locale, errors),
         loadOverrideLayers(pool, route, productCode, moduleCode, tenantId, userId, errors),
       ]);
       // Phase F-F7-2 — derive `masthead` object the host reads.
@@ -836,7 +875,7 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         const moduleCode = deriveModuleCode(row.route);
         const exportErrors: SubQueryError[] = [];
         const [dyn, layers] = await Promise.all([
-          loadProps(pool, row.route, row.archetype, exportErrors),
+          loadProps(pool, row.route, row.archetype, 'en', exportErrors),
           loadOverrideLayers(pool, row.route, productCode, moduleCode, tenantId, userId, exportErrors),
         ]);
         const masthead = {

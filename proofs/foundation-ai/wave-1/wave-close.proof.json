@@ -3,7 +3,7 @@
   "phase": "WAVE-1-CLOSE",
   "wave": 1,
   "name": "wave-close",
-  "status": "GREEN",
+  "status": "RED",
   "payload": {
     "requiredProofs": [
       "/root/DOS-Platform/proofs/foundation-ai/wave-1/wave-entry.proof.json",
@@ -13,20 +13,26 @@
     "missing": [],
     "nonGreen": [],
     "newFileGate": {
-      "status": "GREEN",
+      "status": "RED",
       "classificationFile": "/root/DOS-Platform/proofs/foundation-ai/wave-1/new-files.classification.json",
       "newFiles": [
-        "proofs/foundation-ai/_ledger/2026-05-07T04-09-49-909Z__PLAN_SYNC.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-10-01-084Z__PHASE-A.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-10-22-308Z__WAVE_VERIFY.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-10-22-894Z__WAVE_PROOF.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-10-23-640Z__WAVE_CLOSE.json",
-        "proofs/foundation-ai/wave-29/"
+        ".governance-proof/service-manifest-hardening-proof-bundle.json",
+        "platform/dos/migrations/public/20260511_1100_wave09_ksa_localization_and_compliance_exports.sql",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-13-02-110Z__PLAN_SYNC.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-13-12-990Z__PHASE-A.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-13-55-336Z__PHASE-B.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-15-05-227Z__PHASE-C.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-15-38-814Z__WAVE_VERIFY.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-15-39-396Z__WAVE_PROOF.json",
+        "proofs/foundation-ai/wave-29/implementation.proof.json",
+        "proofs/foundation-ai/wave-29/verification.proof.json"
       ],
-      "missing": [],
+      "missing": [
+        ".governance-proof/service-manifest-hardening-proof-bundle.json"
+      ],
       "invalid": []
     }
   },
-  "emittedAt": "2026-05-07T04:10:37.442Z",
-  "hash": "sha256:e75e0d284d548feac482c4f9f323ede109eeb55269832957efbe5c97c31c9284"
+  "emittedAt": "2026-05-07T04:15:40.290Z",
+  "hash": "sha256:80b711a710e08694ba2eb4907d1abe054bfa6346232a95553e82c7b4cad1362b"
 }

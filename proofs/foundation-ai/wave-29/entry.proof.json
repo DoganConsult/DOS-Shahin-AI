@@ -3,7 +3,7 @@
   "phase": "A",
   "wave": 29,
   "name": "entry",
-  "status": "RED",
+  "status": "GREEN",
   "payload": {
     "checks": [
       {
@@ -28,12 +28,11 @@
       },
       {
         "name": "git-clean",
-        "status": "FAIL",
-        "detail": "M proofs/foundation-ai/_ledger/HEAD\n M proofs/foundation-ai/wave--2/plan-sync.proof.json\n?? proofs/foundation-ai/_ledger/2026-05-07T04-12-17-333Z__PLAN_SYNC.json"
+        "status": "PASS"
       }
     ],
-    "blocker": "git-dirty"
+    "doctrine": "zero-static/zero-legacy/zero-fallback/dynamic-uios-only"
   },
-  "emittedAt": "2026-05-07T04:12:28.445Z",
-  "hash": "sha256:91c3275fa7eea23afed11f9d0d22786e5bce4a7024390cf590ae0a7eba31e5ef"
+  "emittedAt": "2026-05-07T04:13:12.988Z",
+  "hash": "sha256:5e8602ee793eea9f5eeb02b698a8f24af6e46c2aa5cb7f43f52d270fc07f35b1"
 }

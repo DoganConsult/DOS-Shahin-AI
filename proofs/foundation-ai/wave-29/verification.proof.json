@@ -1,0 +1,93 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "C",
+  "wave": 29,
+  "name": "verification",
+  "status": "RED",
+  "payload": {
+    "checks": [
+      {
+        "name": "build-ui-contracts",
+        "status": "PASS",
+        "cmd": "pnpm --filter @dos/ui-contracts build"
+      },
+      {
+        "name": "build-ui-system",
+        "status": "PASS",
+        "cmd": "pnpm --filter @dos/ui-system build"
+      },
+      {
+        "name": "build-platform-core",
+        "status": "PASS",
+        "cmd": "pnpm --filter @dos/platform-core build"
+      },
+      {
+        "name": "build-platform-app",
+        "status": "PASS",
+        "cmd": "pnpm --filter @dos/platform-app build"
+      },
+      {
+        "name": "lint-no-static-nav-fallback",
+        "status": "PASS",
+        "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs"
+      },
+      {
+        "name": "lint-no-legacy-uios-shell",
+        "status": "PASS",
+        "cmd": "node scripts/ci-guards/lint-no-legacy-uios-shell.mjs"
+      },
+      {
+        "name": "grep-proof",
+        "status": "FAIL",
+        "hits": 20,
+        "sample": [
+          "platform/core/platform/shell/templates/index.ts:4: * module-template.types.ts for the canonical stable-key → component_key →",
+          "platform/core/platform/shell/templates/index.ts:205:// Maps dos.dynamic_ui_component_registry component_key → Template",
+          "platform/core/platform/shell/templates/index.ts:208:// component_key              → Selector                  → Template Class",
+          "platform/core/platform/shell/templates/module-audit-trail.template.ts:4: * component_key: module.audit-trail.page",
+          "platform/core/platform/shell/templates/module-calendar-timeline.template.ts:4: * component_key: module.calendar.page",
+          "platform/core/platform/shell/templates/module-case-finalization.template.ts:4: * component_key: module.case_finalization.page",
+          "platform/core/platform/shell/templates/module-decision-dashboard.template.ts:4: * component_key: module.dashboard.page",
+          "platform/core/platform/shell/templates/module-template.types.ts:28:  labelAr?: string;",
+          "platform/core/platform/shell/templates/module-template.types.ts:42:  labelAr?: string;",
+          "platform/core/platform/shell/templates/module-template.types.ts:58:  labelAr?: string;",
+          "platform/core/platform/shell/templates/module-template.types.ts:67:  labelAr?: string;",
+          "platform/core/platform/shell/templates/module-template.types.ts:110:  labelAr?: string;",
+          "platform/core/platform/shell/templates/module-template.types.ts:211:// Stable archetype-key → Dynamic UI component_key → IBM Carbon carbon_key.",
+          "platform/core/platform/shell/templates/module-template.types.ts:220:  componentKey: string;        // dos.dynamic_ui_component_registry.component_key",
+          "platform/core/platform/shell/templates/module-template.types.ts:402:    labelAr?: string;",
+          "platform/core/platform/shell/templates/module-template.types.ts:426:  labelAr?: string;",
+          "platform/core/platform/shell/template-binding.registry.ts:214:  // Keyed by the DB component_key (auth.*.page) so the template_export",
+          "platform/core/platform/shell/workspace-shell-binding.service.ts:7: * `component_key` / `perms_required` (server enforces RBAC; FE only checks",
+          "platform/core/platform/shell/workspace-shell-binding.service.ts:60:/** Anonymous surface row — no component_key, no perms_required. */",
+          "platform/core/platform/shell/workspace-shell-binding.service.ts:179:  // or by composite key. No component_key literals."
+        ]
+      }
+    ],
+    "blocker": "grep-proof",
+    "forbidden": [
+      "platform/core/platform/shell/templates/index.ts:4: * module-template.types.ts for the canonical stable-key → component_key →",
+      "platform/core/platform/shell/templates/index.ts:205:// Maps dos.dynamic_ui_component_registry component_key → Template",
+      "platform/core/platform/shell/templates/index.ts:208:// component_key              → Selector                  → Template Class",
+      "platform/core/platform/shell/templates/module-audit-trail.template.ts:4: * component_key: module.audit-trail.page",
+      "platform/core/platform/shell/templates/module-calendar-timeline.template.ts:4: * component_key: module.calendar.page",
+      "platform/core/platform/shell/templates/module-case-finalization.template.ts:4: * component_key: module.case_finalization.page",
+      "platform/core/platform/shell/templates/module-decision-dashboard.template.ts:4: * component_key: module.dashboard.page",
+      "platform/core/platform/shell/templates/module-template.types.ts:28:  labelAr?: string;",
+      "platform/core/platform/shell/templates/module-template.types.ts:42:  labelAr?: string;",
+      "platform/core/platform/shell/templates/module-template.types.ts:58:  labelAr?: string;",
+      "platform/core/platform/shell/templates/module-template.types.ts:67:  labelAr?: string;",
+      "platform/core/platform/shell/templates/module-template.types.ts:110:  labelAr?: string;",
+      "platform/core/platform/shell/templates/module-template.types.ts:211:// Stable archetype-key → Dynamic UI component_key → IBM Carbon carbon_key.",
+      "platform/core/platform/shell/templates/module-template.types.ts:220:  componentKey: string;        // dos.dynamic_ui_component_registry.component_key",
+      "platform/core/platform/shell/templates/module-template.types.ts:402:    labelAr?: string;",
+      "platform/core/platform/shell/templates/module-template.types.ts:426:  labelAr?: string;",
+      "platform/core/platform/shell/template-binding.registry.ts:214:  // Keyed by the DB component_key (auth.*.page) so the template_export",
+      "platform/core/platform/shell/workspace-shell-binding.service.ts:7: * `component_key` / `perms_required` (server enforces RBAC; FE only checks",
+      "platform/core/platform/shell/workspace-shell-binding.service.ts:60:/** Anonymous surface row — no component_key, no perms_required. */",
+      "platform/core/platform/shell/workspace-shell-binding.service.ts:179:  // or by composite key. No component_key literals."
+    ]
+  },
+  "emittedAt": "2026-05-07T04:15:05.224Z",
+  "hash": "sha256:a496a0f4bc2ad6330a63f04fe193ddca1550effc1f50c923b80dae7d545448bb"
+}
