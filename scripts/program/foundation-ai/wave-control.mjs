@@ -29,7 +29,7 @@ if (Number.isNaN(wave)) {
   process.exit(2);
 }
 
-const PHASES = new Set(['entry', 'verify', 'proof', 'close', 'all']);
+const PHASES = new Set(['preflight', 'entry', 'verify', 'proof', 'close', 'all']);
 if (!PHASES.has(phase)) {
   console.error(`[wave-control] invalid --phase=${phase}. expected one of: ${[...PHASES].join(', ')}`);
   process.exit(2);
@@ -38,6 +38,15 @@ if (!PHASES.has(phase)) {
 function runCmd(cmd) {
   console.log(`\n[wave-control] ▶ ${cmd}`);
   execSync(cmd, { stdio: 'inherit', env: process.env });
+}
+
+function runCapture(cmd) {
+  try {
+    const out = execSync(cmd, { encoding: 'utf8', cwd: ROOT, env: process.env });
+    return { status: 'GREEN', output: String(out ?? '').trim() };
+  } catch (e) {
+    return { status: 'RED', error: e instanceof Error ? e.message : String(e) };
+  }
 }
 
 function listNewFilesFromGit() {
@@ -173,6 +182,16 @@ function checkRuntimeProof() {
 }
 
 function phaseCommands(kind) {
+  if (kind === 'preflight') {
+    return [
+      'node scripts/ci-guards/lint-no-static-nav-fallback.mjs',
+      'node scripts/ci-guards/lint-no-legacy-uios-shell.mjs',
+      'pnpm --filter @dos/ui-contracts build',
+      'pnpm --filter @dos/ui-system build',
+      'pnpm --filter @dos/platform-core build',
+      'pnpm --filter @dos/platform-app build',
+    ];
+  }
   if (kind === 'entry') {
     return [
       'node scripts/ci-guards/lint-no-static-nav-fallback.mjs',
@@ -197,6 +216,92 @@ function phaseCommands(kind) {
     ];
   }
   return [];
+}
+
+function preflightGate() {
+  const dbUrl = process.env.FOUNDATION_DB_URL
+    ?? process.env.DATABASE_URL
+    ?? 'postgresql://dos_migrator:dos_migrator_pass_2026@localhost:5432/shahin_grc';
+  const userSub = process.env.FOUNDATION_PROBE_USER ?? 'foundation-probe-001';
+  const tenantId = process.env.FOUNDATION_PROBE_TENANT ?? '65f10f855eab8b30';
+  const uiOsBase = process.env.UI_OS_BASE_URL ?? 'http://localhost:4115';
+
+  const checks = [
+    {
+      name: 'db_connectivity',
+      ...runCapture(`psql "${dbUrl}" -Atc "SELECT 1"`),
+    },
+    {
+      name: 'migration_bundle_exists',
+      status: existsSync(join(ROOT, 'platform', 'foundation', 'db', 'module-migration-bundle.json')) ? 'GREEN' : 'RED',
+    },
+    {
+      name: 'publish_pipeline_exists',
+      status: existsSync(join(ROOT, 'scripts', 'module', 'publish.mjs')) ? 'GREEN' : 'RED',
+    },
+    {
+      name: 'proof_dir_writable',
+      ...runCapture(`test -d "${PROOFS_DIR}" && test -w "${PROOFS_DIR}" && echo ok`),
+    },
+    {
+      name: 'authenticated_runtime_probe',
+      ...runCapture(`curl -fsS -H "x-user-sub: ${userSub}" -H "x-tenant-id: ${tenantId}" "${uiOsBase}/api/ui-os/template-binding?route=/foundation/users" >/dev/null && echo ok`),
+    },
+  ];
+
+  const commandResults = runCommandList(phaseCommands('preflight'));
+  const commandsGreen = commandResults.every((r) => r.status === 'GREEN');
+  const checksGreen = checks.every((c) => c.status === 'GREEN');
+  const status = commandsGreen && checksGreen ? 'GREEN' : 'RED';
+
+  emitProof({
+    phase: `WAVE-${wave}-PREFLIGHT`,
+    wave,
+    name: 'wave-preflight',
+    payload: { checks, commands: commandResults },
+    status,
+    kind: 'WAVE_PREFLIGHT',
+  });
+
+  if (status === 'RED') {
+    console.error('[wave-control] preflight gate failed');
+    process.exit(1);
+  }
+}
+
+function readProofStatus(path) {
+  if (!existsSync(path)) return { status: 'MISSING' };
+  try {
+    const parsed = JSON.parse(readFileSync(path, 'utf8'));
+    return { status: parsed?.status ?? 'UNKNOWN' };
+  } catch (e) {
+    return { status: `PARSE_ERROR:${e instanceof Error ? e.message : String(e)}` };
+  }
+}
+
+function entryPrereqGate() {
+  const checks = [];
+  if (wave > 1) {
+    const prevClose = join(ROOT, 'proofs', 'foundation-ai', `wave-${wave - 1}`, 'wave-close.proof.json');
+    const s = readProofStatus(prevClose);
+    checks.push({ name: 'prior_wave_close', file: prevClose, status: s.status === 'GREEN' ? 'GREEN' : 'RED', observed: s.status });
+  }
+  const currentProofDir = join(ROOT, 'proofs', 'foundation-ai', `wave-${wave}`);
+  checks.push({ name: 'current_wave_proof_dir', status: existsSync(currentProofDir) ? 'GREEN' : 'RED', dir: currentProofDir });
+
+  const status = checks.every((c) => c.status === 'GREEN') ? 'GREEN' : 'RED';
+  emitProof({
+    phase: `WAVE-${wave}-ENTRY-PREREQ`,
+    wave,
+    name: 'wave-entry-prereq',
+    payload: { checks },
+    status,
+    kind: 'WAVE_ENTRY_PREREQ',
+  });
+  if (status === 'RED') {
+    console.error('[wave-control] entry prereq gate failed');
+    process.exit(1);
+  }
 }
 
 function execute(kind) {
@@ -280,11 +385,17 @@ function closePhase() {
   console.log(`[wave-control] wave ${wave} close gate GREEN`);
 }
 
-if (phase === 'entry') execute('entry');
+if (phase === 'preflight') preflightGate();
+if (phase === 'entry') {
+  entryPrereqGate();
+  execute('entry');
+}
 if (phase === 'verify') execute('verify');
 if (phase === 'proof') proofPhase();
 if (phase === 'close') closePhase();
 if (phase === 'all') {
+  preflightGate();
+  entryPrereqGate();
   execute('entry');
   execute('verify');
   proofPhase();

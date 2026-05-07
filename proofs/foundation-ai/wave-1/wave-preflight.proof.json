@@ -1,0 +1,68 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "WAVE-1-PREFLIGHT",
+  "wave": 1,
+  "name": "wave-preflight",
+  "status": "GREEN",
+  "payload": {
+    "checks": [
+      {
+        "name": "db_connectivity",
+        "status": "GREEN",
+        "output": "1"
+      },
+      {
+        "name": "migration_bundle_exists",
+        "status": "GREEN"
+      },
+      {
+        "name": "publish_pipeline_exists",
+        "status": "GREEN"
+      },
+      {
+        "name": "proof_dir_writable",
+        "status": "GREEN",
+        "output": "ok"
+      },
+      {
+        "name": "authenticated_runtime_probe",
+        "status": "GREEN",
+        "output": "ok"
+      }
+    ],
+    "commands": [
+      {
+        "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs",
+        "status": "GREEN",
+        "ms": 53
+      },
+      {
+        "cmd": "node scripts/ci-guards/lint-no-legacy-uios-shell.mjs",
+        "status": "GREEN",
+        "ms": 2398
+      },
+      {
+        "cmd": "pnpm --filter @dos/ui-contracts build",
+        "status": "GREEN",
+        "ms": 1896
+      },
+      {
+        "cmd": "pnpm --filter @dos/ui-system build",
+        "status": "GREEN",
+        "ms": 3188
+      },
+      {
+        "cmd": "pnpm --filter @dos/platform-core build",
+        "status": "GREEN",
+        "ms": 2407
+      },
+      {
+        "cmd": "pnpm --filter @dos/platform-app build",
+        "status": "GREEN",
+        "ms": 15799
+      }
+    ]
+  },
+  "emittedAt": "2026-05-07T04:36:07.586Z",
+  "hash": "sha256:b3a62974fb6123a0b06caec019c1c1b9f21a870e39379e28476a84cc3de421aa"
+}

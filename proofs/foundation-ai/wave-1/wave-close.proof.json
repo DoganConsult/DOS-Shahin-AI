@@ -16,19 +16,23 @@
       "status": "GREEN",
       "classificationFile": "/root/DOS-Platform/proofs/foundation-ai/wave-1/new-files.classification.json",
       "newFiles": [
-        "docs/foundation-ai/",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-15-52-294Z__WAVE_CLOSE.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-16-37-786Z__PHASE-C.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-18-03-808Z__WAVE_VERIFY.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-18-04-422Z__WAVE_PROOF.json",
-        "proofs/foundation-ai/_ledger/2026-05-07T04-18-05-178Z__WAVE_CLOSE.json",
-        "proofs/foundation-ai/post-launch/pilot-kpi-snapshot.json",
-        "scripts/program/foundation-ai/pilot-kpi-snapshot.mjs"
+        "docs/legacy-label-extraction-report.md",
+        "platform/dos/migrations/public/20260511_1220_foundation_workflows_route_parity_reconcile.sql",
+        "platform/dos/migrations/public/20260511_1300_legacy_label_extraction.sql",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-36-07-588Z__WAVE_PREFLIGHT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-36-10-664Z__WAVE_ENTRY_PREREQ.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-36-36-850Z__WAVE_ENTRY.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-37-09-282Z__WAVE_VERIFY.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-37-14-405Z__WAVE_PROOF.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T04-37-14-647Z__WAVE_CLOSE.json",
+        "proofs/foundation-ai/wave-1/wave-entry-prereq.proof.json",
+        "proofs/foundation-ai/wave-1/wave-preflight.proof.json",
+        "scripts/audits/extract-legacy-labels.mjs"
       ],
       "missing": [],
       "invalid": []
     }
   },
-  "emittedAt": "2026-05-07T04:18:15.688Z",
-  "hash": "sha256:5affbf00a40af378a28cfb524c4cd92a616d065b9b98a84ffbb4198669674aff"
+  "emittedAt": "2026-05-07T04:37:45.989Z",
+  "hash": "sha256:91988622e52840d50695583231664970f7bb8c12560d641e425c0f8326f6bc12"
 }

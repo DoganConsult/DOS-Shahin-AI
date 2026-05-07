@@ -9,35 +9,35 @@
       {
         "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs",
         "status": "GREEN",
-        "ms": 58
+        "ms": 56
       },
       {
         "cmd": "node scripts/ci-guards/lint-no-legacy-uios-shell.mjs",
         "status": "GREEN",
-        "ms": 1810
+        "ms": 2437
       },
       {
         "cmd": "pnpm --filter @dos/ui-contracts build",
         "status": "GREEN",
-        "ms": 1800
+        "ms": 1868
       },
       {
         "cmd": "pnpm --filter @dos/ui-system build",
         "status": "GREEN",
-        "ms": 3044
+        "ms": 3190
       },
       {
         "cmd": "pnpm --filter @dos/platform-core build",
         "status": "GREEN",
-        "ms": 2477
+        "ms": 2468
       },
       {
         "cmd": "pnpm --filter @dos/platform-app build",
         "status": "GREEN",
-        "ms": 15614
+        "ms": 16165
       }
     ]
   },
-  "emittedAt": "2026-05-07T03:31:58.739Z",
-  "hash": "sha256:fe68d621818149b6ef8c18c8d0ca53f5fd4f6e16ccd6148f8fb8c4fbce96d3dc"
+  "emittedAt": "2026-05-07T04:36:36.849Z",
+  "hash": "sha256:dfaaf9f3dfb0a47cf48cc5a21aca6a1550539fc173e7d81bc3bb6962baa2036a"
 }

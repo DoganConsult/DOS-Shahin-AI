@@ -9,7 +9,9 @@
     { "prefix": "docs/foundation-ai/", "classification": "in_wave", "note": "Auto-classify Foundation AI launch/reporting docs as in-wave artifacts." },
     { "prefix": "docs/foundation-ai/launch/", "classification": "in_wave", "note": "Auto-classify wave11 launch package artifacts as in-wave deliverables." },
     { "prefix": ".governance-proof/", "classification": "flagged_followup_not_applied", "note": "Auto-flag external governance proof artifacts outside active foundation wave scope." },
-    { "prefix": "scripts/program/foundation-ai/phase-", "classification": "flagged_followup_not_applied", "note": "Auto-flag unexpected phase helper scripts detected outside this wave scope." }
+    { "prefix": "scripts/program/foundation-ai/phase-", "classification": "flagged_followup_not_applied", "note": "Auto-flag unexpected phase helper scripts detected outside this wave scope." },
+    { "prefix": "scripts/audits/", "classification": "flagged_followup_not_applied", "note": "Auto-flag unrelated audit scripts outside active foundation wave scope." },
+    { "prefix": "docs/legacy-", "classification": "flagged_followup_not_applied", "note": "Auto-flag unrelated legacy-analysis docs outside active wave scope." }
   ],
   "files": [
     { "path": "proofs/foundation-ai/wave-1/new-files.classification.json", "classification": "in_wave", "note": "Wave new-file classification manifest." },
@@ -19,6 +21,9 @@
     { "path": "platform/dos/migrations/public/20260511_0900_foundation_identity_graph_simulation_contracts.sql", "classification": "in_wave", "note": "Wave 07 identity graph + policy simulation contracts and seeds." },
     { "path": "platform/dos/migrations/public/20260511_1000_ai_explainability_blocks.sql", "classification": "in_wave", "note": "Wave 08 AI explainability blocks with typed command/control actions." },
     { "path": "platform/dos/migrations/public/20260511_1100_wave09_ksa_localization_and_compliance_exports.sql", "classification": "in_wave", "note": "Wave 09 Arabic-first localization keys and bilingual compliance export artifacts." },
+    { "path": "platform/dos/migrations/public/20260511_1200_foundation_users_interaction_contracts.sql", "classification": "in_wave", "note": "Wave 03 users/teams/roles serialized interaction contracts and event handlers." },
+    { "path": "platform/dos/migrations/public/20260511_1210_foundation_access_review_campaign_contracts.sql", "classification": "in_wave", "note": "Wave 04 access-review campaign/SLA/evidence contracts." },
+    { "path": "platform/dos/migrations/public/20260511_1220_foundation_workflows_route_parity_reconcile.sql", "classification": "in_wave", "note": "Wave 06 workflows route metadata/template parity reconciliation." },
     { "path": "scripts/program/foundation-ai/pilot-kpi-snapshot.mjs", "classification": "in_wave", "note": "Wave 10 pilot KPI instrumentation snapshot generator." },
     { "path": "scripts/ci-guards/foundation-access-review-lineage-guard.mjs", "classification": "in_wave", "note": "Wave 04 lineage drift guard." },
     { "path": "scripts/program/foundation-ai/wave-control.mjs", "classification": "in_wave", "note": "Wave sequencing/phase enforcement controller." },
@@ -53,6 +58,9 @@
     { "path": "scripts/program/foundation-ai/phase-a-entry.mjs", "classification": "flagged_followup_not_applied", "note": "Unexpected untracked program script detected; excluded from active wave scope." },
     { "path": "ops/scripts/", "classification": "flagged_followup_not_applied", "note": "Unexpected untracked directory detected; flagged for follow-up and excluded from active wave scope." },
     { "path": "docs/governance-wave-phase-runbook.md", "classification": "flagged_followup_not_applied", "note": "Unexpected external governance runbook; parked for follow-up review." },
-    { "path": "scripts/governance-cli-wave-enforcement.mjs", "classification": "flagged_followup_not_applied", "note": "Unexpected external governance script; parked for follow-up review." }
+    { "path": "scripts/governance-cli-wave-enforcement.mjs", "classification": "flagged_followup_not_applied", "note": "Unexpected external governance script; parked for follow-up review." },
+    { "path": "docs/legacy-label-extraction-report.md", "classification": "flagged_followup_not_applied", "note": "Unrelated legacy-label audit report; excluded from this execution wave." },
+    { "path": "scripts/audits/extract-legacy-labels.mjs", "classification": "flagged_followup_not_applied", "note": "Unrelated audit utility outside active foundation wave scope." },
+    { "path": "platform/dos/migrations/public/20260511_1300_legacy_label_extraction.sql", "classification": "flagged_followup_not_applied", "note": "Unrelated migration artifact not required for foundation wave scope." }
   ]
 }
