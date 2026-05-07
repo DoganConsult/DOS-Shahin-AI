@@ -110,7 +110,7 @@ test.describe.skip('M1.5 — download-kit renders inside marketing.home.page', (
 test.use({ viewport: { width: 390, height: 844 } });
 
 // TODO(M3): unskip when archetype mobile reflow is delivered.
-test.describe.skip('M1.5 — mobile 390px reflow', () => {
+test.describe.skip('M1.5 — mobile 390px reflow', () => { // -- justified: TODO(M3): archetype mobile reflow pending
   test('gated modal flips to bottom-sheet at 480px container', async ({ page }) => {
     await goto(page, '/?featured=shahin-executive-overview');
     await page.locator('[data-section-id="download-kit"] dos-download-kit-card button').click();

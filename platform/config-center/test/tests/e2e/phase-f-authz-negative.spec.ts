@@ -172,7 +172,7 @@ test.describe('Phase F-F6 H3 — AuthZ negative paths', () => {
 
 const ADMIN_STORAGE = process.env.ADMIN_STORAGE_STATE;
 test.describe('Phase F-F6 H3 — positive control under admin session', () => {
-  test.skip(!ADMIN_STORAGE, 'ADMIN_STORAGE_STATE not provided; skipping positive control.');
+  test.skip(!ADMIN_STORAGE, 'ADMIN_STORAGE_STATE not provided; skipping positive control.'); // -- justified: requires admin storage state env var
 
   test.use({ storageState: ADMIN_STORAGE });
 

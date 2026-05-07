@@ -99,11 +99,11 @@ test('GATE 4 — workspace-shell binding payload label fields are contract-shape
   // service's pre-load grace path is the only consumer in that case).
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   const tenantHeader = await request.get('/api/auth/whoami').catch(() => null);
-  if (!tenantHeader || !tenantHeader.ok()) test.skip(true, 'no session — gate vacuously holds');
+  if (!tenantHeader || !tenantHeader.ok()) test.skip(true, 'no session — gate vacuously holds'); // -- justified: requires authenticated session
 
   const whoami = await tenantHeader!.json().catch(() => ({} as Record<string, unknown>));
   const tenantId = (whoami as { tenantId?: string }).tenantId;
-  if (!tenantId) test.skip(true, 'no tenantId in whoami payload');
+  if (!tenantId) test.skip(true, 'no tenantId in whoami payload'); // -- justified: requires tenant context
 
   const resp = await request.get(`/api/ui-os/workspace-shell/${encodeURIComponent(tenantId!)}`);
   expect(resp.status(), `workspace-shell endpoint must be reachable for tenant ${tenantId}`).toBe(200);

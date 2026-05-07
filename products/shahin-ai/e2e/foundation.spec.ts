@@ -32,8 +32,8 @@ const TENANT_ID = process.env['SHAHIN_TENANT_ID'] ?? '';
 test.use(STORAGE_STATE ? { storageState: STORAGE_STATE } : {});
 
 test.describe('Foundation Wave 1 — authenticated user journey', () => {
-  test.skip(!STORAGE_STATE, 'set SHAHIN_STORAGE_STATE=<auth.json> from a real KC login');
-  test.skip(!TENANT_ID, 'set SHAHIN_TENANT_ID=<uuid> for landing route resolution');
+  test.skip(!STORAGE_STATE, 'set SHAHIN_STORAGE_STATE=<auth.json> from a real KC login'); // -- justified: requires KC auth storage state
+  test.skip(!TENANT_ID, 'set SHAHIN_TENANT_ID=<uuid> for landing route resolution'); // -- justified: requires tenant ID for routing
 
   let consoleErrors: string[] = [];
 

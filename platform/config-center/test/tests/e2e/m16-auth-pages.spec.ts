@@ -91,7 +91,7 @@ test.describe.skip('M1.6 — register / forgot / reset / mfa surfaces', () => {
 test.use({ viewport: { width: 390, height: 844 } });
 
 // TODO(M3): unskip once archetype mobile reflow is delivered.
-test.describe.skip('M1.6 — mobile 390px reflow', () => {
+test.describe.skip('M1.6 — mobile 390px reflow', () => { // -- justified: TODO(M3): archetype mobile reflow pending
   test('/login collapses to single column at ≤720px', async ({ page }) => {
     await goto(page, '/login');
     const shell = page.locator('dos-auth-shell .dos-auth-shell').first();

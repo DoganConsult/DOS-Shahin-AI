@@ -8,7 +8,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('foundation vertical', () => {
-  test.skip(!process.env.E2E_BASE_URL, 'set E2E_BASE_URL to run');
+  test.skip(!process.env.E2E_BASE_URL, 'set E2E_BASE_URL to run'); // -- justified: requires E2E_BASE_URL env var
 
   test('foundation overview renders and navigates through the hierarchy', async ({ page }) => {
     await page.goto(`${process.env.E2E_BASE_URL}/foundation/overview`);
