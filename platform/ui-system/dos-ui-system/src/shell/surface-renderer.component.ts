@@ -38,6 +38,7 @@ import {
   DosShellGlobalQuickActionsComponent,
   DosShellSidebarNavComponent,
   DosShellModuleCardsComponent,
+  DosShellCatalogWidgetComponent,
 } from './visual-shell-surfaces.component';
 
 export interface WorkspaceSurfaceInput {
@@ -71,6 +72,11 @@ export const COMPONENT_MAP: Readonly<Record<string, Type<unknown> | null>> = Obj
   'shell.global-quick-actions': DosShellGlobalQuickActionsComponent as Type<unknown>,
   'shell.sidebar-nav': DosShellSidebarNavComponent as Type<unknown>,
   'shell.module-cards': DosShellModuleCardsComponent as Type<unknown>,
+  'shell.catalog-action': DosShellCatalogWidgetComponent as Type<unknown>,
+  'shell.catalog-data': DosShellCatalogWidgetComponent as Type<unknown>,
+  'shell.catalog-input': DosShellCatalogWidgetComponent as Type<unknown>,
+  'shell.catalog-nav': DosShellCatalogWidgetComponent as Type<unknown>,
+  'shell.catalog-polish': DosShellCatalogWidgetComponent as Type<unknown>,
 });
 
 @Component({

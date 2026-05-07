@@ -64,8 +64,14 @@ const SHELL_COMPONENT_MAP = {
   'shell.workspace-title'    : 'DosShellWorkspaceTitleComponent',
   'shell.user-menu'          : 'DosShellUserMenuComponent',
   'shell.settings-action'    : 'DosShellSettingsActionComponent',
+  'shell.global-quick-actions': 'DosShellGlobalQuickActionsComponent',
   'shell.sidebar-nav'        : 'DosShellSidebarNavComponent',
   'shell.module-cards'       : 'DosShellModuleCardsComponent',
+  'shell.catalog-action'     : 'DosShellCatalogWidgetComponent',
+  'shell.catalog-data'       : 'DosShellCatalogWidgetComponent',
+  'shell.catalog-input'      : 'DosShellCatalogWidgetComponent',
+  'shell.catalog-nav'        : 'DosShellCatalogWidgetComponent',
+  'shell.catalog-polish'     : 'DosShellCatalogWidgetComponent',
 };
 
 function parseArgs(argv) {
@@ -221,6 +227,9 @@ function classifyCategory(key, meta, rendererKey) {
   if (rendererKey) {
     if (key.startsWith('workspace.action.')) return 'action';
     if (key.startsWith('workspace.data.'))   return 'data-binding';
+    if (key.startsWith('workspace.input.'))  return 'data-binding';
+    if (key.startsWith('workspace.nav.'))    return 'visual-main';
+    if (key.startsWith('workspace.polish.')) return 'visual-main';
   }
   return 'catalog-only';
 }

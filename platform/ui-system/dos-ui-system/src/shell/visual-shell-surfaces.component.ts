@@ -639,3 +639,79 @@ export class DosShellModuleCardsComponent {
     void this.router.navigateByUrl(action.path);
   }
 }
+
+// ── Catalog widget binder (workspace.action/data/input/nav/polish) ───
+// Render-only dynamic shell adapter for contract components that are
+// resolved from DB but not part of the core shell.frame/shell.* visuals.
+@Component({
+  selector: 'dos-shell-catalog-widget',
+  standalone: true,
+  imports: [CommonModule, DosCarbonTileComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <section [attr.data-renderer-key]="'shell.catalog-widget'">
+      <dos-carbon-tile
+        [clickable]="isNavigateAction(action)"
+        [route]="routeForAction(action)"
+        (activated)="onActivate($event)">
+        @if (title) {
+          <strong class="dos-shell-catalog-widget__title">{{ title }}</strong>
+        }
+        @if (subtitle) {
+          <p class="dos-shell-catalog-widget__subtitle">{{ subtitle }}</p>
+        }
+        @if (detail) {
+          <p class="dos-shell-catalog-widget__detail">{{ detail }}</p>
+        }
+        @if (items?.length) {
+          <ul class="dos-shell-catalog-widget__list">
+            @for (it of items; track $index) {
+              <li>{{ it?.label ?? it?.title ?? it?.id ?? '' }}</li>
+            }
+          </ul>
+        }
+      </dos-carbon-tile>
+    </section>
+  `,
+  styles: [`
+    :host { display: block; }
+    .dos-shell-catalog-widget__title {
+      display: block;
+      font-size: var(--cds-heading-compact-01-font-size);
+      line-height: var(--cds-heading-compact-01-line-height);
+    }
+    .dos-shell-catalog-widget__subtitle,
+    .dos-shell-catalog-widget__detail {
+      margin: var(--cds-spacing-02) 0 0;
+      font-size: var(--cds-body-compact-01-font-size);
+      color: var(--cds-text-secondary);
+    }
+    .dos-shell-catalog-widget__list {
+      margin: var(--cds-spacing-03) 0 0;
+      padding-inline-start: var(--cds-spacing-05);
+    }
+  `],
+})
+export class DosShellCatalogWidgetComponent {
+  private readonly router = inject(Router);
+  @Input() title = '';
+  @Input() subtitle = '';
+  @Input() detail = '';
+  @Input() items: Array<Record<string, unknown>> | null = null;
+  @Input() action: RawShellAction | null = null;
+
+  isNavigateAction(action: RawShellAction | null): action is { kind: 'navigate'; path: string } {
+    return !!action && action.kind === 'navigate' && typeof (action as { path?: unknown }).path === 'string';
+  }
+
+  routeForAction(action: RawShellAction | null): string {
+    return this.isNavigateAction(action) ? action.path : '';
+  }
+
+  onActivate(ev: MouseEvent): void {
+    if (!this.action) return;
+    if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
+    ev.preventDefault();
+    dispatchShellAction(this.router, this.action);
+  }
+}
