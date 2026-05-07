@@ -304,7 +304,7 @@ export class ShellHostComponent {
    * with a sticky sidebar. SSR-safe (defaults to a wide viewport so
    * server-rendered output assumes desktop and hydrates correctly).
    */
-  private readonly viewportWidth = signal<number>(
+  readonly viewportWidth = signal<number>(
     typeof window === 'undefined' ? 1440 : window.innerWidth || 1440,
   );
   readonly desktopMinPx = computed<number>(() => this.shell.desktopMinPx() || 0);

@@ -269,7 +269,7 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
        Below the workspace breakpoint, the cdsTable collapses to a
        stacked card layout so each row is readable without horizontal
        scroll. Headers are hidden — column meaning is preserved by
-       prefixing each cell value with its `data-col-label` attribute
+       prefixing each cell value with its data-col-label attribute
        (set in the @for loop above so we don't hardcode labels). */
     @media (max-width: 672px) {
       .dmt-data-table,
