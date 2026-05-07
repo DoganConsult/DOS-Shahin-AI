@@ -1,0 +1,39 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": "A",
+  "wave": 29,
+  "name": "entry",
+  "status": "RED",
+  "payload": {
+    "checks": [
+      {
+        "name": "pnpm-install-frozen",
+        "status": "PASS",
+        "cmd": "pnpm -w install --frozen-lockfile --prefer-offline"
+      },
+      {
+        "name": "plan-sync",
+        "status": "PASS",
+        "cmd": "node scripts/program/foundation-ai/plan-sync.mjs"
+      },
+      {
+        "name": "dos-master-gate-pre",
+        "status": "PASS",
+        "cmd": "node scripts/ci-guards/dos-master-gate.mjs --pre"
+      },
+      {
+        "name": "previous-wave-close",
+        "status": "SKIP",
+        "detail": "no prior close.proof.json"
+      },
+      {
+        "name": "git-clean",
+        "status": "FAIL",
+        "detail": "M proofs/foundation-ai/_ledger/HEAD\n M proofs/foundation-ai/wave--2/plan-sync.proof.json\n?? proofs/foundation-ai/_ledger/2026-05-07T04-09-49-909Z__PLAN_SYNC.json"
+      }
+    ],
+    "blocker": "git-dirty"
+  },
+  "emittedAt": "2026-05-07T04:10:01.082Z",
+  "hash": "sha256:8700f4958fd79dc451cfccbb544a1ca53f03e1d47bad9bca3f78f64a851f7166"
+}

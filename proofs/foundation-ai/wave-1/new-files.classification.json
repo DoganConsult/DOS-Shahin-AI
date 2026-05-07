@@ -4,6 +4,7 @@
   "rules": [
     { "prefix": "proofs/foundation-ai/_ledger/", "classification": "in_wave", "note": "Auto-classify generated ledger artifacts as in-wave proof evidence." },
     { "prefix": "proofs/foundation-ai/wave-1/", "classification": "in_wave", "note": "Auto-classify wave-1 proof files as in-wave artifacts." },
+    { "prefix": "proofs/foundation-ai/wave-", "classification": "in_wave", "note": "Auto-classify generated wave proof directories as in-wave artifacts." },
     { "prefix": "proofs/foundation-ai/post-launch/", "classification": "in_wave", "note": "Auto-classify post-launch visual/runtime proof artifacts as in-wave." },
     { "prefix": "scripts/program/foundation-ai/phase-", "classification": "flagged_followup_not_applied", "note": "Auto-flag unexpected phase helper scripts detected outside this wave scope." }
   ],
