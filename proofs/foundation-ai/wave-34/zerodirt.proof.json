@@ -1,0 +1,72 @@
+{
+  "schema": "foundation-ai.proof.v1",
+  "phase": -2,
+  "wave": 34,
+  "name": "zerodirt",
+  "status": "GREEN",
+  "payload": {
+    "schema": "foundation-ai.zerodirt.v1",
+    "status": "GREEN",
+    "checks": {
+      "Z1_no_untracked_in_scope": "GREEN",
+      "Z2_no_backup_files": "GREEN",
+      "Z4_no_forbidden_tokens": "GREEN",
+      "Z5_mirror_shell_collapsed": "GREEN",
+      "Z9_no_unowned_todos": "GREEN"
+    },
+    "findings": {
+      "untracked": [
+        "proofs/foundation-ai/_ledger/HEAD",
+        "proofs/foundation-ai/wave--2/inventory.proof.json",
+        "proofs/foundation-ai/wave--2/plan-sync.proof.json",
+        "proofs/foundation-ai/wave-1/wave-entry.proof.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-05-35-306Z__PLAN_SYNC.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-05-47-501Z__PHASE-A.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-05-47-559Z__INVENTORY.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-05-47-937Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-05-47-950Z__PREFLIGHT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-05-48-041Z__RUN.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-05-48-260Z__PHASE-B.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-05-55-314Z__WAVE_ENTRY.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-06-15-288Z__PHASE-C.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-06-15-414Z__INVENTORY.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-06-15-769Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-06-15-785Z__GATE.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-06-16-445Z__ZERODIRT.json",
+        "proofs/foundation-ai/_ledger/2026-05-07T05-06-16-456Z__DRIFT.json",
+        "proofs/foundation-ai/wave-34/drift.proof.json",
+        "proofs/foundation-ai/wave-34/entry.proof.json",
+        "proofs/foundation-ai/wave-34/implementation.proof.json",
+        "proofs/foundation-ai/wave-34/preflight.proof.json",
+        "proofs/foundation-ai/wave-34/quality-gate.proof.json",
+        "proofs/foundation-ai/wave-34/run.proof.json",
+        "proofs/foundation-ai/wave-34/verification.proof.json",
+        "proofs/foundation-ai/wave-34/zerodirt.proof.json"
+      ],
+      "backups": [],
+      "forbidden": [],
+      "mirrorShell": [
+        "modules/core/platform/shell/index.ts",
+        "modules/core/platform/shell/auth-logout.service.ts",
+        "modules/core/platform/shell/breadcrumb.service.ts",
+        "modules/core/platform/shell/correlation-id.interceptor.ts",
+        "modules/core/platform/shell/dos-page-layout.component.ts",
+        "modules/core/platform/shell/dynamic-template-page.component.ts",
+        "modules/core/platform/shell/module-content-provider.ts",
+        "modules/core/platform/shell/page-context-labels.ts",
+        "modules/core/platform/shell/route-metadata.service.ts",
+        "modules/core/platform/shell/shell-connectivity.service.ts",
+        "modules/core/platform/shell/shell-error-state.service.ts",
+        "modules/core/platform/shell/shell-host.component.ts",
+        "modules/core/platform/shell/shell-preferences.service.ts",
+        "modules/core/platform/shell/template-binding.registry.ts",
+        "modules/core/platform/shell/template-binding.service.ts",
+        "modules/core/platform/shell/workspace-shell-binding.service.ts"
+      ],
+      "staleTodos": [],
+      "forbiddenObserved": []
+    }
+  },
+  "emittedAt": "2026-05-07T05:06:16.795Z",
+  "hash": "sha256:c19a449403092dce4e8cb71d41afa6fbc3dc065c25a0132b215b7926e6128561"
+}
