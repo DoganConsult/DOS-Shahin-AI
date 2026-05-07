@@ -211,21 +211,26 @@ export class DosShellWorkspaceTitleComponent {
         </svg>
       }
     </cds-icon-button>
+    <!--
+      Carbon directive instantiates its own cds-overflow-menu-pane via
+      DialogService when the trigger opens. The projected template MUST
+      contain only cds-overflow-menu-option items; wrapping them in another
+      cds-overflow-menu-pane creates a second pane with no dialogConfig
+      and crashes on placement.split / flip access.
+    -->
     <ng-template #userMenuPane>
-      <cds-overflow-menu-pane [attr.id]="menuId" role="menu" [attr.aria-label]="resolvedAriaLabel() || null">
-        @for (entry of menu ?? []; track entry.id) {
-          <cds-overflow-menu-option
-            [disabled]="entry.enabled === false"
-            [type]="entry.destructive ? 'danger' : null"
-            [innerClass]="entry.id"
-            [attr.data-entry-id]="entry.id"
-            [attr.data-action-type]="entry.actionType ? entry.actionType : null"
-            [attr.data-route-exists]="entry.routeExists === null || entry.routeExists === undefined ? null : (entry.routeExists ? 'true' : 'false')"
-            [attr.aria-label]="entry.ariaLabel || entry.label || entry.i18nKey || null"
-            (selected)="activate(entry)"
-          >{{ entry.label || entry.i18nKey || entry.id }}</cds-overflow-menu-option>
-        }
-      </cds-overflow-menu-pane>
+      @for (entry of menu ?? []; track entry.id) {
+        <cds-overflow-menu-option
+          [disabled]="entry.enabled === false"
+          [type]="entry.destructive ? 'danger' : null"
+          [innerClass]="entry.id"
+          [attr.data-entry-id]="entry.id"
+          [attr.data-action-type]="entry.actionType ? entry.actionType : null"
+          [attr.data-route-exists]="entry.routeExists === null || entry.routeExists === undefined ? null : (entry.routeExists ? 'true' : 'false')"
+          [attr.aria-label]="entry.ariaLabel || entry.label || entry.i18nKey || null"
+          (selected)="activate(entry)"
+        >{{ entry.label || entry.i18nKey || entry.id }}</cds-overflow-menu-option>
+      }
     </ng-template>
     }
   `,
@@ -249,6 +254,12 @@ export class DosShellUserMenuComponent implements OnInit {
       // eslint-disable-next-line no-console
       console.warn('[shell.user-menu] MISSING_REQUIRED_PROP ariaLabel — control fail-closed, not rendered');
     }
+    // #region agent log
+    try {
+      // eslint-disable-next-line no-console
+      console.info('[DOS_DEBUG] user-menu mounted', { menuLen: (this.menu ?? []).length, ariaLabel: this.resolvedAriaLabel().slice(0, 40) });
+    } catch { /* no-op */ }
+    // #endregion
   }
 
   resolvedAriaLabel(): string {

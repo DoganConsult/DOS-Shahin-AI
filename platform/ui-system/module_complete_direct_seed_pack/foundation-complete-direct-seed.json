@@ -468,7 +468,52 @@
         "title": "Foundation Overview",
         "subtitle": "Organization structure, access governance, and operational posture.",
         "loading": false,
-        "kpis": [],
+        "zones": [
+          {
+            "zone": "header",
+            "surfaces": [
+              {
+                "componentKey": "ui.page-header",
+                "props": {
+                  "title": "Foundation Overview",
+                  "description": "Organization structure, access governance, and operational posture."
+                }
+              }
+            ]
+          },
+          {
+            "zone": "main",
+            "surfaces": [
+              {
+                "componentKey": "ui.metric-card",
+                "props": {
+                  "label": "Total Employees",
+                  "value": "1,248",
+                  "delta": 12,
+                  "deltaSuffix": "%"
+                }
+              },
+              {
+                "componentKey": "ui.metric-card",
+                "props": {
+                  "label": "Active Departments",
+                  "value": "24",
+                  "delta": 0,
+                  "deltaSuffix": ""
+                }
+              },
+              {
+                "componentKey": "ui.metric-card",
+                "props": {
+                  "label": "Open Access Reviews",
+                  "value": "3",
+                  "delta": -2,
+                  "deltaSuffix": ""
+                }
+              }
+            ]
+          }
+        ],
         "pillars": {
           "evidence": "Live foundation dashboard and resolver contract."
         }
@@ -624,33 +669,42 @@
         "title": "Users",
         "subtitle": "Directory of active users and account ownership.",
         "loading": false,
-        "columns": [
+        "zones": [
           {
-            "key": "username",
-            "label": "User",
-            "labelAr": "المستخدم",
-            "sortable": true
+            "zone": "header",
+            "surfaces": [
+              {
+                "componentKey": "ui.page-header",
+                "props": {
+                  "title": "Users",
+                  "description": "Directory of active users and account ownership."
+                }
+              }
+            ]
           },
           {
-            "key": "email",
-            "label": "Email",
-            "labelAr": "البريد الإلكتروني"
-          },
-          {
-            "key": "department",
-            "label": "Department",
-            "labelAr": "الإدارة"
-          },
-          {
-            "key": "status",
-            "label": "Status",
-            "labelAr": "الحالة",
-            "type": "tag"
+            "zone": "main",
+            "surfaces": [
+              {
+                "componentKey": "ui.data-table",
+                "rendererKey": "ui.data-table",
+                "props": {
+                  "title": "User Registry",
+                  "columns": [
+                    { "key": "username", "label": "User" },
+                    { "key": "email", "label": "Email" },
+                    { "key": "department", "label": "Department" },
+                    { "key": "status", "label": "Status", "type": "tag" }
+                  ],
+                  "records": [
+                    { "id": "1", "username": "admin", "email": "admin@dos.local", "department": "Security", "status": "active" },
+                    { "id": "2", "username": "reviewer", "email": "reviewer@dos.local", "department": "Audit", "status": "active" }
+                  ]
+                }
+              }
+            ]
           }
         ],
-        "records": [],
-        "searchPlaceholder": "Search users",
-        "filterLabel": "Department",
         "pillars": {
           "evidence": "User-service directory."
         }

@@ -1,39 +1,33 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DosCarbonTabsComponent, DosCarbonTabItem } from '../carbon/dos-carbon-tabs.component';
 
-export interface DosTabItem {
-  id: string;
-  label: string;
-}
-
+/**
+ * DosTabs — tabbed navigation.
+ * Refined to use Carbon Tabs policies.
+ */
 @Component({
   selector: 'dos-tabs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DosCarbonTabsComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="dos-tabs" role="tablist">
-      @for (t of items; track t.id) {
-        <button
-          type="button"
-          role="tab"
-          class="dos-tabs__item"
-          [attr.aria-selected]="t.id === selectedId"
-          (click)="select(t)"
-        >
-          {{ t.label }}
-        </button>
-      }
-    </div>
+    <dos-carbon-tabs
+      [items]="items"
+      [selectedId]="selectedId"
+      (selectedIdChange)="select($event)"
+    >
+      <ng-content></ng-content>
+    </dos-carbon-tabs>
   `,
 })
 export class DosTabsComponent {
-  @Input() items: DosTabItem[] = [];
+  @Input() items: DosCarbonTabItem[] = [];
   @Input() selectedId = '';
   @Output() selectedIdChange = new EventEmitter<string>();
 
-  select(t: DosTabItem): void {
-    this.selectedId = t.id;
-    this.selectedIdChange.emit(t.id);
+  select(id: string): void {
+    this.selectedId = id;
+    this.selectedIdChange.emit(id);
   }
 }

@@ -72,12 +72,16 @@ export class ShellPreferencesService {
   }
 
   private readStoredLanguage(): DosShellLanguage {
+    // Doctrine: default app language/dir = en/ltr. Arabic/RTL is honored
+    // ONLY when the user (or tenant runtime) has stored an explicit
+    // 'ar' preference in localStorage. Implicit adoption from
+    // <html lang="..."> is forbidden because the shipped index.html may
+    // carry a non-en lang for SSR/static reasons; the browser must not
+    // turn that into a sticky preference for the app.
     if (!this.isBrowser) return 'en';
     try {
       const raw = window.localStorage?.getItem(LS_KEY_LANG);
       if (raw === 'ar' || raw === 'en') return raw;
-      const htmlLang = document.documentElement.getAttribute('lang') || '';
-      if (htmlLang.toLowerCase().startsWith('ar')) return 'ar';
     } catch { /* no-op */ }
     return 'en';
   }

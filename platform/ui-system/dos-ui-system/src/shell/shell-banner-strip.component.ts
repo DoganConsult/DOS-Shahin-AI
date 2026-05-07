@@ -25,13 +25,13 @@ export type { ShellBanner } from '@dos/ui-contracts';
   imports: [CommonModule, NotificationModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (banners.length) {
+    @if (renderable().length) {
       <div class="dos-banner-strip"
            role="status"
            aria-live="polite"
            data-testid="dos-shell-banner-strip"
            data-cds-component="notification">
-        @for (b of banners; track b.id) {
+        @for (b of renderable(); track b.id) {
           <!-- cds-actionable-notification (carbon_key=notification) -->
           <cds-actionable-notification
             [kind]="resolveKind(b.kind)"
@@ -76,6 +76,25 @@ export class DosShellBannerStripComponent {
   @Input() banners: ShellBanner[] = [];
   @Output() action  = new EventEmitter<ShellBanner>();
   @Output() dismiss = new EventEmitter<ShellBanner>();
+
+  /**
+   * Defensive renderable filter: even if an upstream gate is bypassed, a
+   * banner with no resolvable title AND no resolvable message must not
+   * render — empty actionable-notification rows stack as ~50px dark bars
+   * with stray close buttons (visual chrome-waste symptom). The upstream
+   * gate in WorkspaceShellBindingService.shellBannerCandidates is
+   * authoritative; this is a safety net only.
+   */
+  renderable(): ShellBanner[] {
+    return (this.banners || []).filter((b) => {
+      const t = typeof b?.title === 'string' ? b.title.trim() : '';
+      const m = typeof b?.message === 'string' ? b.message.trim() : '';
+      const s = typeof (b as { subtitle?: string })?.subtitle === 'string'
+        ? ((b as { subtitle?: string }).subtitle as string).trim()
+        : '';
+      return !!(t || m || s);
+    });
+  }
 
   /** Carbon doesn't expose a 'danger' notification kind; map to 'error'. */
   resolveKind(kind: ShellBanner['kind']): DosCarbonNotificationKind {

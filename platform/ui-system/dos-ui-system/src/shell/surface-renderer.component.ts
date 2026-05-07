@@ -29,6 +29,11 @@ import {
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { DosWorkspaceHeaderComponent } from './workspace-header.component';
 import { DosEmptyStateComponent } from '../components/empty-state.component';
+import { DosLoadingStateComponent } from '../components/loading-state.component';
+import { DosMetricCardComponent } from '../components/metric-card.component';
+import { DosServiceCardComponent } from '../components/service-card.component';
+import { DosPageHeaderComponent } from '../components/page-header.component';
+import { DosCarbonDataTableComponent } from '../carbon/dos-carbon-data-table.component';
 import {
   DosShellBrandComponent,
   DosShellWorkspaceTitleComponent,
@@ -63,6 +68,7 @@ export const COMPONENT_MAP: Readonly<Record<string, Type<unknown> | null>> = Obj
   'shell.frame': null,
   'shell.workspace-header': DosWorkspaceHeaderComponent as Type<unknown>,
   'shell.empty-state': DosEmptyStateComponent as Type<unknown>,
+  'shell.loading-state': DosLoadingStateComponent as Type<unknown>,
   'shell.brand': DosShellBrandComponent as Type<unknown>,
   'shell.workspace-title': DosShellWorkspaceTitleComponent as Type<unknown>,
   'shell.user-menu': DosShellUserMenuComponent as Type<unknown>,
@@ -75,6 +81,14 @@ export const COMPONENT_MAP: Readonly<Record<string, Type<unknown> | null>> = Obj
   'shell.catalog-input': DosShellCatalogWidgetComponent as Type<unknown>,
   'shell.catalog-nav': DosShellCatalogWidgetComponent as Type<unknown>,
   'shell.catalog-polish': DosShellCatalogWidgetComponent as Type<unknown>,
+  
+  // Wave G - UI Archetype Components
+  'ui.page-header': DosPageHeaderComponent as Type<unknown>,
+  'ui.metric-card': DosMetricCardComponent as Type<unknown>,
+  'ui.service-card': DosServiceCardComponent as Type<unknown>,
+  'ui.empty-state': DosEmptyStateComponent as Type<unknown>,
+  'ui.loading-state': DosLoadingStateComponent as Type<unknown>,
+  'ui.data-table': DosCarbonDataTableComponent as Type<unknown>,
 });
 
 @Component({

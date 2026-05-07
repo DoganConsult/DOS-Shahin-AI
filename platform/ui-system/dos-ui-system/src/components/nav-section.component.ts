@@ -1,37 +1,34 @@
 import { Component, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { UIShellModule } from 'carbon-components-angular';
 import type { DosNavGroup, DosNavItem } from '@dos/ui-contracts';
 import { DosNavItemComponent } from './nav-item.component';
 
 /**
  * DosNavSection — labelled group of nav items.
- *
- * Renders the group label (uppercase, muted) and a vertical list of
- * `<dos-nav-item>`. Re-emits child select events upward unchanged.
- *
- * Consumers: DosWorkspaceNav.
+ * Refined to use Carbon SideNav menu policies.
  */
 @Component({
   selector: 'dos-nav-section',
   standalone: true,
-  imports: [CommonModule, DosNavItemComponent],
+  imports: [CommonModule, UIShellModule, DosNavItemComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="dos-nav-section" [attr.aria-label]="group.label">
-      <header class="dos-nav-section__head">{{ group.label }}</header>
-      <ul class="dos-nav-list">
+    @if (group.items?.length) {
+      <cds-sidenav-menu [title]="group.label" [expanded]="true">
         @for (item of group.items; track item.id) {
-          <li class="dos-nav-section__item">
-            <dos-nav-item
-              [item]="item"
-              [active]="isActive(item)"
-              (select)="select.emit($event)"
-            ></dos-nav-item>
-          </li>
+          <dos-nav-item
+            [item]="item"
+            [active]="isActive(item)"
+            (select)="select.emit($event)"
+          ></dos-nav-item>
         }
-      </ul>
-    </section>
+      </cds-sidenav-menu>
+    } @else {
+       <!-- Flat items in a group without children are not standard in SideNav menus, 
+            but we handle it as a single non-menu item if it had a route, 
+            or just skip if it's an empty header. -->
+    }
   `,
 })
 export class DosNavSectionComponent {

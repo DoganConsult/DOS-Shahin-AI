@@ -372,6 +372,37 @@ export class WorkspaceShellBindingService {
       return;
     }
 
+    // #region agent log
+    try {
+      const raw = shell.surfaces;
+      const perZone: Record<string, number> = {};
+      const perComponentType: Record<string, number> = {};
+      const perRenderer: Record<string, number> = {};
+      const sample: Array<Record<string, unknown>> = [];
+      for (const r of raw) {
+        const rec = (r ?? {}) as Record<string, unknown>;
+        const z = String(rec['zone'] ?? '∅');
+        perZone[z] = (perZone[z] ?? 0) + 1;
+        const ct = String(rec['componentType'] ?? '∅');
+        perComponentType[ct] = (perComponentType[ct] ?? 0) + 1;
+        const rk = String(rec['rendererKey'] ?? '∅');
+        perRenderer[rk] = (perRenderer[rk] ?? 0) + 1;
+        if (sample.length < 8) sample.push({ zone: rec['zone'], componentKey: rec['componentKey'], surfaceId: rec['surfaceId'], rendererKey: rec['rendererKey'], componentType: rec['componentType'] });
+      }
+      fetch('http://localhost:7837/ingest/4a9598a0-2068-40f6-a025-5dfbf60e9c19', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '409426' },
+        body: JSON.stringify({
+          sessionId: '409426', runId: 'post-fix', hypothesisId: 'H1+H2+H5',
+          location: 'workspace-shell-binding.service.ts:refresh:RAW',
+          message: 'resolver raw surfaces (pre-gate)',
+          data: { totalRaw: raw.length, perZone, perComponentType, perRenderer, sample,
+                  spaScript: typeof document !== 'undefined' ? (document.querySelector('script[src*="main"]') as HTMLScriptElement | null)?.src : null },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+    } catch { /* no-op */ }
+    // #endregion
     const next = new Map<string, WorkspaceShellSurface>();
     const dropped: Array<{ reason: string; row: unknown }> = [];
     for (const row of shell.surfaces) {
@@ -389,7 +420,11 @@ export class WorkspaceShellBindingService {
       const componentType = typeof r['componentType'] === 'string' ? (r['componentType'] as string) : (r['componentType'] === null ? null : undefined);
       const rendererKey = textOrNull(r['rendererKey']);
       const carbonKey = typeof r['carbonKey'] === 'string' ? (r['carbonKey'] as string) : (r['carbonKey'] === null ? null : undefined);
-      if (!surfaceIdRaw || !slotKeyRaw || !componentKey || !rendererKey || !hasRequiredSurfacePayload(row.props)) {
+      // Shell-frame Carbon primitives (header-name/side-nav-items/content/...)
+      // are complete-by-existence; their props are intentionally `{}`. Only
+      // visual surfaces require a non-empty contract payload.
+      const isShellFrame = componentType === 'shell-frame';
+      if (!surfaceIdRaw || !slotKeyRaw || !componentKey || !rendererKey || (!isShellFrame && !hasRequiredSurfacePayload(row.props))) {
         dropped.push({ reason: 'missing-required-contract-fields', row });
         continue;
       }
@@ -421,6 +456,13 @@ export class WorkspaceShellBindingService {
     this._chrome.set(shell.chrome && typeof shell.chrome === 'object' ? shell.chrome : EMPTY_RECORD);
     this._shortcutsRaw.set(Array.isArray(shell.shortcuts) ? shell.shortcuts : []);
     this._bannersRaw.set(Array.isArray(shell.banners) ? shell.banners : []);
+    // #region agent log
+    try {
+      const banners = Array.isArray(shell.banners) ? shell.banners : [];
+      // eslint-disable-next-line no-console
+      console.info('[DOS_DEBUG] BANNERS_RAW', { count: banners.length, rows: banners.map((b: WorkspaceRuntimeBanner) => ({ id: b?.id ?? null, kind: (b as { kind?: string })?.kind ?? null, titleKey: (b as { titleKey?: string })?.titleKey ?? null, titleFallback: (b as { titleFallback?: string })?.titleFallback ?? null, messageKey: (b as { messageKey?: string })?.messageKey ?? null, messageFallback: (b as { messageFallback?: string })?.messageFallback ?? null })) });
+    } catch { /* no-op */ }
+    // #endregion
     this._policies.set(shell.policies && typeof shell.policies === 'object' ? shell.policies : EMPTY_RECORD);
     this._version.set(Number(shell.version ?? resp.version) || 0);
     this._loaded.set(true);
@@ -484,6 +526,30 @@ export class WorkspaceShellBindingService {
       // eslint-disable-next-line no-console
       console.warn('[workspace-shell-binding] STRUCTURAL_CONTRACT_GATE_DROPPED', dropped);
     }
+    // #region agent log
+    try {
+      const dropReason: Record<string, number> = {};
+      const droppedZones: Record<string, number> = {};
+      for (const d of dropped) {
+        dropReason[d.reason] = (dropReason[d.reason] ?? 0) + 1;
+        const r = (d.row ?? {}) as Record<string, unknown>;
+        const z = String(r['zone'] ?? '∅');
+        droppedZones[z] = (droppedZones[z] ?? 0) + 1;
+      }
+      const perZoneAfter = { header, banner, sidebar, main, pageActions, pageContent };
+      fetch('http://localhost:7837/ingest/4a9598a0-2068-40f6-a025-5dfbf60e9c19', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '409426' },
+        body: JSON.stringify({
+          sessionId: '409426', runId: 'post-fix', hypothesisId: 'H1+H2',
+          location: 'workspace-shell-binding.service.ts:refresh:POST_GATE',
+          message: 'after structural contract gate',
+          data: { perZoneAfter, frame, visual, kept: next.size, dropped: dropped.length, dropReason, droppedZones },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+    } catch { /* no-op */ }
+    // #endregion
   }
 
   /**
@@ -594,18 +660,45 @@ export class WorkspaceShellBindingService {
 
     for (const tpl of templates) {
       if (!tpl.id) continue;
-      if (tpl.gate === 'offline' && !isOffline) continue;
+      // Doctrine: a banner template carries a `gate` (e.g. 'offline',
+      // 'session-expiry', 'trial-expired'). The banner must render ONLY
+      // when its gate's runtime predicate is satisfied. Any gate the
+      // frontend cannot evaluate must FAIL CLOSED (drop) — otherwise the
+      // shell stacks blank "Trial expired"/"Session about to expire" bars
+      // on every page even when those conditions are inactive.
+      // Until session-expiry / trial-expired signals are wired through the
+      // workspace-runtime envelope, any non-offline gate is dropped.
+      const gate = tpl.gate ?? null;
+      if (gate) {
+        if (gate === 'offline') {
+          if (!isOffline) continue;
+        } else {
+          // Unknown / not-yet-evaluable gate → fail closed.
+          // eslint-disable-next-line no-console
+          console.debug('[workspace-shell-binding] BANNER_DROPPED_UNGATED', { id: tpl.id, gate });
+          continue;
+        }
+      }
 
-      const title = this.bannerLabel(tpl.titleKey, tpl.titleFallback);
-      const message = this.bannerLabel(tpl.messageKey, tpl.messageFallback);
-      // Drop banners with no resolvable title at all.
-      if (!title) continue;
+      const rawTitle = this.bannerLabel(tpl.titleKey, tpl.titleFallback);
+      const rawMessage = this.bannerLabel(tpl.messageKey, tpl.messageFallback);
+      const title = typeof rawTitle === 'string' ? rawTitle.trim() : '';
+      const message = typeof rawMessage === 'string' ? rawMessage.trim() : '';
+      // Doctrine: a banner with neither a meaningful title nor a meaningful
+      // message is empty chrome and must not render. Empty banners stack
+      // as blank dark bars with stray close buttons (visual duplicate-chrome
+      // symptom) — drop them here before they reach the renderer.
+      if (!title && !message) {
+        // eslint-disable-next-line no-console
+        console.debug('[workspace-shell-binding] BANNER_DROPPED_EMPTY', tpl.id);
+        continue;
+      }
 
       banners.push({
         id: tpl.id,
         kind: (tpl.kind ?? 'info') as ShellBanner['kind'],
-        title,
-        message,
+        title: title || message,
+        message: title ? message : '',
         dismissible: !!tpl.dismissible,
         actionLabel: tpl.actionLabelKey ? this.runtimeChromeLabel(tpl.actionLabelKey) : undefined,
         action: tpl.action,

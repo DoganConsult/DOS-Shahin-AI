@@ -35,17 +35,21 @@ export interface DosCarbonOverflowMenuItem {
         <circle cx="16" cy="8" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="16" cy="24" r="2"/>
       </svg>
     </button>
+    <!--
+      Carbon directive creates its own pane via DialogService; the template
+      projected here must contain only cds-overflow-menu-option items.
+      Wrapping them in a second cds-overflow-menu-pane instantiates a pane
+      without dialogConfig and crashes Dialog.ngOnInit on placement.split.
+    -->
     <ng-template #menuPane>
-      <cds-overflow-menu-pane>
-        <ng-container *ngFor="let item of items">
-          <cds-overflow-menu-option
-            *ngIf="!item.divider"
-            [disabled]="item.disabled || false"
-            [type]="item.danger ? 'danger' : null"
-            (selected)="selected.emit(item.id)"
-          >{{ item.label }}</cds-overflow-menu-option>
-        </ng-container>
-      </cds-overflow-menu-pane>
+      <ng-container *ngFor="let item of items">
+        <cds-overflow-menu-option
+          *ngIf="!item.divider"
+          [disabled]="item.disabled || false"
+          [type]="item.danger ? 'danger' : null"
+          (selected)="selected.emit(item.id)"
+        >{{ item.label }}</cds-overflow-menu-option>
+      </ng-container>
     </ng-template>
   `,
 })

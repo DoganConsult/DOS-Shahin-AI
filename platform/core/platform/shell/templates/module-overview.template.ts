@@ -48,10 +48,9 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
     <!-- ── Loading skeleton ───────────────────────────────────────── -->
     @if (loading) {
       <div class="dmt-overview-skeleton">
-        <cds-tile class="dmt-masthead-skeleton">
+        <div class="dmt-page-header dmt-page-header--skeleton">
           <div cdsSkeletonText [lines]="1" heading></div>
-          <div cdsSkeletonText [lines]="2"></div>
-        </cds-tile>
+        </div>
         <div class="dmt-kpi-strip">
           @for (n of [1,2,3,4]; track n) {
             <cds-tile class="dmt-kpi-skeleton"><div cdsSkeletonText [lines]="3"></div></cds-tile>
@@ -71,71 +70,55 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
       </cds-notification>
     }
 
-    <!-- ── Masthead tile ──────────────────────────────────────────── -->
+    <!-- ── Compact page header (Carbon page-header pattern) ───────── -->
     @if (!loading) {
-      <cds-tile class="dmt-masthead">
-        <!-- Breadcrumb -->
-        <cds-breadcrumb [noTrailingSlash]="true" class="dmt-eyebrow-breadcrumb">
-          <cds-breadcrumb-item>{{ eyebrow }}</cds-breadcrumb-item>
-        </cds-breadcrumb>
-
-        <div class="dmt-masthead-content">
-          <div class="dmt-masthead-left">
-            <!-- AI Label (always first) -->
-            @if (aiHeadline) {
-              <cds-ai-label class="dmt-ai-headline" kind="inline" size="sm">
-                {{ aiHeadline }}
-              </cds-ai-label>
-            }
-            <h1 class="dmt-title">{{ title }}</h1>
-            @if (subtitle) {
-              <p class="dmt-subtitle">{{ subtitle }}</p>
-            }
-
-            <!-- Status tags -->
-            <div class="dmt-tags-row">
+      <header class="dmt-page-header" data-testid="dos-tpl-page-header">
+        <div class="dmt-page-header__row dmt-page-header__row--top">
+          @if (eyebrow) {
+            <cds-breadcrumb [noTrailingSlash]="true" class="dmt-page-header__breadcrumb">
+              <cds-breadcrumb-item>{{ eyebrow }}</cds-breadcrumb-item>
+            </cds-breadcrumb>
+          }
+          @if (aiHeadline) {
+            <cds-ai-label class="dmt-page-header__ai" kind="inline" size="sm">{{ aiHeadline }}</cds-ai-label>
+          }
+          <div class="dmt-page-header__actions">
+            @if (statusTags.length) {
               @for (tag of statusTags; track tag.label) {
-                <cds-tag [type]="tagType(tag.severity)">{{ tag.label }}</cds-tag>
+                <cds-tag [type]="tagType(tag.severity)" size="sm">{{ tag.label }}</cds-tag>
               }
-            </div>
-
-            <!-- Actions — role-gated -->
+            }
             @if (viewMode() !== 'limited') {
-              <div class="dmt-actions-row">
-                @if (primaryAction) {
-                  <button cdsButton="primary" size="sm"
-                    (click)="triggerAction(primaryAction)">
-                    {{ primaryAction.label }}
+              @if (primaryAction) {
+                <button cdsButton="primary" size="sm"
+                  (click)="triggerAction(primaryAction)">
+                  {{ primaryAction.label }}
+                </button>
+              }
+              @if (secondaryActions.length && viewMode() === 'full') {
+                @for (action of secondaryActions; track action.actionKey || action.commandKey || action.route || action.label) {
+                  <button cdsButton="tertiary" size="sm" (click)="triggerAction(action)">
+                    {{ action.label }}
                   </button>
                 }
-                @if (secondaryActions.length && viewMode() === 'full') {
-                  @for (action of secondaryActions; track action.actionKey || action.commandKey || action.route || action.label) {
-                    <button cdsButton="tertiary" size="sm" (click)="triggerAction(action)">
-                      {{ action.label }}
-                    </button>
-                  }
-                }
-              </div>
+              }
             }
           </div>
-
-          <!-- Big number hero (right of masthead) -->
+        </div>
+        <div class="dmt-page-header__row dmt-page-header__row--title">
+          <h1 class="dmt-page-header__title">{{ title }}</h1>
+          @if (subtitle) {
+            <p class="dmt-page-header__subtitle">{{ subtitle }}</p>
+          }
           @if (heroKpi) {
-            <div class="dmt-masthead-hero">
-              <!-- IBM Products cds-big-number (wrapper-required, custom element) -->
-              <cds-big-number
-                [value]="heroKpi.value"
-                [label]="heroKpi.label"
-                [percentage]="heroKpi.delta ?? ''"
-                size="lg">
-              </cds-big-number>
-              @if (heroKpi.aiInsight) {
-                <cds-ai-label kind="inline" size="sm">{{ heroKpi.aiInsight }}</cds-ai-label>
-              }
-            </div>
+            <span class="dmt-page-header__hero">
+              <strong>{{ heroKpi.value }}</strong>
+              @if (heroKpi.label) { <span class="dmt-page-header__hero-label">{{ heroKpi.label }}</span> }
+              @if (heroKpi.delta) { <span class="dmt-page-header__hero-delta">{{ heroKpi.delta }}</span> }
+            </span>
           }
         </div>
-      </cds-tile>
+      </header>
 
       <!-- ── 5-Pillar Insight Bar ────────────────────────────────── -->
       <dos-insight-bar
@@ -226,16 +209,71 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
   `,
   styles: [`
     :host { display: block; padding: 0; }
-    .dmt-masthead { margin-bottom: 1rem; padding: 1.5rem 2rem; }
-    .dmt-masthead-content { display: flex; justify-content: space-between; align-items: flex-start; }
-    .dmt-masthead-left { flex: 1; }
-    .dmt-masthead-hero { text-align: right; min-width: 160px; }
-    .dmt-eyebrow-breadcrumb { margin-bottom: 0.5rem; }
-    .dmt-title { font-size: 2rem; font-weight: 400; margin: 0.25rem 0; line-height: 1.25; }
-    .dmt-subtitle { font-size: 0.875rem; color: var(--cds-text-secondary); margin: 0.25rem 0 0.75rem; }
-    .dmt-tags-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .dmt-actions-row { display: flex; gap: 0.5rem; align-items: center; }
-    .dmt-ai-headline { margin-bottom: 0.5rem; }
+
+    /* ── Compact page header (Carbon page-header pattern) ─────────
+       Doctrine: ≤72px desktop; no hero-style empty space; subtitle
+       inline next to title. Page content begins immediately after
+       this header — no large blank area above/below. */
+    .dmt-page-header {
+      display: flex;
+      flex-direction: column;
+      padding-block: 0.375rem 0.5rem;
+      padding-inline: 1rem;
+      margin-block-end: 0.75rem;
+      background: var(--cds-layer);
+      border-block-end: 1px solid var(--cds-border-subtle);
+    }
+    .dmt-page-header__row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-inline-size: 0;
+    }
+    .dmt-page-header__row--top {
+      justify-content: space-between;
+      min-block-size: 1.25rem;
+    }
+    .dmt-page-header__row--title {
+      flex-wrap: wrap;
+      min-block-size: 1.75rem;
+    }
+    .dmt-page-header__breadcrumb { font-size: 0.75rem; line-height: 1; }
+    .dmt-page-header__ai { font-size: 0.75rem; }
+    .dmt-page-header__actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
+      margin-inline-start: auto;
+    }
+    .dmt-page-header__title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-inline-size: 40%;
+    }
+    .dmt-page-header__subtitle {
+      font-size: 0.8125rem;
+      color: var(--cds-text-secondary);
+      margin: 0;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1 1 auto;
+      min-inline-size: 0;
+    }
+    .dmt-page-header__hero {
+      display: inline-flex; align-items: baseline; gap: 0.375rem;
+      font-size: 0.875rem;
+    }
+    .dmt-page-header__hero strong { font-size: 1rem; font-weight: 600; }
+    .dmt-page-header__hero-label { color: var(--cds-text-secondary); font-size: 0.75rem; }
+    .dmt-page-header__hero-delta { color: var(--cds-text-secondary); font-size: 0.75rem; }
 
     /* KPI strip */
     .dmt-kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; margin-bottom: 1rem; }
@@ -258,7 +296,7 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
 
     /* Skeleton */
     .dmt-overview-skeleton { display: flex; flex-direction: column; gap: 1rem; }
-    .dmt-masthead-skeleton { height: 160px; }
+    .dmt-page-header--skeleton { min-block-size: 56px; }
     .dmt-kpi-skeleton { height: 100px; }
 
     @media (max-width: 1024px) {
@@ -266,9 +304,11 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
       .dmt-rail-col { display: none; }
     }
     @media (max-width: 768px) {
-      .dmt-title { font-size: 1.5rem; }
-      .dmt-masthead-content { flex-direction: column; }
-      .dmt-masthead-hero { display: none; }
+      .dmt-page-header { padding-inline: 0.75rem; }
+      .dmt-page-header__row--title { flex-wrap: wrap; }
+      .dmt-page-header__title { max-inline-size: 100%; font-size: 1rem; }
+      .dmt-page-header__subtitle { white-space: normal; flex-basis: 100%; }
+      .dmt-page-header__hero { display: none; }
     }
   `]
 })

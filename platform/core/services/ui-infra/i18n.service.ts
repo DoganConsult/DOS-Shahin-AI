@@ -1,7 +1,8 @@
-import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { ShellPreferencesService } from '../../platform/shell/shell-preferences.service';
 
 interface TranslationTree {
   [key: string]: string | TranslationTree;
@@ -10,41 +11,43 @@ interface TranslationTree {
 export type Lang = 'ar' | 'en';
 export type Dir = 'rtl' | 'ltr';
 
-const LANG_KEY = 'grc_lang';
 const AR_DIGITS = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
 
+/**
+ * I18nService — translation + locale-derived formatters.
+ *
+ * Direction & language are NOT owned here. The single source of truth is
+ * `ShellPreferencesService` (see `<html dir/lang>` writer). I18n consumes
+ * that signal so language toggles flow through one path, no race.
+ *
+ * Default locale is `en` (LTR) per the Workspace doctrine: Arabic is
+ * applied only when the persisted preference or tenant/user locale
+ * explicitly says Arabic.
+ */
 @Injectable({ providedIn: 'root' })
 export class I18nService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
+  private prefs = inject(ShellPreferencesService);
 
   private readonly _translations = signal<TranslationTree>({});
   private readonly _translationsVersion = signal(0);
 
-  private readonly _lang = signal<Lang>(this.loadLang());
-  readonly currentLang = this._lang.asReadonly();
+  private readonly _lang = computed<Lang>(() => this.prefs.language());
+  readonly currentLang = this._lang;
   readonly isArabic = computed(() => this._lang() === 'ar');
   readonly isAr = this.isArabic;
   readonly isRtl = this.isArabic;
-  readonly dir = computed<Dir>(() => this._lang() === 'ar' ? 'rtl' : 'ltr');
+  readonly dir = this.prefs.dir;
   readonly direction = this.dir;
   readonly ready = computed(() => this._translationsVersion() > 0);
 
   constructor() {
     this.loadTranslations(this._lang());
-    this.applyDir(this._lang());
-  }
-
-  private loadLang(): Lang {
-    if (!isPlatformBrowser(this.platformId)) return 'ar';
-    return (localStorage.getItem(LANG_KEY) as Lang) || 'ar';
-  }
-
-  private applyDir(lang: Lang): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    const dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.setAttribute('dir', dir);
-    document.documentElement.setAttribute('lang', lang);
+    effect(() => {
+      const next = this._lang();
+      void this.loadTranslations(next);
+    });
   }
 
   async loadTranslations(lang: Lang): Promise<void> {
@@ -60,12 +63,10 @@ export class I18nService {
   }
 
   switchLanguage(lang: Lang): void {
-    this._lang.set(lang);
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem(LANG_KEY, lang);
-    }
-    this.applyDir(lang);
-    this.loadTranslations(lang);
+    // Single source of truth: writes flow through ShellPreferencesService.
+    // The reactive `_lang` computed and the effect in the constructor will
+    // re-fire `loadTranslations(lang)` automatically.
+    this.prefs.setLanguage(lang);
   }
 
   translate(key: string, params?: Record<string, string | number>): string {
