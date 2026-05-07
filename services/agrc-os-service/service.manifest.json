@@ -4,6 +4,7 @@
   "layer": "platform-service",
   "ownerTeam": "platform-ai",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service",
@@ -12,6 +13,7 @@
   "modules": [
     "agrc-engine"
   ],
+  "apiPrefix": "/api/agrc",
   "exposes": {
     "apiBase": "/api/agrc",
     "events": [

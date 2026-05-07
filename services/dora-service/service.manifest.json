@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "product-shahin-ai",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service",
@@ -12,6 +13,7 @@
   "modules": [
     "dora"
   ],
+  "apiPrefix": "/api/dora",
   "exposes": {
     "apiBase": "/api/dora",
     "events": [

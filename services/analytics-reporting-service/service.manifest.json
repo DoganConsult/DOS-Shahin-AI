@@ -4,6 +4,7 @@
   "serviceCode": "analytics-reporting-service",
   "layer": "domain",
   "ownerTeam": "analytics-team",
+  "trustZone": "tenant",
   "domains": [
     "governance",
     "analytics",

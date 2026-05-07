@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "product-shahin-ai",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service"
@@ -13,6 +14,7 @@
     "widgets",
     "dashboard-editor"
   ],
+  "apiPrefix": "/api/dashboard",
   "exposes": {
     "apiBase": "/api/dashboard",
     "events": [

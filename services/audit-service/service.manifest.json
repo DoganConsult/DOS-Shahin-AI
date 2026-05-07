@@ -4,8 +4,10 @@
   "layer": "platform-service",
   "ownerTeam": "platform-core",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": ["auth-service","tenant-service"],
   "modules": [],
+  "apiPrefix": "/api/audit-core",
   "exposes": {
     "apiBase": "/api/audit-core"
   }

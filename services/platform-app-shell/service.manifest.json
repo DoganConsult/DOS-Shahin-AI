@@ -1,6 +1,6 @@
 {
-  "serviceCode": "gateway",
-  "displayName": "Gateway",
+  "serviceCode": "platform-app-shell",
+  "displayName": "Platform App Shell",
   "layer": "edge-service",
   "ownerTeam": "platform-core",
   "runtime": "node",
@@ -8,13 +8,9 @@
   "dependsOn": [
     "auth-service",
     "tenant-service",
-    "user-service"
+    "gateway"
   ],
-  "modules": [
-    "integrations",
-    "connectors",
-    "portals"
-  ],
+  "modules": [],
   "apiPrefix": "/",
   "exposes": {
     "apiBase": "/"

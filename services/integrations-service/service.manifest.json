@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "platform-core",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service"
@@ -12,6 +13,7 @@
     "integrations",
     "fitch"
   ],
+  "apiPrefix": "/api/integrations",
   "exposes": {
     "apiBase": "/api/integrations",
     "events": [

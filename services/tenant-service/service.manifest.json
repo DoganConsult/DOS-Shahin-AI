@@ -4,6 +4,7 @@
   "layer": "platform-service",
   "ownerTeam": "platform-core",
   "runtime": "node",
+  "trustZone": "admin",
   "dependsOn": [
     "auth-service"
   ],
@@ -21,6 +22,7 @@
     "platform-stats",
     "operating-cockpit"
   ],
+  "apiPrefix": "/api/tenants",
   "exposes": {
     "apiBase": "/api/tenants"
   }

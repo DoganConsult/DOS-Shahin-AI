@@ -50,14 +50,32 @@ const SAFE_EMPTY_PERMS_ZONES: ReadonlySet<string> = new Set<string>([
 ]);
 
 function sanitizeProps(raw: unknown): Record<string, unknown> {
+  const FORBIDDEN_CAMEL_KEYS = new Set<string>([
+    'labelKey',
+    'labelEn',
+    'labelAr',
+    'detailRoute',
+    'evidenceUri',
+    'chromeStrings',
+    'accountMenu',
+  ]);
+
+  const clean = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map((entry) => clean(entry));
+    if (!value || typeof value !== 'object') return value;
+    const record = value as Record<string, unknown>;
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(record)) {
+      // Strip snake_case leaks and forbidden legacy camelCase keys.
+      if (/_/.test(k)) continue;
+      if (FORBIDDEN_CAMEL_KEYS.has(k)) continue;
+      out[k] = clean(v);
+    }
+    return out;
+  };
+
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
-  const out: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
-    // Strip snake_case leaks — props must reach the FE in camelCase only.
-    if (/_/.test(k)) continue;
-    out[k] = v;
-  }
-  return out;
+  return clean(raw) as Record<string, unknown>;
 }
 
 interface RegistryRow {
@@ -524,6 +542,34 @@ async function loadChrome(pool: DbPool, tenantId: string): Promise<Record<string
   return out;
 }
 
+function scrubChromeForResponse(chrome: Record<string, unknown>): Record<string, unknown> {
+  const FORBIDDEN_KEYS = new Set<string>([
+    'chromeStrings',
+    'accountMenu',
+    'labelKey',
+    'labelEn',
+    'labelAr',
+    'detailRoute',
+    'evidenceUri',
+    'route',
+  ]);
+
+  const clean = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map((entry) => clean(entry));
+    if (!value || typeof value !== 'object') return value;
+    const record = value as Record<string, unknown>;
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(record)) {
+      if (/_/.test(k)) continue;
+      if (FORBIDDEN_KEYS.has(k)) continue;
+      out[k] = clean(v);
+    }
+    return out;
+  };
+
+  return clean(chrome) as Record<string, unknown>;
+}
+
 async function loadPolicies(pool: DbPool, tenantId: string): Promise<Record<string, unknown>> {
   const r = await pool.query<PolicyRow>(
     `SELECT policy_key, value_json
@@ -741,7 +787,7 @@ async function loadEntitledModuleCards(
     out.push({
       id: row.module_code,
       title: row.display_name ?? row.module_code,
-      route: row.default_route,
+      action: { kind: 'navigate', path: row.default_route },
       productCode: row.product_code,
     });
   }
@@ -1080,6 +1126,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
         moduleCards,
         navigateEligibleRoutes,
       );
+      const chromeOut = scrubChromeForResponse(chrome);
 
       const surfaces = surfaceRows.map(toFrontendSurface);
       const zones = groupByZone(surfaceRows, catalog);
@@ -1095,7 +1142,7 @@ export function createWorkspaceShellRouter(pool: DbPool): Router {
           surfaces,
           zones,
           nav,
-          chrome,
+          chrome: chromeOut,
           shortcuts,
           banners,
           policies,

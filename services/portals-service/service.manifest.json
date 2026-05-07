@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "product-shahin-ai",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service"
@@ -11,6 +12,7 @@
   "modules": [
     "portals"
   ],
+  "apiPrefix": "/api/portals",
   "exposes": {
     "apiBase": "/api/portals",
     "events": [

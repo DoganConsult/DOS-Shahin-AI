@@ -4,12 +4,14 @@
   "layer": "edge-service",
   "ownerTeam": "platform-core",
   "runtime": "node",
+  "trustZone": "admin",
   "dependsOn": [
     "auth-service",
     "tenant-service",
     "gateway"
   ],
   "modules": [],
+  "apiPrefix": "/api/shell",
   "exposes": {
     "apiBase": "/api/shell",
     "events": []

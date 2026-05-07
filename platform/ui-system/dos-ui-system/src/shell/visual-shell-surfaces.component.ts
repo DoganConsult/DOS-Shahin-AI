@@ -67,7 +67,7 @@ export interface ShellAccountMenuEntry {
 export interface ShellModuleCard {
   id: string;
   title: string;
-  route: string;
+  action: { kind: 'navigate'; path: string };
   productCode?: string;
 }
 
@@ -454,7 +454,7 @@ export class DosShellSidebarNavComponent {
             <li>
               <dos-carbon-tile
                 [clickable]="true"
-                [route]="item.route"
+                [route]="item.action.path"
                 (activated)="onActivate($event, item)"
                 [attr.data-module-id]="item.id"
               >
@@ -497,9 +497,10 @@ export class DosShellModuleCardsComponent {
   @Input() ariaLabel = '';
 
   onActivate(ev: MouseEvent, item: ShellModuleCard): void {
-    if (!item.route) return;
+    const action = item.action;
+    if (!action || action.kind !== 'navigate') return;
     if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button !== 0) return;
     ev.preventDefault();
-    void this.router.navigateByUrl(item.route);
+    void this.router.navigateByUrl(action.path);
   }
 }

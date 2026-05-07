@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "product-shahin-ai",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service",
@@ -13,6 +14,7 @@
     "remediation",
     "action"
   ],
+  "apiPrefix": "/api/remediation",
   "exposes": {
     "apiBase": "/api/remediation",
     "events": [

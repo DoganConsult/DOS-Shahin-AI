@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "product-shahin-ai",
   "runtime": "node",
+  "trustZone": "tenant",
   "status": "RED_BLOCKED",
   "statusGrade": "RED_BLOCKED",
   "statusSeverity": "P0",
@@ -18,6 +19,7 @@
   "modules": [
     "sales-room"
   ],
+  "apiPrefix": "/api/sales-room",
   "exposes": {
     "apiBase": "/api/sales-room",
     "events": [

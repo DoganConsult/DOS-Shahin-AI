@@ -127,6 +127,8 @@ abstract class ExtendedTemplateBase {
   @Input() tabs: ModuleTab[] = [];
   @Input() statusTags: Array<{ label: string; severity?: string }> = [];
   @Input() primaryAction: ModuleAction | null = null;
+  @Input() emptyStateTitle = '';
+  @Input() emptyStateDescription = '';
   @Input() pillars: ModuleInsightPillars | null = null;
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
@@ -478,12 +480,28 @@ export interface DelegationRule {
                 <td>{{ r.expiresAt }}</td>
                 <td><cds-tag [type]="r.status === 'active' ? 'green' : r.status === 'expired' ? 'red' : r.status === 'pending' ? 'blue' : 'warm-gray'">{{ r.status }}</cds-tag></td>
               </tr>
+            } @empty {
+              <tr>
+                <td colspan="6">
+                  <div class="dax-empty-state">
+                    @if (emptyStateTitle) { <h3>{{ emptyStateTitle }}</h3> }
+                    @if (emptyStateDescription) { <p>{{ emptyStateDescription }}</p> }
+                    @if (primaryAction?.route && primaryAction?.label) {
+                      <button cdsButton="primary" size="sm" [routerLink]="[primaryAction!.route!]">
+                        {{ primaryAction!.label }}
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
             }
           </tbody>
         </table>
       </cds-tile>
     }`,
-  styles: [DAX_STYLES],
+  styles: [DAX_STYLES + `
+    .dax-empty-state { padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  `],
 })
 export class DelegationCenterTemplateComponent extends ExtendedTemplateBase {
   archetypeKey = 'delegation-center';

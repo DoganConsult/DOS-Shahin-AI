@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "product-shahin-ai",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service",
@@ -16,6 +17,7 @@
     "governance-os",
     "proactive-leadership"
   ],
+  "apiPrefix": "/api/governance",
   "exposes": {
     "apiBase": "/api/governance"
   }

@@ -79,7 +79,11 @@ const GUARDS = [
 
 let pass = 0, fail = 0;
 for (const g of GUARDS) {
-  const r = spawnSync('node', [`scripts/ci-guards/${g}`], { stdio: 'inherit' });
+  const env = { ...process.env };
+  // Enable enforcement for guards that support it (one by one)
+  if (g === 'service-manifest-required.mjs') env.MANIFEST_ENFORCE = '1';
+  if (g === 'tenant-completeness.mjs') env.TENANT_COMPLETENESS_ENFORCE = '1';
+  const r = spawnSync('node', [`scripts/ci-guards/${g}`], { stdio: 'inherit', env });
   if (r.status === 0) pass++; else fail++;
 }
 console.log(`\n[dos-master-gate] ${pass}/${GUARDS.length} guards PASS, ${fail} FAIL`);

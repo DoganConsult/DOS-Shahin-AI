@@ -1,6 +1,7 @@
 {
   "serviceCode": "ui-os-service",
   "version": "0.1.0",
+  "trustZone": "admin",
   "domains": [
     "ui-os",
     "platform-dna"

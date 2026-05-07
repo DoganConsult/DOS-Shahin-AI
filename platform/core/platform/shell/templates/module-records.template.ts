@@ -199,10 +199,11 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
                     @if (aiHeadline) {
                       <cds-ai-label kind="inline" size="sm">{{ aiHeadline }}</cds-ai-label>
                     }
-                    <p>No {{ title }} found. {{ viewMode() === 'full' ? 'Start by adding one.' : '' }}</p>
+                    @if (emptyStateTitle) { <h3>{{ emptyStateTitle }}</h3> }
+                    @if (emptyStateDescription) { <p>{{ emptyStateDescription }}</p> }
                     @if (viewMode() === 'full' && addAction) {
                       <button cdsButton="primary" size="sm" (click)="addAction!.action?.()">
-                        + {{ addAction.label }}
+                        {{ addAction.label }}
                       </button>
                     }
                   </cds-tile>
@@ -275,6 +276,8 @@ export class ModuleRecordsTemplateComponent {
   @Input() viewSwitcher: Array<{ id: string; label: string }> = [];
   @Input() bulkActions: Array<{ content: string; click: () => void }> = [];
   @Input() addAction: { label: string; action: () => void } | null = null;
+  @Input() emptyStateTitle = '';
+  @Input() emptyStateDescription = '';
   @Input() pillars: ModuleInsightPillars | null = null;
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];

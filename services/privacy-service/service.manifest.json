@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "product-shahin-ai",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service",
@@ -12,6 +13,7 @@
   "modules": [
     "privacy"
   ],
+  "apiPrefix": "/api/privacy",
   "exposes": {
     "apiBase": "/api/privacy",
     "events": [

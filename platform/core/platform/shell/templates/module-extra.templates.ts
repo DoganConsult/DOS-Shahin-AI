@@ -21,7 +21,7 @@ import {
 } from 'carbon-components-angular';
 import {
   ModuleReport, ModuleSettingsSection, ModuleSetupStep, ModuleTab,
-  ModuleNotification, ModuleRole, resolveViewMode, ModuleInsightPillars
+  ModuleNotification, ModuleRole, resolveViewMode, ModuleInsightPillars, ModuleAction
 } from './module-template.types';
 import { DosInsightBarComponent } from './dos-insight-bar.component';
 
@@ -310,6 +310,13 @@ export class ModuleSettingsTemplateComponent {
       <!-- Pipeline progress indicator -->
       <cds-progress-indicator [steps]="progressSteps" [current]="currentStage" spacing="equal" class="dmt-pipeline">
       </cds-progress-indicator>
+      @if (primaryAction?.route && primaryAction?.label) {
+        <div class="dmt-masthead-actions">
+          <button cdsButton="primary" size="sm" [routerLink]="[primaryAction!.route!]">
+            {{ primaryAction!.label }}
+          </button>
+        </div>
+      }
     </cds-tile>
 
     <!-- 5-Pillar Insight Bar -->
@@ -318,13 +325,25 @@ export class ModuleSettingsTemplateComponent {
     </dos-insight-bar>
 
     <cds-tile class="dmt-assessments-tile">
-      <cds-tabs type="line" [followFocus]="true">
-        @for (tab of tabs; track tab.id) {
-          <cds-tab [id]="tab.id" [heading]="tab.label">
-            <ng-content [select]="'[dosAssessmentTab=' + tab.id + ']'"></ng-content>
-          </cds-tab>
-        }
-      </cds-tabs>
+      @if (tabs.length) {
+        <cds-tabs type="line" [followFocus]="true">
+          @for (tab of tabs; track tab.id) {
+            <cds-tab [id]="tab.id" [heading]="tab.label">
+              <ng-content [select]="'[dosAssessmentTab=' + tab.id + ']'"></ng-content>
+            </cds-tab>
+          }
+        </cds-tabs>
+      } @else {
+        <div class="dmt-empty-state">
+          @if (emptyStateTitle) { <h3>{{ emptyStateTitle }}</h3> }
+          @if (emptyStateDescription) { <p>{{ emptyStateDescription }}</p> }
+          @if (primaryAction?.route && primaryAction?.label) {
+            <button cdsButton="primary" size="sm" [routerLink]="[primaryAction!.route!]">
+              {{ primaryAction!.label }}
+            </button>
+          }
+        </div>
+      }
     </cds-tile>
 
     <!-- Charts slot -->
@@ -345,7 +364,9 @@ export class ModuleSettingsTemplateComponent {
     .dmt-title { font-size: 1.75rem; font-weight: 400; margin: 0.25rem 0; }
     .dmt-subtitle { font-size: 0.875rem; color: var(--cds-text-secondary); margin: 0.25rem 0 0.75rem; }
     .dmt-pipeline { margin-top: 1rem; }
+    .dmt-masthead-actions { margin-top: 1rem; }
     .dmt-assessments-tile { padding: 0; margin-top: 1rem; }
+    .dmt-empty-state { padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
     .dmt-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
     .dmt-chart-tile { padding: 1rem; min-height: 240px; }
     @media (max-width: 768px) { .dmt-charts-row { grid-template-columns: 1fr; } }
@@ -362,6 +383,9 @@ export class ModuleAssessmentsTemplateComponent {
   @Input() tabs: ModuleTab[] = [];
   @Input() progressSteps: Array<{ label: string; secondaryLabel?: string }> = [];
   @Input() currentStage = 0;
+  @Input() primaryAction: ModuleAction | null = null;
+  @Input() emptyStateTitle = '';
+  @Input() emptyStateDescription = '';
   @Input() currentRole: ModuleRole = 'standard_user';
   @Input() writeRoles: ModuleRole[] = [];
 

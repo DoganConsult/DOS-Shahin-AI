@@ -4,6 +4,7 @@
   "layer": "domain-service",
   "ownerTeam": "platform-core",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service",
@@ -13,6 +14,7 @@
     "inbox",
     "notification"
   ],
+  "apiPrefix": "/api/inbox",
   "exposes": {
     "apiBase": "/api/inbox",
     "events": [

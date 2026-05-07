@@ -4,6 +4,7 @@
   "layer": "platform-service",
   "ownerTeam": "platform-core",
   "runtime": "node",
+  "trustZone": "tenant",
   "dependsOn": [
     "auth-service",
     "tenant-service"
@@ -13,6 +14,7 @@
     "inbox",
     "mobile"
   ],
+  "apiPrefix": "/api/notifications",
   "exposes": {
     "apiBase": "/api/notifications"
   }

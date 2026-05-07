@@ -4,6 +4,7 @@
   "serviceCode": "platform-core-service",
   "layer": "platform",
   "ownerTeam": "platform-team",
+  "trustZone": "admin",
   "domains": [
     "platform",
     "mobile"
