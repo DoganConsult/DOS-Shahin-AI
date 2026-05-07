@@ -315,9 +315,36 @@ export class ShellHostComponent {
       case 'clear_error':
         this.shellError.clearError();
         break;
-      case 'open_context_tab':
       case 'open_command':
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent('dos:workspace-open-command', { bubbles: true, composed: true }),
+          );
+        }
+        break;
+      case 'open_context_tab': {
+        const tab = (action as { tab?: string }).tab;
+        if (
+          typeof window !== 'undefined' &&
+          typeof tab === 'string' &&
+          tab.length > 0
+        ) {
+          window.dispatchEvent(
+            new CustomEvent('dos:workspace-open-context-tab', {
+              bubbles: true,
+              composed: true,
+              detail: { tab },
+            }),
+          );
+        }
+        break;
+      }
       case 'close_overlay':
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(
+            new CustomEvent('dos:workspace-close-overlay', { bubbles: true, composed: true }),
+          );
+        }
         break;
       case 'dispatch_event': {
         const evt = (action as { eventName?: string }).eventName ?? '';

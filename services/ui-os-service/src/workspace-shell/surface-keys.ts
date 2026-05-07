@@ -11,6 +11,7 @@ export const WS_SHELL_SURFACE = {
   SIDEBAR_NAV: 'workspace.shell.sidebar-nav',
   USER_MENU: 'workspace.shell.user-menu',
   SETTINGS_ACTION: 'workspace.shell.settings-action',
+  GLOBAL_QUICK_ACTIONS: 'workspace.shell.global-quick-actions',
   MODULE_CARDS: 'workspace.shell.module-cards',
 } as const;
 

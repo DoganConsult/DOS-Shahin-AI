@@ -1,7 +1,7 @@
 /**
  * Visual shell surface components — Carbon-native (UIShell + Dialog + Tile).
  *
- * Six prop-driven, standalone components that back the canonical
+ * Seven prop-driven, standalone components that back the canonical
  * `workspace.shell.*` surfaces resolved through the hybrid-static
  * COMPONENT_MAP. Each component composes IBM Carbon Angular primitives
  * (`cds-header-action`, `cds-sidenav-item`, `[cdsOverflowMenu]`,
@@ -34,6 +34,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UIShellModule, DialogModule, ButtonModule } from '../carbon';
 import { DosCarbonTileComponent } from '../carbon/dos-carbon-tile.component';
+import { DosIconComponent } from '../components/icon.component';
 
 let __dosShellMenuIdCounter = 0;
 function nextMenuId(prefix: string): string {
@@ -342,6 +343,140 @@ export class DosShellSettingsActionComponent implements OnInit {
   onClick(): void {
     if (this.enabled === false) return;
     dispatchShellAction(this.router, this.action);
+  }
+}
+
+// ── Global quick actions (command palette + inbox) ───────────────────
+@Component({
+  selector: 'dos-shell-global-quick-actions',
+  standalone: true,
+  imports: [CommonModule, ButtonModule, DosIconComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    @if (hasAnyControl()) {
+    <div class="dos-shell-global-quick-actions"
+         [attr.data-placement]="placement || null"
+         [attr.data-renderer-key]="'shell.global-quick-actions'">
+      @if (commandSearchAction && resolvedCommandAria()) {
+        <span class="dos-shell-global-quick-actions__btn-wrap">
+          <cds-icon-button
+            kind="ghost"
+            size="lg"
+            [description]="resolvedCommandTooltip()"
+            (click)="onCommandSearch()"
+            [buttonNgClass]="{ 'cds--header__action': true }"
+            [buttonAttributes]="commandTriggerAttrs()"
+          >
+            <dos-icon name="search" [size]="20"></dos-icon>
+          </cds-icon-button>
+        </span>
+      }
+      @if (inboxAction && resolvedInboxAria()) {
+        <span class="dos-shell-global-quick-actions__btn-wrap">
+          <cds-icon-button
+            kind="ghost"
+            size="lg"
+            [description]="resolvedInboxTooltip()"
+            (click)="onInbox()"
+            [buttonNgClass]="{
+              'cds--header__action': true,
+              'dos-shell-global-quick-actions__inbox--badge': inboxCount > 0
+            }"
+            [buttonAttributes]="inboxTriggerAttrs()"
+            [attr.data-badge-count]="inboxCount > 0 ? inboxCount : null"
+          >
+            <dos-icon name="notification" [size]="20"></dos-icon>
+            @if (inboxCount > 0) {
+              <span class="dos-shell-global-quick-actions__badge" aria-hidden="true">
+                {{ inboxCount > 99 ? '99+' : inboxCount }}
+              </span>
+            }
+          </cds-icon-button>
+        </span>
+      }
+    </div>
+    }
+  `,
+  styles: [`
+    :host { display: inline-flex; align-items: stretch; height: 100%; }
+    .dos-shell-global-quick-actions {
+      display: inline-flex;
+      align-items: stretch;
+      gap: 0;
+    }
+    .dos-shell-global-quick-actions__btn-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: stretch;
+    }
+    .dos-shell-global-quick-actions__badge {
+      position: absolute;
+      inset-inline-end: var(--cds-spacing-02);
+      inset-block-start: var(--cds-spacing-02);
+      min-width: 1rem;
+      padding: 0 var(--cds-spacing-02);
+      font-size: var(--cds-label-01-font-size);
+      line-height: 1rem;
+      border-radius: var(--cds-tag-border-radius);
+      background-color: var(--cds-support-error);
+      color: var(--cds-text-on-color);
+    }
+  `],
+})
+export class DosShellGlobalQuickActionsComponent {
+  private readonly router = inject(Router);
+  @Input() placement = '';
+  @Input() commandSearchLabel = '';
+  @Input() commandSearchAriaLabel = '';
+  @Input() commandSearchAction: RawShellAction | null = null;
+  @Input() inboxLabel = '';
+  @Input() inboxAriaLabel = '';
+  @Input() inboxAction: RawShellAction | null = null;
+  @Input() inboxCount = 0;
+
+  hasAnyControl(): boolean {
+    return (
+      !!(this.commandSearchAction && this.resolvedCommandAria()) ||
+      !!(this.inboxAction && this.resolvedInboxAria())
+    );
+  }
+
+  resolvedCommandAria(): string {
+    return this.commandSearchAriaLabel || this.commandSearchLabel || '';
+  }
+
+  resolvedCommandTooltip(): string {
+    return this.commandSearchLabel || this.commandSearchAriaLabel || '';
+  }
+
+  resolvedInboxAria(): string {
+    return this.inboxAriaLabel || this.inboxLabel || '';
+  }
+
+  resolvedInboxTooltip(): string {
+    return this.inboxLabel || this.inboxAriaLabel || '';
+  }
+
+  commandTriggerAttrs(): Record<string, string> {
+    const attrs: Record<string, string> = {};
+    const aria = this.resolvedCommandAria();
+    if (aria) attrs['aria-label'] = aria;
+    return attrs;
+  }
+
+  inboxTriggerAttrs(): Record<string, string> {
+    const attrs: Record<string, string> = {};
+    const aria = this.resolvedInboxAria();
+    if (aria) attrs['aria-label'] = aria;
+    return attrs;
+  }
+
+  onCommandSearch(): void {
+    dispatchShellAction(this.router, this.commandSearchAction);
+  }
+
+  onInbox(): void {
+    dispatchShellAction(this.router, this.inboxAction);
   }
 }
 

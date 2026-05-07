@@ -1,263 +1,90 @@
 {
-  "generatedAt": "2026-05-07T03:01:42.421Z",
+  "generatedAt": "2026-05-07T03:11:33.869Z",
   "summary": {
     "httpStatus": 200,
-    "ok": true,
-    "forbiddenChecks": {
+    "shellKeys": [
+      "version",
+      "surfaces",
+      "zones",
+      "nav",
+      "chrome",
+      "shortcuts",
+      "banners",
+      "policies"
+    ],
+    "navShape": {
+      "groups": true,
+      "items": true,
+      "navigationAliasPresent": false
+    },
+    "actionShapeSample": [
+      {
+        "kind": "navigate",
+        "path": "/foundation/overview"
+      },
+      {
+        "kind": "navigate",
+        "path": "/foundation/organization"
+      },
+      {
+        "kind": "navigate",
+        "path": "/foundation/business-units"
+      },
+      {
+        "kind": "navigate",
+        "path": "/foundation/departments"
+      },
+      {
+        "kind": "navigate",
+        "path": "/foundation/positions"
+      }
+    ],
+    "surfaceShapeSample": [
+      {
+        "componentKey": "workspace.frame.ui-shell",
+        "componentType": "shell-frame",
+        "rendererKey": "shell.frame",
+        "hasLegacySnake": false
+      },
+      {
+        "componentKey": "workspace.frame.header",
+        "componentType": "shell-frame",
+        "rendererKey": "shell.frame",
+        "hasLegacySnake": false
+      },
+      {
+        "componentKey": "workspace.frame.header-name",
+        "componentType": "shell-frame",
+        "rendererKey": "shell.frame",
+        "hasLegacySnake": false
+      },
+      {
+        "componentKey": "workspace.frame.header-navigation",
+        "componentType": "shell-frame",
+        "rendererKey": "shell.frame",
+        "hasLegacySnake": false
+      },
+      {
+        "componentKey": "workspace.frame.header-menu",
+        "componentType": "shell-frame",
+        "rendererKey": "shell.frame",
+        "hasLegacySnake": false
+      }
+    ],
+    "forbidden": {
       "component_key": false,
       "perms_required": false,
       "label_key": false,
       "label_fallback": false,
-      "labelKey": true,
-      "routeRaw": true,
-      "navigationAlias": false,
-      "chromeStrings": true,
-      "accountMenu": true
-    },
-    "sampleSidebarSurface": {
-      "enabled": true,
-      "position": 110,
-      "props": {
-        "zone": "sidebar",
-        "items": [
-          {
-            "id": "foundation.overview",
-            "label": "Overview",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/overview"
-            },
-            "icon": "layout-dashboard",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.organization",
-            "badge": null
-          },
-          {
-            "id": "foundation.organization",
-            "label": "Organization",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/organization"
-            },
-            "icon": "sitemap",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.organization",
-            "badge": null
-          },
-          {
-            "id": "foundation.business-units",
-            "label": "Business units",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/business-units"
-            },
-            "icon": "building",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.organization",
-            "badge": null
-          },
-          {
-            "id": "foundation.departments",
-            "label": "Departments",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/departments"
-            },
-            "icon": "users",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.organization",
-            "badge": null
-          },
-          {
-            "id": "foundation.positions",
-            "label": "Positions",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/positions"
-            },
-            "icon": "id-card",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.organization",
-            "badge": null
-          },
-          {
-            "id": "foundation.locations",
-            "label": "Locations",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/locations"
-            },
-            "icon": "map-pin",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.organization",
-            "badge": null
-          },
-          {
-            "id": "foundation.users",
-            "label": "Users",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/users"
-            },
-            "icon": "user",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.identity",
-            "badge": null
-          },
-          {
-            "id": "foundation.teams",
-            "label": "Teams",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/teams"
-            },
-            "icon": "users-group",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.identity",
-            "badge": null
-          },
-          {
-            "id": "foundation.roles",
-            "label": "Roles",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/roles"
-            },
-            "icon": "key",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.identity",
-            "badge": null
-          },
-          {
-            "id": "foundation.committees",
-            "label": "Committees",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/committees"
-            },
-            "icon": "gavel",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.governance",
-            "badge": null
-          },
-          {
-            "id": "foundation.delegations",
-            "label": "Delegations",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/delegations"
-            },
-            "icon": "share",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.governance",
-            "badge": null
-          },
-          {
-            "id": "foundation.ownership-mapping",
-            "label": "Ownership mapping",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/ownership-mapping"
-            },
-            "icon": "link",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.governance",
-            "badge": null
-          },
-          {
-            "id": "foundation.policies",
-            "label": "Policies",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/policies"
-            },
-            "icon": "file-shield",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.governance",
-            "badge": null
-          },
-          {
-            "id": "foundation.data-processing",
-            "label": "Data processing",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/data-processing"
-            },
-            "icon": "database",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.governance",
-            "badge": null
-          },
-          {
-            "id": "foundation.reference-data",
-            "label": "Reference data",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/reference-data"
-            },
-            "icon": "list",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.governance",
-            "badge": null
-          },
-          {
-            "id": "foundation.audit",
-            "label": "Audit",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/audit"
-            },
-            "icon": "history",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.governance",
-            "badge": null
-          },
-          {
-            "id": "foundation.settings",
-            "label": "Settings",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/settings"
-            },
-            "icon": "settings",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.governance",
-            "badge": null
-          },
-          {
-            "id": "foundation.user-lifecycle",
-            "label": "User lifecycle",
-            "action": {
-              "kind": "navigate",
-              "path": "/foundation/user-lifecycle"
-            },
-            "icon": "arrow-cycle",
-            "moduleCode": "foundation",
-            "groupId": "foundation.group.main",
-            "badge": null
-          }
-        ],
-        "ariaLabel": "Primary navigation",
-        "emptyMessage": "No navigation entries available.",
-        "poweredByLabel": "Powered by Dogan-AI OS"
-      },
-      "version": 1,
-      "zone": "sidebar",
-      "surfaceId": "workspace.sidebar.shell.sidebar-nav.b14625",
-      "slotKey": "sidebar#110#b14625",
-      "componentKey": "workspace.shell.sidebar-nav",
-      "componentType": "shell.sidebar-nav",
-      "rendererKey": "shell.sidebar-nav",
-      "carbonKey": "side-nav-items"
-    },
-    "sampleModuleCards": [
-      {
-        "id": "foundation",
-        "title": "Foundation — Organization Hierarchy",
-        "route": "/foundation/committees",
-        "productCode": "shahin-ai"
-      }
-    ]
+      "labelKey": false,
+      "labelEn": false,
+      "labelAr": false,
+      "routeRaw": false,
+      "detailRoute": false,
+      "evidenceUri": false,
+      "chromeStrings": false,
+      "accountMenu": false
+    }
   },
   "body": {
     "tenantId": "14f273cf260a4736",
@@ -332,37 +159,14 @@
           "enabled": true,
           "position": 5,
           "props": {
-            "accountMenu": [
-              {
-                "id": "profile",
-                "route": "/profile",
-                "labelKey": "shell.account.menu.profile"
-              },
-              {
-                "id": "settings",
-                "route": "/settings",
-                "labelKey": "shell.account.menu.settings"
-              },
-              {
-                "id": "logout",
-                "labelKey": "shell.account.menu.logout",
-                "destructive": true
-              }
-            ],
-            "chromeStrings": {
-              "shell.account.menu.theme": "Toggle Theme",
-              "shell.account.menu.language": "العربية / English"
-            },
             "accountMenuActions": [
               {
                 "id": "prefs_language",
-                "action": "toggle_language",
-                "labelKey": "shell.account.menu.language"
+                "action": "toggle_language"
               },
               {
                 "id": "prefs_theme",
-                "action": "toggle_theme",
-                "labelKey": "shell.account.menu.theme"
+                "action": "toggle_theme"
               }
             ]
           },
@@ -889,7 +693,10 @@
               {
                 "id": "foundation",
                 "title": "Foundation — Organization Hierarchy",
-                "route": "/foundation/committees",
+                "action": {
+                  "kind": "navigate",
+                  "path": "/foundation/committees"
+                },
                 "productCode": "shahin-ai"
               }
             ],
@@ -957,37 +764,14 @@
             "enabled": true,
             "position": 5,
             "props": {
-              "accountMenu": [
-                {
-                  "id": "profile",
-                  "route": "/profile",
-                  "labelKey": "shell.account.menu.profile"
-                },
-                {
-                  "id": "settings",
-                  "route": "/settings",
-                  "labelKey": "shell.account.menu.settings"
-                },
-                {
-                  "id": "logout",
-                  "labelKey": "shell.account.menu.logout",
-                  "destructive": true
-                }
-              ],
-              "chromeStrings": {
-                "shell.account.menu.theme": "Toggle Theme",
-                "shell.account.menu.language": "العربية / English"
-              },
               "accountMenuActions": [
                 {
                   "id": "prefs_language",
-                  "action": "toggle_language",
-                  "labelKey": "shell.account.menu.language"
+                  "action": "toggle_language"
                 },
                 {
                   "id": "prefs_theme",
-                  "action": "toggle_theme",
-                  "labelKey": "shell.account.menu.theme"
+                  "action": "toggle_theme"
                 }
               ]
             },
@@ -1224,7 +1008,10 @@
                 {
                   "id": "foundation",
                   "title": "Foundation — Organization Hierarchy",
-                  "route": "/foundation/committees",
+                  "action": {
+                    "kind": "navigate",
+                    "path": "/foundation/committees"
+                  },
                   "productCode": "shahin-ai"
                 }
               ],
@@ -1998,62 +1785,6 @@
         ]
       },
       "chrome": {
-        "accountMenu": [
-          {
-            "id": "profile",
-            "action": {
-              "kind": "navigate",
-              "path": "/profile"
-            },
-            "enabled": true,
-            "i18nKey": "shell.account.profile",
-            "actionType": "navigate",
-            "permission": null
-          },
-          {
-            "id": "settings",
-            "action": {
-              "kind": "navigate",
-              "path": "/settings"
-            },
-            "enabled": true,
-            "i18nKey": "shell.account.settings",
-            "actionType": "navigate",
-            "permission": null
-          },
-          {
-            "id": "language",
-            "action": {
-              "kind": "toggle_language"
-            },
-            "enabled": true,
-            "i18nKey": "shell.account.language",
-            "actionType": "shell.preference",
-            "permission": null
-          },
-          {
-            "id": "theme",
-            "action": {
-              "kind": "toggle_theme"
-            },
-            "enabled": true,
-            "i18nKey": "shell.account.theme",
-            "actionType": "shell.preference",
-            "permission": null
-          },
-          {
-            "id": "signout",
-            "action": {
-              "kind": "dispatch_event",
-              "eventName": "auth.logout"
-            },
-            "enabled": true,
-            "i18nKey": "shell.account.signout",
-            "actionType": "auth.logout",
-            "permission": null,
-            "destructive": true
-          }
-        ],
         "accountMenuActions": [
           {
             "id": "toggle-language",
@@ -2167,15 +1898,11 @@
         },
         "workspaceTitle": "Workspace",
         "tplStrings": {
-          "shell.tpl.access_denied.title": "Access denied",
-          "shell.tpl.access_denied.description": "You do not have the required permission to open this page.",
-          "shell.tpl.required_permission_prefix": "Required permission:",
           "shell.tpl.loading": "Loading…",
           "shell.tpl.empty.title": "",
           "shell.tpl.empty.description": "",
           "shell.tpl.dph.empty.title": "No widgets to display",
           "shell.tpl.dph.empty.body": "Content appears when widgets are assigned to this route in your workspace.",
-          "shell.tpl.skip_to_main": "Skip to main content",
           "shell.tpl.aria.header": "Workspace header",
           "shell.tpl.aria.sidebar": "Workspace sidebar",
           "shell.tpl.aria.main": "Main content",

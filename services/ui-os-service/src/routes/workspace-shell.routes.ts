@@ -952,6 +952,10 @@ function enrichVisualShellProps(
   const chromePoweredByLabel  = typeof chrome['shell.sidebar.poweredByLabel']  === 'string' ? (chrome['shell.sidebar.poweredByLabel']  as string).trim() : '';
   const chromeCmdSearchLabel  = typeof chrome['shell.header.commandSearch.label'] === 'string' ? (chrome['shell.header.commandSearch.label'] as string).trim() : '';
   const chromeInboxLabel      = typeof chrome['shell.header.inbox.label']     === 'string' ? (chrome['shell.header.inbox.label']     as string).trim() : '';
+  const chromeCmdSearchAria   = typeof chrome['shell.header.commandSearch.aria-label'] === 'string' ? (chrome['shell.header.commandSearch.aria-label'] as string).trim() : '';
+  const chromeInboxAria       = typeof chrome['shell.header.inbox.aria-label'] === 'string' ? (chrome['shell.header.inbox.aria-label'] as string).trim() : '';
+  const chromeCmdSearchAction = normalizeShellAction(chrome['shell.header.commandSearch.action']);
+  const chromeInboxAction     = normalizeShellAction(chrome['shell.header.inbox.action']);
 
   for (const s of surfaces) {
     const props = (s.props ?? {}) as Record<string, unknown>;
@@ -997,6 +1001,17 @@ function enrichVisualShellProps(
         next['enabled'] = enabled;
         next['routeExists'] = settingsEntry?.['routeExists'] ?? null;
         if (chromeSettingsAria) next['ariaLabel'] = chromeSettingsAria;
+        s.props = next;
+        break;
+      }
+      case WS_SHELL_SURFACE.GLOBAL_QUICK_ACTIONS: {
+        const next: Record<string, unknown> = { ...props, placement: 'trailing' };
+        if (chromeCmdSearchLabel) next['commandSearchLabel'] = chromeCmdSearchLabel;
+        if (chromeInboxLabel) next['inboxLabel'] = chromeInboxLabel;
+        if (chromeCmdSearchAria) next['commandSearchAriaLabel'] = chromeCmdSearchAria;
+        if (chromeInboxAria) next['inboxAriaLabel'] = chromeInboxAria;
+        if (chromeCmdSearchAction) next['commandSearchAction'] = chromeCmdSearchAction;
+        if (chromeInboxAction) next['inboxAction'] = chromeInboxAction;
         s.props = next;
         break;
       }

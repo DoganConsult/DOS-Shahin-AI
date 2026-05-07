@@ -35,6 +35,7 @@ import {
   DosShellWorkspaceTitleComponent,
   DosShellUserMenuComponent,
   DosShellSettingsActionComponent,
+  DosShellGlobalQuickActionsComponent,
   DosShellSidebarNavComponent,
   DosShellModuleCardsComponent,
 } from './visual-shell-surfaces.component';
@@ -67,6 +68,7 @@ export const COMPONENT_MAP: Readonly<Record<string, Type<unknown> | null>> = Obj
   'shell.workspace-title': DosShellWorkspaceTitleComponent as Type<unknown>,
   'shell.user-menu': DosShellUserMenuComponent as Type<unknown>,
   'shell.settings-action': DosShellSettingsActionComponent as Type<unknown>,
+  'shell.global-quick-actions': DosShellGlobalQuickActionsComponent as Type<unknown>,
   'shell.sidebar-nav': DosShellSidebarNavComponent as Type<unknown>,
   'shell.module-cards': DosShellModuleCardsComponent as Type<unknown>,
 });
