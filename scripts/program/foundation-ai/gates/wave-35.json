@@ -1,0 +1,11 @@
+{
+  "schema": "foundation-ai.gate.v2",
+  "wave": 35,
+  "phase": "P35",
+  "derivedFrom": "program.master.json",
+  "checks": [
+    {"id":"inventory_runs","cmd":"node scripts/program/foundation-ai/inventory.mjs > /dev/null"},
+    {"id":"run_proof_present","cmd":"test -f proofs/foundation-ai/wave-35/run.proof.json"},
+    {"id":"zerodirt","cmd":"PROGRAM_WAVE=35 node scripts/program/foundation-ai/zerodirt.mjs","required":true}
+  ]
+}
