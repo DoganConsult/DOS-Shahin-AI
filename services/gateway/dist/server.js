@@ -1090,15 +1090,13 @@ if (USER_SERVICE_URL) {
         '/api/privacy-ops',
     ];
     for (const prefix of FOUNDATION_PREFIXES) {
-        app.use(prefix, authGuard, injectIdentityHeaders, (req, _res, next) => {
-            // http-proxy-middleware v3 forwards req.url which express has stripped
-            // of the mount prefix. Restore originalUrl so downstream user-service
-            // (which mounts at /api/foundation, /api/users, etc.) sees the canonical
-            // path. Without this, /api/foundation/users → /users → 404.
-            if (req.originalUrl)
-                req.url = req.originalUrl;
-            next();
-        }, (0, http_proxy_middleware_1.createProxyMiddleware)({
+        // Wave 19 (2026-05-07): use the canonical forwardOriginalUrl middleware
+        // instead of an inline restorer. forwardOriginalUrl additionally 308-
+        // redirects bare-prefix requests (e.g. GET /api/organizations) to the
+        // trailing-slash variant so http-proxy-middleware v3 actually fires.
+        // Without it, FE calls without trailing slash (Foundation contract
+        // declares /api/organizations) returned 404.
+        app.use(prefix, authGuard, injectIdentityHeaders, forwardOriginalUrl, (0, http_proxy_middleware_1.createProxyMiddleware)({
             target: USER_SERVICE_URL,
             changeOrigin: true,
             xfwd: true,

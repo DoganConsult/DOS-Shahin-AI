@@ -18,6 +18,10 @@
 
 import { Router } from 'express';
 import type { DbPool } from '../db.js';
+import {
+  WS_SHELL_HEADER_LEGACY,
+  WS_SHELL_SURFACE,
+} from '../workspace-shell/surface-keys.js';
 
 // ─── Types (resolver-internal; never leaves) ─────────────────────────
 type RuntimeZone = string;
@@ -505,10 +509,9 @@ async function loadLandingRoute(pool: DbPool, tenantId: string): Promise<string 
 }
 
 // ─── Shell-tpl strings loader (DB → chrome.tplStrings) ────────────────
-// Pulls publisher-owned shell.tpl.* keys for the caller's primary locale
-// from dos.workspace_shell_i18n. Used by DynamicTemplatePageComponent
-// to render Access denied / Loading / Empty / Required-permission text
-// without any frontend constants.
+// Pulls publisher-owned shell.tpl.* and shell.tpl.dph.* keys for the caller's
+// primary locale from dos.workspace_shell_i18n. Merged into chrome.tplStrings
+// for DynamicTemplatePageComponent and DynamicPageHostComponent (no FE literals).
 async function loadShellTplStrings(
   pool: DbPool,
   localePrimary: string,
@@ -517,7 +520,7 @@ async function loadShellTplStrings(
     `SELECT key, value
        FROM dos.workspace_shell_i18n
       WHERE locale = $1
-        AND ns = 'shell.tpl'`,
+        AND ns IN ('shell.tpl', 'shell.tpl.dph')`,
     [localePrimary === 'ar' ? 'ar' : 'en'],
   );
   const out: Record<string, string> = {};
@@ -794,7 +797,7 @@ function enrichVisualShellProps(
   for (const s of surfaces) {
     const props = (s.props ?? {}) as Record<string, unknown>;
     switch (s.component_key) {
-      case 'workspace.shell.brand': {
+      case WS_SHELL_SURFACE.BRAND: {
         const next: Record<string, unknown> = { ...props };
         if (chromeBrand)    next['text']     = chromeBrand;
         if (chromeLogoHref) next['logoHref'] = chromeLogoHref;
@@ -802,13 +805,13 @@ function enrichVisualShellProps(
         s.props = next;
         break;
       }
-      case 'workspace.shell.workspace-title': {
+      case WS_SHELL_SURFACE.WORKSPACE_TITLE: {
         const next: Record<string, unknown> = { ...props };
         if (chromeWorkspaceTitle) next['text'] = chromeWorkspaceTitle;
         s.props = next;
         break;
       }
-      case 'workspace.shell.sidebar-nav': {
+      case WS_SHELL_SURFACE.SIDEBAR_NAV: {
         const next: Record<string, unknown> = {
           ...props,
           items: sidebarItems,
@@ -819,14 +822,14 @@ function enrichVisualShellProps(
         s.props = next;
         break;
       }
-      case 'workspace.shell.user-menu': {
+      case WS_SHELL_SURFACE.USER_MENU: {
         const next: Record<string, unknown> = { ...props, menu: accountMenu, placement: 'trailing' };
         if (chromeUserMenuLabel) next['label']     = chromeUserMenuLabel;
         if (chromeUserMenuAria)  next['ariaLabel'] = chromeUserMenuAria;
         s.props = next;
         break;
       }
-      case 'workspace.shell.settings-action': {
+      case WS_SHELL_SURFACE.SETTINGS_ACTION: {
         const next: Record<string, unknown> = { ...props, placement: 'trailing' };
         // Only wire if settings navigate path is metadata-eligible (and
         // binding-present when required); mirrors account-menu enrichment.
@@ -838,13 +841,13 @@ function enrichVisualShellProps(
         s.props = next;
         break;
       }
-      case 'workspace.shell.module-cards': {
+      case WS_SHELL_SURFACE.MODULE_CARDS: {
         const next: Record<string, unknown> = { ...props, items: moduleCards };
         if (chromeModuleCardsAria) next['ariaLabel'] = chromeModuleCardsAria;
         s.props = next;
         break;
       }
-      case 'workspace.header': {
+      case WS_SHELL_HEADER_LEGACY: {
         const next: Record<string, unknown> = { ...props };
         if (chromeCmdSearchLabel) next['commandSearchLabel'] = chromeCmdSearchLabel;
         if (chromeInboxLabel)    next['inboxLabel']          = chromeInboxLabel;

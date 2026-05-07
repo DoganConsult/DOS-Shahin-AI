@@ -39,6 +39,77 @@ exports.requireOwnershipOf = requireOwnershipOf;
 const jwt = __importStar(require("jsonwebtoken"));
 const token_verifier_factory_1 = require("./token-verifier-factory");
 const authz_evaluator_port_1 = require("./dauth-ports/authz-evaluator.port");
+const gateway_origin_1 = require("./gateway-origin");
+// Wave 25 — module-scoped replay registry for the best-effort
+// gateway-origin role enrichment in authenticate/optionalAuthenticate.
+const __WAVE25_REPLAY = (0, gateway_origin_1.createInMemoryReplayRegistry)();
+// Wave 25 — role enrichment.
+// Keycloak access tokens carry only realm/resource roles (e.g.
+// `default-roles-<realm>`). The platform's functional roles
+// (`tenant_admin`, etc.) live in `platform_dauth.user_role_assignments`
+// and the gateway resolves+signs them into `x-dos-gateway-token`. The
+// dauth decision-engine reads `ctx.roles` to look up granted permissions.
+// Without this enrichment `ctx.roles` is undefined → permMap.get(undefined)
+// → DAUTH_DENY_PERMISSION_MISSING for every functional-role permission.
+function enrichDecodedRoles(decoded, req) {
+    const merged = new Set();
+    // 1) Existing decoded.roles (if any).
+    const existing = decoded.roles;
+    if (Array.isArray(existing)) {
+        for (const r of existing)
+            if (typeof r === 'string' && r)
+                merged.add(r);
+    }
+    // 2) Keycloak realm_access.roles
+    const realmAccess = decoded.realm_access;
+    if (realmAccess && Array.isArray(realmAccess.roles)) {
+        for (const r of realmAccess.roles)
+            if (typeof r === 'string' && r)
+                merged.add(r);
+    }
+    // 3) Keycloak resource_access.<client>.roles
+    const resourceAccess = decoded.resource_access;
+    if (resourceAccess && typeof resourceAccess === 'object') {
+        for (const entry of Object.values(resourceAccess)) {
+            if (entry && Array.isArray(entry.roles)) {
+                for (const r of entry.roles)
+                    if (typeof r === 'string' && r)
+                        merged.add(r);
+            }
+        }
+    }
+    // 4) Gateway-origin signed token — DB-resolved functional roles.
+    //    Verified with HMAC; failures are silently ignored (best-effort
+    //    enrichment; the authenticate gate has already accepted the
+    //    Keycloak JWT).
+    const gwToken = req.headers[gateway_origin_1.GATEWAY_ORIGIN_HEADER];
+    const secret = process.env.GATEWAY_ORIGIN_HMAC_SECRET;
+    if (gwToken && secret && secret.length >= 32) {
+        try {
+            const result = (0, gateway_origin_1.verifyGatewayOrigin)(gwToken, { secret, replayRegistry: __WAVE25_REPLAY });
+            if (result.ok && Array.isArray(result.principal.roles)) {
+                for (const r of result.principal.roles)
+                    if (typeof r === 'string' && r)
+                        merged.add(r);
+            }
+        }
+        catch {
+            // ignore — keep enrichment best-effort
+        }
+    }
+    // 5) Legacy `x-user-roles` header — only honored when LEGACY_HEADER_TRUST
+    //    is on (matches gateway-origin middleware semantics).
+    const legacyTrust = (process.env.LEGACY_HEADER_TRUST ?? 'true').toLowerCase();
+    if (legacyTrust !== 'false' && legacyTrust !== '0' && legacyTrust !== 'no') {
+        const raw = req.headers['x-user-roles'];
+        if (typeof raw === 'string' && raw) {
+            for (const r of raw.split(',').map((s) => s.trim()).filter(Boolean))
+                merged.add(r);
+        }
+    }
+    if (merged.size > 0)
+        decoded.roles = Array.from(merged);
+}
 function readBool(envKey) {
     const v = process.env[envKey];
     if (!v)
@@ -239,6 +310,10 @@ function createCanonicalAuthMiddleware(opts) {
             if (!decoded.userId && decoded.id)
                 decoded.userId = decoded.id;
             decoded.principalType = decoded.principalType ?? 'human';
+            // Wave 25 — merge functional roles from gateway-origin token + Keycloak
+            // realm/resource access into decoded.roles so the dauth decision-engine
+            // can resolve permissions through `platform_dauth.role_permission_map`.
+            enrichDecodedRoles(decoded, req);
             req.user = decoded;
             req.tenantId = (resolvedTenantId ?? decoded.tenantId);
             next();
@@ -287,6 +362,8 @@ function createCanonicalAuthMiddleware(opts) {
             if (!decoded.userId && decoded.id)
                 decoded.userId = decoded.id;
             decoded.principalType = decoded.principalType ?? 'human';
+            // Wave 25 — same enrichment as authenticate (functional roles).
+            enrichDecodedRoles(decoded, req);
             req.user = decoded;
             req.tenantId = (resolvedTenantId ?? decoded.tenantId);
         }
