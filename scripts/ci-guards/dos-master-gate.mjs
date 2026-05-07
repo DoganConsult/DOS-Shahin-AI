@@ -64,6 +64,10 @@ const GUARDS = [
   'lint-no-static-nav-fallback.mjs',
   // Hard-kill legacy mode — no DB DTOs, no legacy adapters in frontend shell.
   'lint-no-legacy-uios-shell.mjs',
+  // Foundation route inventory must remain complete for all published pages.
+  'foundation-pages-coverage.mjs',
+  // Access-review table DDL lineage must remain canonical (single owner path).
+  'foundation-access-review-lineage-guard.mjs',
   'lint-no-hardcoded-shell-labels.mjs',
   // Phase 3B — block hardcoded 'Search' labels in shell/foundation/module
   // search components; labels must come from DB chrome keys via UI-OS resolver.
@@ -83,6 +87,7 @@ for (const g of GUARDS) {
   // Enable enforcement for guards that support it (one by one)
   if (g === 'service-manifest-required.mjs') env.MANIFEST_ENFORCE = '1';
   if (g === 'tenant-completeness.mjs') env.TENANT_COMPLETENESS_ENFORCE = '1';
+  if (g === 'foundation-pages-coverage.mjs') env.FOUNDATION_PAGES_COVERAGE_ENFORCE = '1';
   const r = spawnSync('node', [`scripts/ci-guards/${g}`], { stdio: 'inherit', env });
   if (r.status === 0) pass++; else fail++;
 }

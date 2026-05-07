@@ -257,6 +257,20 @@ VALUES
   ('/foundation/diagnostics', 'diag-maturity', 'maturity', 20, 'Telemetry maturity', 'نضج القياس', 4, 5, 'medium', 'stable'),
   ('/foundation/diagnostics', 'diag-gap', 'gap', 30, 'Open failures', 'الإخفاقات المفتوحة', 3, NULL, 'medium', 'attention');
 
+UPDATE dos.ui_route_template_binding
+   SET props = jsonb_set(
+     COALESCE(props, '{}'::jsonb),
+     '{eventHandlers}',
+     COALESCE(props->'eventHandlers', '{}'::jsonb) || jsonb_build_object(
+       'foundation.partial.create', jsonb_build_object('method', 'redirect', 'url', route || '/new'),
+       'foundation.partial.open-details', jsonb_build_object('method', 'redirect', 'url', route),
+       'foundation.partial.export-evidence', jsonb_build_object('method', 'redirect', 'url', '/foundation/reports')
+     ),
+     true
+   ),
+   updated_at = now()
+ WHERE route IN ('/foundation/positions','/foundation/locations','/foundation/records','/foundation/committees','/foundation/policies');
+
 DO $$
 DECLARE
   c_rows integer;
