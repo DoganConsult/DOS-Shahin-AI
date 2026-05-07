@@ -26,7 +26,7 @@ function findServerTsFiles() {
     const result = execSync('find services -name "server.ts" -type f', { cwd: ROOT, encoding: 'utf8' });
     files.push(...result.trim().split('\n').filter(Boolean));
   } catch (e) {
-    console.error('Failed to find server.ts files:', (e as Error).message);
+    console.error('Failed to find server.ts files:', e.message);
   }
   return files;
 }
@@ -46,8 +46,10 @@ function hasHealthCheckRouter(content) {
 // ═══════════════════════════════════════════════════════════════════
 
 function extractServiceCode(filePath) {
-  const parts = path.basename(path.dirname(filePath));
-  return parts.replace(/-service$/, '').replace(/-/g, '_');
+  // Extract service name from path like "services/gateway/src/server.ts"
+  const parts = filePath.split('/');
+  const serviceDir = parts[1]; // "gateway", "auth-service", etc.
+  return serviceDir.replace(/-service$/, '').replace(/-/g, '_');
 }
 
 // ═══════════════════════════════════════════════════════════════════
