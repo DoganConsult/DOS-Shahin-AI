@@ -166,11 +166,17 @@ function generateSeedSql(labels) {
       const route = extractRoute(item.file);
       
       if (type === 'labelKey') {
+        // labelKey is used as i18n key - store as title_key
         sql += `INSERT INTO dos.dynamic_ui_routes (id, module_code, path_pattern, title_key) VALUES ('${id}', '${moduleCode}', '${route || '/unknown'}', '${item.key}') ON CONFLICT DO NOTHING;\n`;
       } else if (type === 'label_fallback') {
+        // label_fallback is the fallback text - store as title_key for now
         sql += `INSERT INTO dos.dynamic_ui_routes (id, module_code, path_pattern, title_key) VALUES ('${id}', '${moduleCode}', '${route || '/unknown'}', '${item.key}') ON CONFLICT DO NOTHING;\n`;
-      } else if (type === 'labelEn' || type === 'labelAr') {
-        // Skip labelEn/labelAr for now - they're i18n keys, not fallbacks
+      } else if (type === 'labelEn') {
+        // labelEn is i18n English - store as title_key
+        sql += `INSERT INTO dos.dynamic_ui_routes (id, module_code, path_pattern, title_key) VALUES ('${id}', '${moduleCode}', '${route || '/unknown'}', '${item.key}') ON CONFLICT DO NOTHING;\n`;
+      } else if (type === 'labelAr') {
+        // labelAr is i18n Arabic - store as title_key for now (will need i18n table later)
+        sql += `INSERT INTO dos.dynamic_ui_routes (id, module_code, path_pattern, title_key) VALUES ('${id}', '${moduleCode}', '${route || '/unknown'}', '${item.key}') ON CONFLICT DO NOTHING;\n`;
       }
     });
     
