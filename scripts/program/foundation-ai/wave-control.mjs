@@ -247,6 +247,10 @@ function preflightGate() {
       name: 'authenticated_runtime_probe',
       ...runCapture(`curl -fsS -H "x-user-sub: ${userSub}" -H "x-tenant-id: ${tenantId}" "${uiOsBase}/api/ui-os/template-binding?route=/foundation/users" >/dev/null && echo ok`),
     },
+    {
+      name: 'authenticated_workspace_runtime_probe',
+      ...runCapture(`curl -fsS -H "x-user-sub: ${userSub}" -H "x-tenant-id: ${tenantId}" "${uiOsBase}/api/ui-os/workspace-runtime" >/dev/null && echo ok`),
+    },
   ];
 
   const commandResults = runCommandList(phaseCommands('preflight'));
