@@ -64,6 +64,16 @@ export * from './dos-carbon-aspect-ratio.component';
 // ── WAVE 4 — Charts (1 facade, 21 kinds) ──────────────────────────
 export * from './dos-carbon-chart.component';
 
+// ── WAVE 5 — Mobile Experience Enhancement (8 mobile components) ─────
+export * from './dos-carbon-mobile-button.component';
+export * from './dos-carbon-mobile-input.component';
+export * from './dos-carbon-mobile-dropdown.component';
+export * from './dos-carbon-mobile-data-table.component';
+export * from './dos-carbon-mobile-tabs.component';
+export * from './dos-carbon-mobile-modal.component';
+export * from './dos-carbon-mobile-card.component';
+export * from './dos-carbon-mobile-form.component';
+
 // ── Re-exports of Carbon NgModules used by @dos/ui-system shell ────
 // Allows internal shell components (visual-shell-surfaces, etc.) to
 // import Carbon NgModules through the carbon-boundary-guard-approved

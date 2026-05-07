@@ -11,9 +11,8 @@ export interface DosBottomNavItem {
   id: string;
   label: string;
   icon?: string;
-  route?: string;
-  active?: boolean;
   badgeCount?: number;
+  active?: boolean;
 }
 
 @Component({
@@ -30,12 +29,13 @@ export interface DosBottomNavItem {
           [class.dos-bottom-nav__item--active]="item.active"
           [attr.aria-current]="item.active ? 'page' : null"
           [attr.data-nav-id]="item.id"
-          (click)="select.emit(item)"
+          [style.min-height.px]="touchTargetSize"
+          (click)="handleSelect(item)"
         >
           @if (item.icon) {
             <dos-icon class="dos-bottom-nav__icon"
                       [name]="item.icon"
-                      [size]="22"></dos-icon>
+                      [size]="iconSize"></dos-icon>
           }
           <span class="dos-bottom-nav__label">{{ item.label }}</span>
           @if (item.badgeCount && item.badgeCount > 0) {
@@ -60,6 +60,9 @@ export interface DosBottomNavItem {
       border-block-start: 2px solid transparent;
       transition: color .12s, border-color .12s, background .12s;
     }
+    .dos-bottom-nav__item:active {
+      transform: scale(0.96);
+    }
     .dos-bottom-nav__item:hover { background: var(--cds-layer-hover); }
     .dos-bottom-nav__item--active {
       color: var(--cds-link-primary);
@@ -71,7 +74,7 @@ export interface DosBottomNavItem {
       position: absolute; top: .25rem; inset-inline-end: 25%;
       min-width: 1rem; padding: 0 .25rem; border-radius: 999px;
       font-size: .625rem; line-height: 1rem; text-align: center;
-      background: var(--cds-support-error); color: var(--cds-text-on-color));
+      background: var(--cds-support-error); color: var(--cds-text-on-color);
     }
   `],
 })
@@ -79,5 +82,24 @@ export class DosMobileBottomNavComponent {
   @Input() items: DosBottomNavItem[] = [];
   @Input() dir: 'ltr' | 'rtl' = 'ltr';
   @Input() ariaLabel: string | null = null;
+  @Input() maxItems = 5;
+  @Input() touchEnabled = true;
+  @Input() touchTargetSize = 44;
+  @Input() iconSize = 22;
+  @Input() hapticFeedback = true;
   @Output() select = new EventEmitter<DosBottomNavItem>();
+  @Output() itemSwipe = new EventEmitter<{ itemId: string; direction: string }>();
+
+  handleSelect(item: DosBottomNavItem): void {
+    if (this.hapticFeedback) {
+      this.triggerHaptic();
+    }
+    this.select.emit(item);
+  }
+
+  private triggerHaptic(): void {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(10);
+    }
+  }
 }
