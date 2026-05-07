@@ -78,9 +78,22 @@ export interface CaseFinalizationRow {
   `,
   styles: [`
     :host { display: block; }
-    .dos-case-row { display: flex; gap: .5rem; align-items: center; padding: .5rem 0; }
+    .dos-case-row {
+      display: flex; flex-wrap: wrap;
+      gap: var(--cds-spacing-03, .5rem);
+      align-items: center; padding: var(--cds-spacing-03, .5rem) 0;
+    }
     .dos-case-owner { color: var(--cds-text-secondary); }
-    .dos-case-empty { padding: 1rem; color: var(--cds-text-secondary); }
+    .dos-case-empty { padding: var(--cds-spacing-05, 1rem); color: var(--cds-text-secondary); }
+
+    /* Mobile-first responsive polish — stack badges/labels at narrow
+       viewports so the case row remains readable without horizontal
+       scroll. Aligned with the workspace shell breakpoint policy. */
+    @media (max-width: 672px) {
+      .dos-case-row { flex-direction: column; align-items: flex-start; gap: var(--cds-spacing-02, .25rem); }
+      .dos-case-row > strong { font-size: 1rem; }
+      .dos-case-empty { padding: var(--cds-spacing-04, .75rem); }
+    }
   `],
 })
 export class CaseFinalizationTemplateComponent {

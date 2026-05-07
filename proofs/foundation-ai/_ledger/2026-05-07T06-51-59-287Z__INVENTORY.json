@@ -1,0 +1,14 @@
+{
+  "runId": "47e9b1eb-8700-4fe9-a1e8-e662f0cff4b4",
+  "phase": -2,
+  "wave": -2,
+  "kind": "INVENTORY",
+  "inputsHash": "sha256:8a8b36041cd62fe8cc5b88c93db6ab884df4d5eec2a86aeb38551f978c7611ff",
+  "outputsHash": "sha256:305bb533c6d37a84fe17bebfac3726c37129f77ba3fbe9df0aec1378c1389e1f",
+  "parentHash": "sha256:e42a9c5ad5e109c6e35c4cc665136b034503c8fa56648cc87f83883b62762743",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave--2/inventory.proof.json",
+  "createdAt": "2026-05-07T06:51:59.287Z",
+  "hash": "sha256:459b8f46fc5e18d78b741e7bc085d77904908a739b0a2a5f849be8b4f1b6790d"
+}

@@ -464,12 +464,96 @@ const ARCHETYPE_EXTENSIONS: Record<string, Array<{ key: string; sql: string }>> 
 // services/ui-os-service/src/routes/workspace-shell.routes.ts. Frontend
 // renders empty/no-op when DB rows are absent (NO FRONTEND INVENTION).
 
+// Wave 2 — typed event-handler + role-policy loaders. Returns the resolver
+// payload pieces previously buried in template-binding.props JSONB. When
+// no rows exist for a route, returns empty objects so existing inline
+// JSON in props.eventHandlers / props.writeRoles continues to win.
+async function loadEventHandlers(
+  pool: DbPool,
+  route: string,
+  errors: SubQueryError[],
+): Promise<Record<string, unknown>> {
+  const r = await safeQuery<{ event_name: string; handler: Record<string, unknown> }>(
+    'props.eventHandler',
+    errors,
+    () => pool.query(
+      `SELECT event_name, handler
+         FROM dos.ui_route_event_handler
+        WHERE route=$1 AND enabled=true
+        ORDER BY sort_order, event_name`,
+      [route],
+    ),
+  );
+  if (!r.rows.length) return {};
+  const out: Record<string, unknown> = {};
+  for (const row of r.rows) out[row.event_name] = row.handler;
+  return out;
+}
+
+async function loadRolePolicy(
+  pool: DbPool,
+  route: string,
+  errors: SubQueryError[],
+): Promise<{ writeRoles?: string[]; readRoles?: string[]; defaultRole?: string }> {
+  const r = await safeQuery<{ write_roles: string[]; read_roles: string[]; default_role: string | null }>(
+    'props.rolePolicy',
+    errors,
+    () => pool.query(
+      `SELECT write_roles, read_roles, default_role
+         FROM dos.ui_route_role_policy
+        WHERE route=$1 AND enabled=true
+        LIMIT 1`,
+      [route],
+    ),
+  );
+  if (!r.rows.length) return {};
+  const row = r.rows[0];
+  const out: { writeRoles?: string[]; readRoles?: string[]; defaultRole?: string } = {};
+  if (Array.isArray(row.write_roles) && row.write_roles.length) out.writeRoles = row.write_roles;
+  if (Array.isArray(row.read_roles)  && row.read_roles.length)  out.readRoles  = row.read_roles;
+  if (row.default_role)                                          out.defaultRole = row.default_role;
+  return out;
+}
+
+// Wave 2 — Foundation org-chart live data. Reads from the tenant schema
+// org-hierarchy when present so the /foundation/organization route shows
+// real nodes instead of seeded placeholders. Falls back to an empty array
+// when the tenant schema is missing or the request is unauthenticated.
+async function loadFoundationOrgChartNodes(
+  pool: DbPool,
+  tenantId: string,
+  errors: SubQueryError[],
+): Promise<Array<Record<string, unknown>>> {
+  if (!tenantId) return [];
+  const schema = `tenant_${tenantId}`;
+  // Validate schema name to avoid SQL injection (only alnum + underscore).
+  if (!/^[a-z0-9_]+$/i.test(schema)) return [];
+  const sql = `
+    SELECT
+      organization_id::text  AS node_id,
+      parent_id::text        AS parent_id,
+      0                       AS sort_order,
+      COALESCE(name_en, name_ar, code, organization_id::text) AS title_en,
+      COALESCE(name_ar, name_en, '')                          AS title_ar,
+      COALESCE(org_type, 'organization')                       AS role,
+      NULL::text              AS owner,
+      status                  AS badge
+      FROM "${schema}".organizations
+     WHERE deleted_at IS NULL
+     ORDER BY parent_id NULLS FIRST, name_en
+     LIMIT 500
+  `;
+  const r = await safeQuery<Record<string, unknown>>('props.live.orgChart', errors, () => pool.query(sql));
+  return r.rows;
+}
+
 async function loadProps(
   pool: DbPool,
   route: string,
   archetype: string | null | undefined,
   locale: 'en' | 'ar',
   errors: SubQueryError[],
+  tenantId: string,
 ): Promise<Record<string, unknown>> {
   const [kpis, cols, tabs, nbas, sections, reports, groups, axes, filters, tableActions] = await Promise.all([
     safeQuery('props.kpi', errors, () => pool.query(
@@ -574,6 +658,32 @@ async function loadProps(
     if (rowActions.length) base['rowActions'] = rowActions;
     if (batchActions.length) base['batchActions'] = batchActions;
   }
+  // Wave 2 — typed event handlers + role policy override props JSONB when
+  // present. They are namespaced (`eventHandlers`, `writeRoles`,
+  // `readRoles`, `defaultRole`) so they cannot collide with any existing
+  // archetype payload.
+  const [eventHandlers, rolePolicy] = await Promise.all([
+    loadEventHandlers(pool, route, errors),
+    loadRolePolicy(pool, route, errors),
+  ]);
+  if (Object.keys(eventHandlers).length) base['eventHandlers'] = eventHandlers;
+  if (rolePolicy.writeRoles)  base['writeRoles']  = rolePolicy.writeRoles;
+  if (rolePolicy.readRoles)   base['readRoles']   = rolePolicy.readRoles;
+  if (rolePolicy.defaultRole) base['defaultRole'] = rolePolicy.defaultRole;
+
+  // Wave 2 — Foundation org-chart live nodes for org-structure family.
+  // Only populates when the bound archetype is org-chart and the tenant
+  // schema is available; empty result means the inline seed wins.
+  if (archetype === 'org-chart' && tenantId && route.startsWith('/foundation/')) {
+    const liveNodes = await loadFoundationOrgChartNodes(pool, tenantId, errors);
+    if (liveNodes.length) {
+      base['orgChartNodes'] = liveNodes.map((row) => ({
+        ...row,
+        title: locale === 'ar' ? (row['title_ar'] ?? row['title_en'] ?? '') : (row['title_en'] ?? row['title_ar'] ?? ''),
+      }));
+    }
+  }
+
   const ext = archetype ? ARCHETYPE_EXTENSIONS[archetype] : undefined;
   if (ext && ext.length) {
     const results = await Promise.all(
@@ -759,7 +869,7 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
       // this resolver returns 404 above. Do not synthesize starter
       // KPIs/nbaActions on the FE's behalf.
       const [dynamicProps, layers] = await Promise.all([
-        loadProps(pool, route, row.archetype, locale, errors),
+        loadProps(pool, route, row.archetype, locale, errors, tenantId),
         loadOverrideLayers(pool, route, productCode, moduleCode, tenantId, userId, errors),
       ]);
       // Phase F-F7-2 — derive `masthead` object the host reads.
@@ -997,7 +1107,7 @@ export function createTemplateBindingRouter(pool: DbPool): Router {
         const moduleCode = deriveModuleCode(row.route);
         const exportErrors: SubQueryError[] = [];
         const [dyn, layers] = await Promise.all([
-          loadProps(pool, row.route, row.archetype, 'en', exportErrors),
+          loadProps(pool, row.route, row.archetype, 'en', exportErrors, tenantId),
           loadOverrideLayers(pool, row.route, productCode, moduleCode, tenantId, userId, exportErrors),
         ]);
         const masthead = {

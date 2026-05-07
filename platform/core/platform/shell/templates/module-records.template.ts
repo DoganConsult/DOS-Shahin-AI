@@ -164,7 +164,7 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
                   </td>
                 }
                 @for (col of columns; track col.key) {
-                  <td cdsTableData>
+                  <td cdsTableData [attr.data-col-label]="col.label">
                     @switch (col.type) {
                       @case ('tag') {
                         <cds-tag [type]="tagType(row._severity)">{{ row[col.key] }}</cds-tag>
@@ -264,6 +264,47 @@ import { DosInsightBarComponent } from './dos-insight-bar.component';
     @media (max-width: 768px) {
       .dmt-toolbar { flex-wrap: wrap; }
       .dmt-masthead-actions { display: none; }
+    }
+    /* Mobile-first card/list fallback for the records table.
+       Below the workspace breakpoint, the cdsTable collapses to a
+       stacked card layout so each row is readable without horizontal
+       scroll. Headers are hidden — column meaning is preserved by
+       prefixing each cell value with its `data-col-label` attribute
+       (set in the @for loop above so we don't hardcode labels). */
+    @media (max-width: 672px) {
+      .dmt-data-table,
+      .dmt-data-table thead,
+      .dmt-data-table tbody,
+      .dmt-data-table tr,
+      .dmt-data-table td,
+      .dmt-data-table th { display: block; width: 100%; }
+      .dmt-data-table thead {
+        position: absolute; left: -9999px; top: -9999px;
+        height: 1px; width: 1px; overflow: hidden;
+      }
+      .dmt-data-table tr {
+        border: 1px solid var(--cds-border-subtle, #e0e0e0);
+        margin-block-end: var(--cds-spacing-04, .75rem);
+        padding: var(--cds-spacing-04, .75rem);
+        background: var(--cds-layer, #f4f4f4);
+        border-radius: 4px;
+      }
+      .dmt-data-table td {
+        padding: var(--cds-spacing-02, .25rem) 0;
+        border: 0;
+      }
+      .dmt-data-table td[data-col-label]::before {
+        content: attr(data-col-label) ': ';
+        color: var(--cds-text-secondary);
+        font-size: .75rem;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        display: inline-block;
+        margin-inline-end: .375rem;
+      }
+      .dmt-row-actions { flex-wrap: wrap; gap: var(--cds-spacing-02, .25rem); }
+      .dmt-actions-col { width: auto; }
+      .dmt-table-tile { padding: var(--cds-spacing-04, .75rem); }
     }
   `]
 })

@@ -3,7 +3,7 @@
   "phase": "A",
   "wave": 36,
   "name": "entry",
-  "status": "RED",
+  "status": "GREEN",
   "payload": {
     "checks": [
       {
@@ -28,12 +28,11 @@
       },
       {
         "name": "git-clean",
-        "status": "FAIL",
-        "detail": "M platform/foundation/db/migrations/20260512_1010_module_sod_rules_canonical.sql\n?? platform/ai/services/ai-governance-service/contracts/"
+        "status": "PASS"
       }
     ],
-    "blocker": "git-dirty"
+    "doctrine": "zero-static/zero-legacy/zero-fallback/dynamic-uios-only"
   },
-  "emittedAt": "2026-05-07T06:51:07.761Z",
-  "hash": "sha256:b86021e65613311a31f1b60632af721ec21e063b8e46bec9c2700b4818b923ce"
+  "emittedAt": "2026-05-07T06:51:59.228Z",
+  "hash": "sha256:16696a7971f530d645e29f7711b3f5a21edf9125445b6fddf65a5a94ab1e7c3f"
 }

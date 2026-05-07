@@ -17,7 +17,7 @@
  *     the resolver emits zero visual surfaces in a zone, the zone
  *     renders empty (no static fallback).
  */
-import { Component, DestroyRef, computed, inject } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet } from '@angular/router';
 import {
@@ -44,6 +44,9 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
     <div
       class="dos-shell-host"
       [class.dos-shell-host--rtl]="isRtl()"
+      [class.dos-shell-host--mobile]="isMobileViewport()"
+      [attr.data-desktop-min-px]="desktopMinPx() || null"
+      [attr.data-viewport-w]="viewportWidth()"
     >
       @if (skipToMainText()) {
         <a class="dos-shell-skip" href="#main-content">{{ skipToMainText() }}</a>
@@ -148,6 +151,33 @@ import type { ShellAction, ShellBanner } from '@dos/ui-contracts';
         'banners banners'
         'main sidebar';
     }
+    /* Mobile-first switch driven by UI-OS policy
+       (layout.breakpoints.desktopMinPx). When the JS-detected viewport
+       is below the breakpoint, collapse to a single column with a
+       sticky bottom-aligned sidebar so primary nav remains reachable
+       without horizontal scroll. */
+    .dos-shell-host--mobile,
+    .dos-shell-host--mobile.dos-shell-host--rtl {
+      grid-template-columns: 1fr;
+      grid-template-rows: 3rem auto 1fr auto;
+      grid-template-areas:
+        'header'
+        'banners'
+        'main'
+        'sidebar';
+    }
+    .dos-shell-host--mobile .dos-shell-zone--sidebar {
+      border-inline-end: 0;
+      border-block-start: 1px solid var(--cds-border-subtle);
+      max-height: 40vh;
+      position: sticky;
+      bottom: 0;
+      z-index: 50;
+      background: var(--cds-background);
+    }
+    .dos-shell-host--mobile .dos-shell-zone__main-inner {
+      padding: var(--cds-spacing-05) var(--cds-spacing-04);
+    }
     .dos-shell-zone--header {
       grid-area: header;
       display: flex; align-items: stretch;
@@ -219,6 +249,24 @@ export class ShellHostComponent {
   readonly ariaBannersLabel = computed(() => this.tplStrings()['shell.tpl.aria.banners'] ?? '');
   readonly isRtl = computed(() => this.prefs.dir() === 'rtl');
 
+  /**
+   * Wave 3 — mobile-first responsive shell.
+   * Viewport tracker driven by window.innerWidth + the UI-OS policy
+   * `layout.breakpoints.desktopMinPx`. When width < breakpoint we add
+   * .dos-shell-host--mobile and the grid collapses to a single column
+   * with a sticky sidebar. SSR-safe (defaults to a wide viewport so
+   * server-rendered output assumes desktop and hydrates correctly).
+   */
+  private readonly viewportWidth = signal<number>(
+    typeof window === 'undefined' ? 1440 : window.innerWidth || 1440,
+  );
+  readonly desktopMinPx = computed<number>(() => this.shell.desktopMinPx() || 0);
+  readonly isMobileViewport = computed<boolean>(() => {
+    const min = this.desktopMinPx();
+    if (!min) return false;
+    return this.viewportWidth() < min;
+  });
+
   readonly headerSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.surfacesByZone('header'));
   readonly sidebarSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.surfacesByZone('sidebar'));
   readonly mainSurfaces = computed<WorkspaceShellSurface[]>(() => this.shell.surfacesByZone('main'));
@@ -282,6 +330,12 @@ export class ShellHostComponent {
       };
       window.addEventListener('dos:shell-action', handler);
       this.destroyRef.onDestroy(() => window.removeEventListener('dos:shell-action', handler));
+
+      // Wave 3 — viewport tracker for the policy-driven mobile breakpoint.
+      const onResize = () => this.viewportWidth.set(window.innerWidth || 0);
+      window.addEventListener('resize', onResize, { passive: true });
+      onResize();
+      this.destroyRef.onDestroy(() => window.removeEventListener('resize', onResize));
     }
   }
 
