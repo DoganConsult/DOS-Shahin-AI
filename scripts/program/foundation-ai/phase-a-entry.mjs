@@ -60,8 +60,13 @@ if (prev >= -2 && existsSync(closeFile)) {
   checks.push({ name: 'previous-wave-close', status: 'SKIP', detail: prev < -2 ? 'genesis' : 'no prior close.proof.json' });
 }
 
-// 5. Git status — must be clean (no dirty drift entering the wave)
-const dirty = execSync('git status --porcelain', { cwd: ROOT, encoding: 'utf8' }).trim();
+// 5. Git status — must be clean (no dirty drift entering the wave).
+// proofs/ tree is excluded because phase scripts themselves emit ledger
+// entries during this gate; we only care about source/contract drift.
+const dirtyRaw = execSync('git status --porcelain', { cwd: ROOT, encoding: 'utf8' });
+const dirty = dirtyRaw.split('\n')
+  .filter(l => l.trim() && !/\sproofs\/foundation-ai\//.test(l))
+  .join('\n').trim();
 if (dirty) {
   checks.push({ name: 'git-clean', status: 'FAIL', detail: dirty.split('\n').slice(0, 20).join('\n') });
   emitProof({ phase: 'A', wave, name: 'entry', status: 'RED', kind: 'PHASE-A',
