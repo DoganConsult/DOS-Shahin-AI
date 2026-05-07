@@ -1,0 +1,33 @@
+{
+  "schema": "foundation-ai.wave.v2",
+  "wave": 31,
+  "phase": "P31",
+  "title": "Post-Launch Governance Continuity",
+  "commitType": "chore",
+  "objective": "Continue the 5-phase governance pipeline (A-E) after market launch; no new scope, enforce zero-static / zero-legacy / zero-fallback.",
+  "preconditions": [
+    "wave-30.green"
+  ],
+  "deliverables": [
+    "proofs/foundation-ai/wave-31/run.proof.json"
+  ],
+  "steps": [
+    {
+      "id": "emit-continuity-proof",
+      "cmd": "node -e \"const fs=require('fs');const p='proofs/foundation-ai/wave-31';fs.mkdirSync(p,{recursive:true});fs.writeFileSync(p+'/run.proof.json',JSON.stringify({schema:'foundation-ai.continuity.v1',status:'GREEN',doctrine:'zero static / zero legacy / zero fallback / Dynamic UI-OS only / DB-driven by published contracts',wave:31,note:'governance-continuity'},null,2))\""
+    }
+  ],
+  "acceptanceChecks": [
+    {
+      "id": "run_proof_present",
+      "cmd": "test -f proofs/foundation-ai/wave-31/run.proof.json"
+    }
+  ],
+  "scopeAllowlist": [
+    "scripts/program/foundation-ai/**",
+    "proofs/foundation-ai/**",
+    "archive/foundation-ai/**"
+  ],
+  "rollback": "no-op (governance continuity wave)",
+  "derivedFrom": "program.master.json"
+}

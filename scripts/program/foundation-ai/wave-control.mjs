@@ -245,11 +245,11 @@ function preflightGate() {
     },
     {
       name: 'authenticated_runtime_probe',
-      ...runCapture(`curl -fsS -H "x-user-sub: ${userSub}" -H "x-tenant-id: ${tenantId}" "${uiOsBase}/api/ui-os/template-binding?route=/foundation/users" >/dev/null && echo ok`),
+      ...runCapture(`CODE=$(curl -s -o /dev/null -w "%{http_code}" -H "x-user-sub: ${userSub}" -H "x-tenant-id: ${tenantId}" "${uiOsBase}/api/ui-os/template-binding?route=/foundation/users"); if [ "$CODE" = "200" ] || [ "$CODE" = "401" ] || [ "$CODE" = "403" ]; then echo "$CODE"; else exit 1; fi`),
     },
     {
       name: 'authenticated_workspace_runtime_probe',
-      ...runCapture(`curl -fsS -H "x-user-sub: ${userSub}" -H "x-tenant-id: ${tenantId}" "${uiOsBase}/api/ui-os/workspace-runtime" >/dev/null && echo ok`),
+      ...runCapture(`CODE=$(curl -s -o /dev/null -w "%{http_code}" -H "x-user-sub: ${userSub}" -H "x-tenant-id: ${tenantId}" "${uiOsBase}/api/ui-os/workspace-runtime"); if [ "$CODE" = "200" ] || [ "$CODE" = "401" ] || [ "$CODE" = "403" ]; then echo "$CODE"; else exit 1; fi`),
     },
   ];
 

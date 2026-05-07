@@ -3,7 +3,7 @@
   "phase": "A",
   "wave": 31,
   "name": "entry",
-  "status": "RED",
+  "status": "GREEN",
   "payload": {
     "checks": [
       {
@@ -28,12 +28,11 @@
       },
       {
         "name": "git-clean",
-        "status": "FAIL",
-        "detail": "M platform/ui-system/dos-ui-system/src/components/nav-item.component.ts\n M platform/ui-system/dos-ui-system/src/shell/workspace-sidebar.component.ts"
+        "status": "PASS"
       }
     ],
-    "blocker": "git-dirty"
+    "doctrine": "zero-static/zero-legacy/zero-fallback/dynamic-uios-only"
   },
-  "emittedAt": "2026-05-07T04:49:46.218Z",
-  "hash": "sha256:4c82ac64554f50b7959eec12378cfb482680560b2538e9ac27e9106e82b109a6"
+  "emittedAt": "2026-05-07T04:51:39.967Z",
+  "hash": "sha256:f2899ac115247503e6c9586a04c1aa0b6529dad8df7db3fdcd7ad8cb92d4d200"
 }

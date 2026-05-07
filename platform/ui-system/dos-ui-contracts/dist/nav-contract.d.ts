@@ -23,7 +23,9 @@ export interface DosNavItem {
     id: string;
     /** Plain English fallback label (also acts as default if no i18n). */
     label: string;
-    /** Angular route. May be omitted for items that are pure group placeholders. */
+    /** Canonical UI-OS action contract (preferred). */
+    action?: ShellAction;
+    /** Legacy router path shim; retained temporarily for adapter compatibility. */
     route?: string;
     /** Icon name (canonical icon system: lucide / material-icons-outlined). */
     icon?: string;

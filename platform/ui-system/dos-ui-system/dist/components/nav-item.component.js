@@ -31,14 +31,7 @@ let DosNavItemComponent = class DosNavItemComponent {
     }
     disabledTitle() {
         const reason = this.item.disabledReason;
-        switch (reason) {
-            case 'not-entitled': return 'Not entitled for this tenant';
-            case 'missing-permission': return 'Missing required permission';
-            case 'backend-offline': return 'Backend service offline';
-            case 'route-not-wired': return 'Route not yet wired';
-            case 'coming-soon': return 'Coming soon';
-            default: return 'Unavailable';
-        }
+        return typeof reason === 'string' ? reason : '';
     }
 };
 __decorate([

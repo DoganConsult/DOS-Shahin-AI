@@ -5,8 +5,8 @@
   "name": "autopilot",
   "status": "RED",
   "payload": {
-    "error": "Command failed: node scripts/program/foundation-ai/phase-a-entry.mjs --wave=31"
+    "error": "Command failed: node scripts/program/foundation-ai/run-wave.mjs --wave=31"
   },
-  "emittedAt": "2026-05-07T04:49:46.227Z",
-  "hash": "sha256:7b045c071f493461ff4791ffd5912132281a7b6e11280a5e507c4fc6589e7de2"
+  "emittedAt": "2026-05-07T04:51:40.560Z",
+  "hash": "sha256:532f7a98ac2ad41d2072fe3aa4788884b16c1d0c6b4017b4c8e4216c9cedb401"
 }
