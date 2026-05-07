@@ -27,42 +27,47 @@
       {
         "name": "authenticated_runtime_probe",
         "status": "GREEN",
-        "output": "ok"
+        "output": "200"
+      },
+      {
+        "name": "authenticated_workspace_runtime_probe",
+        "status": "GREEN",
+        "output": "403"
       }
     ],
     "commands": [
       {
         "cmd": "node scripts/ci-guards/lint-no-static-nav-fallback.mjs",
         "status": "GREEN",
-        "ms": 53
+        "ms": 54
       },
       {
         "cmd": "node scripts/ci-guards/lint-no-legacy-uios-shell.mjs",
         "status": "GREEN",
-        "ms": 2398
+        "ms": 2499
       },
       {
         "cmd": "pnpm --filter @dos/ui-contracts build",
         "status": "GREEN",
-        "ms": 1896
+        "ms": 1886
       },
       {
         "cmd": "pnpm --filter @dos/ui-system build",
         "status": "GREEN",
-        "ms": 3188
+        "ms": 3299
       },
       {
         "cmd": "pnpm --filter @dos/platform-core build",
         "status": "GREEN",
-        "ms": 2407
+        "ms": 2584
       },
       {
         "cmd": "pnpm --filter @dos/platform-app build",
         "status": "GREEN",
-        "ms": 15799
+        "ms": 15522
       }
     ]
   },
-  "emittedAt": "2026-05-07T04:36:07.586Z",
-  "hash": "sha256:b3a62974fb6123a0b06caec019c1c1b9f21a870e39379e28476a84cc3de421aa"
+  "emittedAt": "2026-05-07T05:05:28.410Z",
+  "hash": "sha256:9f053a1eddde93d472a886b23022048079c554fddc5bdca9c2d34cd6be4826f8"
 }

@@ -1,0 +1,14 @@
+{
+  "runId": "a464a210-e03d-456a-832b-cccb1000571c",
+  "phase": "WAVE-1-ENTRY-PREREQ",
+  "wave": 1,
+  "kind": "WAVE_ENTRY_PREREQ",
+  "inputsHash": "sha256:6ea26f3d2b9938261379f10f9e3c469da815fc2ece953c3c4478c09f9539dada",
+  "outputsHash": "sha256:0e5d61043e6dc66eaaf47663b88d04e39b8cf8bca78af612c30494dca0f2e993",
+  "parentHash": "sha256:7235d97963a73db6736a93daccaba0a91d4643c4133a026d94d25fcc12875ac9",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-1/wave-entry-prereq.proof.json",
+  "createdAt": "2026-05-07T05:05:28.470Z",
+  "hash": "sha256:f446454aa53f59a9e9f86df46f8233647d5a94271c5060cd03847ce44581b489"
+}
