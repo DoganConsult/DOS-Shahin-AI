@@ -1,0 +1,21 @@
+{
+  "schema": "foundation-ai.wave.v1",
+  "wave": 17,
+  "phase": "P17",
+  "title": "Disable redundant workspace.shell.empty-state surface",
+  "status": "GREEN",
+  "ts": "2026-05-07T05:35:00Z",
+  "doctrine": "zero static / zero legacy / zero fallback / Dynamic UI-OS only / DB-driven by published contracts",
+  "rootCausesClosed": [
+    "shell-host rendered workspace.shell.empty-state in zones.main alongside the router-outlet's dynamic-template-page, producing a duplicated 'Workspace ready / Module surfaces will appear here once activated' placeholder ABOVE actual page content for routes that have a template binding (all 21 foundation pages)"
+  ],
+  "fixesAppliedAtDbLayer": [
+    "platform/foundation/db/migrations/20260507_0400_wave17_disable_shell_empty_state.sql — UPDATE 44 rows enabled=false; idempotent self-test"
+  ],
+  "runtimeProof": {
+    "endpoint": "/api/ui-os/workspace-runtime",
+    "user": "foundation-probe-001@dos.local",
+    "surfaces": 20,
+    "emptyStateSurfaces": 0
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "foundation-ai.wave.v1",
+  "wave": 18,
+  "phase": "P18",
+  "title": "tenant_admin / tenant_owner foundation perm backfill",
+  "status": "GREEN",
+  "ts": "2026-05-07T05:40:00Z",
+  "doctrine": "zero static / zero legacy / zero fallback / Dynamic UI-OS only / DB-driven by published contracts",
+  "rootCausesClosed": [
+    "tenant_admin functional role (auto-granted to every self-registered tenant founder) lacked access_review.write — UI-OS resolver therefore stripped /foundation/access-review nav item for the tenant founder"
+  ],
+  "fixesAppliedAtDbLayer": [
+    "platform/foundation/db/migrations/20260507_0500_wave18_tenant_admin_foundation_perms.sql — appended 11 canonical foundation perms to tenant_admin + tenant_owner; idempotent (DISTINCT) self-test"
+  ],
+  "runtimeProof": {
+    "endpoint": "/api/ui-os/workspace-runtime",
+    "user": "foundation-probe-001@dos.local",
+    "navItems": 24,
+    "navGroups": 4,
+    "accessReviewNavPresent": true
+  }
+}
