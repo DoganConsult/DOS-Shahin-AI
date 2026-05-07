@@ -1,0 +1,14 @@
+{
+  "runId": "052b020d-8acd-4f76-b0fc-51ce56b85bdc",
+  "phase": -2,
+  "wave": 36,
+  "kind": "ARCHIVE",
+  "inputsHash": "sha256:ee86d8892954360cc7113132ddf3c072b2e59fc3349f5fb297ec4942a706a578",
+  "outputsHash": "sha256:9f9d14b6e6f8a10eed5634bcde1209073d6572a4a40a7e62e0ac8fddba5a7003",
+  "parentHash": "sha256:fb95d72c0d05287159427536c076648b824c7ee48f6000b798d502ee231d6595",
+  "signer": "dev-1",
+  "status": "GREEN",
+  "evidenceUri": "/root/DOS-Platform/proofs/foundation-ai/wave-36/archive.proof.json",
+  "createdAt": "2026-05-07T06:56:33.676Z",
+  "hash": "sha256:c0dfb6cac6d496789035e1a8bd180be769f98048359556650e429c4240e098a0"
+}
