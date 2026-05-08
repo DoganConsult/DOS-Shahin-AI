@@ -1,0 +1,71 @@
+{
+  "phase": "F14.5 build-host recovery — Postgres/Keycloak SIGBUS blocker (operator-owned host)",
+  "status": "FC_GREEN_BLOCKED_ON_HOST_INFRA_RECOVERY",
+  "summary": "End-to-end SSO at https://f.shahin-ai.com/ cannot complete because Keycloak (realm 'dogan') will not start: it depends on Postgres 18 on this build host, and Postgres 18 dies with SIGBUS on every boot attempt. Root cause is host-level kernel page corruption produced by earlier swap-device read errors plus an ext4 abort that remounted /dev/vdb read-only. FC code/env remain GREEN — no FC source change can fix this.",
+  "fc_code_status": "UNCHANGED_GREEN — see F14.5-keycloak-client-blocker.proof.json (env-driven OIDC, PKCE S256, redirect_uri=https://f.shahin-ai.com/auth/callback, no hardcoded values).",
+  "host_infra_evidence": {
+    "dmesg_recent": [
+      "EXT4-fs error (device vdb): __ext4_find_entry:1663: inode #2: comm pgbackrest: reading directory lblock 0 (recurring hourly)",
+      "Read-error on swap-device (252:16:*) — multiple at 2026-05-08 12:27:30/31",
+      "EXT4-fs error (device vdb): ext4_journal_check_start:83: comm swapon: Detected aborted journal",
+      "EXT4-fs (vdb): Remounting filesystem read-only",
+      "end_swap_bio_read: 6 callbacks suppressed; Read-error on swap-device (252:16:37456200)"
+    ],
+    "swap_state": {
+      "swapon_show": "empty (swap disabled by operator action `swapoff -av`)",
+      "free_h_swap": "Swap: 331Mi total / 331Mi used / 0 free — kernel still holds corrupted swap-backed pages; only a reboot clears them"
+    },
+    "vdb_state": "ext4 on /dev/vdb mounted read-only after journal abort; pgbackrest cron re-triggers EXT4 errors hourly",
+    "uptime": "5 days 22h since last boot — recovery requires reboot",
+    "memory_total": "31 GiB, 26 GiB available — not a memory-pressure issue"
+  },
+  "postgres_sigbus_proof": {
+    "command": "sudo -u postgres /usr/lib/postgresql/18/bin/postgres -D /var/lib/postgresql/18/main -c shared_preload_libraries='' -c huge_pages=off -c shared_buffers=32MB -c dynamic_shared_memory_type=posix",
+    "outcome": "Process dies silently within ~1s of mmap initialization. stderr empty.",
+    "strace_last_event": "mmap(NULL, 27002, PROT_READ, MAP_SHARED, 3, 0) = 0x7f96f85e9000  →  --- SIGBUS {si_signo=SIGBUS, si_code=BUS_ADRERR, si_addr=0x7f96f85e7000} ---  →  +++ killed by SIGBUS +++",
+    "interpretation": "BUS_ADRERR at the next page-fault into a file-backed mmap — kernel cannot service the page because the underlying page-cache slot is unrecoverable (corrupted swap-backed). Reproducible across two strace runs, before and after disabling preload libraries / huge pages.",
+    "tried_mitigations_all_failed": [
+      "removed all shared_preload_libraries (citus,pglogical,pg_stat_statements,pg_qualstats,pg_stat_kcache,pg_hint_plan,auto_explain,pgmemcache,pg_squeeze)",
+      "huge_pages=off",
+      "shared_buffers=32MB",
+      "dynamic_shared_memory_type=posix",
+      "rotated 1.6 GB /var/log/postgresql/postgresql-18-main.log to *.crashed-20260508",
+      "cleared stale /run/postgresql/.s.PGSQL.5432* and postmaster.pid",
+      "swapoff -av (succeeded; /data/swapfile_build removed)"
+    ]
+  },
+  "keycloak_state": {
+    "service": "keycloak.service",
+    "status": "Repeatedly restarted, killed by SIGBUS — depends on Postgres connection to 127.0.0.1:5432/keycloak which cannot start.",
+    "config": "/etc/keycloak/keycloak.conf — db=postgres, db-url=jdbc:postgresql://127.0.0.1:5432/keycloak, hostname=https://shahin-ai.com/login (correct).",
+    "downstream_effect": "Foundation Console gateway /auth/login still emits a correct authorize URL (302) but the upstream Keycloak does not respond, so SSO never completes."
+  },
+  "operator_recovery_required": [
+    "1. Reboot the host (only way to clear corrupted swap-cached kernel pages).",
+    "2. After reboot: fsck.ext4 /dev/vdb (currently mounted read-only after journal abort).",
+    "3. Recreate / relocate swap to a healthy backing device (do not re-enable /data/swapfile_build until /dev/vdb is verified healthy).",
+    "4. Start patroni / postgresql@18-main; verify 5432 LISTEN.",
+    "5. Start keycloak.service; verify https://shahin-ai.com/login/realms/dogan/.well-known/openid-configuration returns 200.",
+    "6. In realm 'dogan' admin: register OIDC client 'foundation-console' with Standard Flow + PKCE S256, Valid Redirect URI 'https://f.shahin-ai.com/auth/callback', Web Origin 'https://f.shahin-ai.com'.",
+    "7. Re-run /auth/login → /auth/callback round-trip → /auth/session 200 → /api/ui-os/workspace-runtime 200 (authenticated)."
+  ],
+  "doctrine_held": {
+    "no_fc_code_change_attempted_to_workaround_host_infra_failure": true,
+    "no_static_fallback_added": true,
+    "no_dev_session_minter_in_stage_posture": true,
+    "fc_dev_test_session_enabled": false,
+    "node_env": "production",
+    "wire_format_camelCase_only": true
+  },
+  "downstream_phases": {
+    "F12_0_remote_OS_install": "independent — still pending operator",
+    "F15_production_deploy_gate": "still pending F12-0 + this host-recovery (only if SSO E2E must be exercised on this build host before F15)"
+  },
+  "files_touched_in_this_step": [
+    "rotated /var/log/postgresql/postgresql-18-main.log → *.crashed-20260508",
+    "cleared /run/postgresql/.s.PGSQL.5432* and /var/lib/postgresql/18/main/postmaster.pid",
+    "swapoff -av disabled /data/swapfile_build",
+    "proofs/foundation-console/F14.5-build-host-postgres-sigbus-blocker.proof.json (this file)"
+  ],
+  "next_action_required_from_operator": "Authorize host reboot + fsck.ext4 /dev/vdb. No further FC source/env changes can advance this end-to-end gate."
+}

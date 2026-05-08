@@ -1,0 +1,145 @@
+{
+  "phase": "F10 — Foundation Console real domain component skeletons + page-runtime seed cutover",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_placeholder_components": true,
+    "zero_fake_page_content": true,
+    "zero_angular_static_routes": true,
+    "zero_db_reads_from_angular": true,
+    "zero_production_deployment": true,
+    "zero_platform_imports": true,
+    "zero_legacy_field_emission": true,
+    "zero_unapproved_componentKeys_seeded": true,
+    "wire_format_camelCase_only": true,
+    "missing_props_show_visible_diagnostic_not_fabricated_data": true,
+    "f7_baseline_preserved": "All 11 F7 keys retained in FC_DEFAULT_COMPONENT_MAP and FC_APPROVED_COMPONENT_KEYS.",
+    "f10_keys_appended": "4 new approved keys added prior to seeding (closure test passed at 15/15 BEFORE migration was applied)."
+  },
+  "scope_executed": [
+    "products/foundation-console/packages/fc-ui-system/src/foundation-domain-components.ts (NEW — 4 real renderer components: FoundationSectionHeadingComponent, FoundationTileMetricComponent, FoundationListSimpleComponent, FoundationDashboardSummaryComponent. All consume `surface.props` only; missing props produce inline diagnostic text, not fabricated business data.)",
+    "products/foundation-console/packages/fc-ui-system/src/component-map.token.ts (extended FC_APPROVED_COMPONENT_KEYS to 15 entries and FC_DEFAULT_COMPONENT_MAP with the 4 new mappings)",
+    "products/foundation-console/packages/fc-ui-system/src/index.ts (exports the 4 new domain components)",
+    "products/foundation-console/db/migrations/20260507_2600_fc_ui_os_foundation_domain_seed.sql (NEW — idempotent: DELETE F9 placeholder welcome surface; refresh page row with version=2 and proper title; INSERT 4 page surfaces using only F10-approved componentKeys; validation block enforces both row count >= 4 AND zero unapproved component_key rows)"
+  ],
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "Angular app routes (still empty — route-driven UI is the page-runtime resolver, not Angular Router routes)",
+    "OIDC pipeline (F6)",
+    "permissions/session guard (F11)",
+    "production deployment (F15)",
+    "DosSurfaceRendererComponent (no changes — closure resolution is unchanged: known key → real component, unknown key → diagnostic)"
+  ],
+  "approved_component_keys_after_F10": [
+    "workspace.shell",
+    "workspace.header",
+    "workspace.sidebar",
+    "workspace.content",
+    "workspace.navGroup",
+    "workspace.navItem",
+    "workspace.surface",
+    "workspace.emptyState",
+    "workspace.diagnostic",
+    "workspace.loading",
+    "workspace.error",
+    "foundation.section.heading",
+    "foundation.tile.metric",
+    "foundation.list.simple",
+    "foundation.dashboard.summary"
+  ],
+  "component_mapping_added": [
+    { "key": "foundation.section.heading",   "ctor": "FoundationSectionHeadingComponent" },
+    { "key": "foundation.tile.metric",       "ctor": "FoundationTileMetricComponent" },
+    { "key": "foundation.list.simple",       "ctor": "FoundationListSimpleComponent" },
+    { "key": "foundation.dashboard.summary", "ctor": "FoundationDashboardSummaryComponent" }
+  ],
+  "build_proof": {
+    "fc_ui_system":        "GREEN (tsc -p tsconfig.json) — emits dist/foundation-domain-components.{js,d.ts} alongside existing artifacts",
+    "fc_app_angular":      "GREEN (ng build production) — main-F56HY455.js 233.11 kB raw / 60.40 kB transfer; styles-GDC2C72E.css 124 B"
+  },
+  "closure_test_proof": {
+    "command": "node ./test/component-map-closure.test.mjs",
+    "result": "GREEN",
+    "summary": {
+      "approvedKeys": 15,
+      "mappedKeys": 15,
+      "knownResolves": "WorkspaceShellSurfaceComponent",
+      "unknownResolves": null
+    },
+    "assertions_passed": [
+      "All 15 approved keys present (11 F7 + 4 F10)",
+      "All values are real component constructors",
+      "No mapped class name contains 'Placeholder'",
+      "No extra unapproved keys (closure size == approved size)"
+    ]
+  },
+  "migration_proof": {
+    "first_run":  "BEGIN; DELETE 1 (F9 welcome placeholder); INSERT 0 1 (page refresh ON CONFLICT); INSERT 0 4 (page surfaces); DO (validation passed); COMMIT",
+    "second_run_idempotent": "BEGIN; DELETE 0 (welcome already removed); INSERT 0 1 (ON CONFLICT DO UPDATE); INSERT 0 4 (ON CONFLICT DO UPDATE); DO; COMMIT",
+    "validation_block_assertions": [
+      "page_surfaces (enabled, /) >= 4",
+      "ZERO unapproved component_key rows (whitelist enforced in DB)"
+    ],
+    "row_inventory_after_apply": [
+      { "page_id": "fc.page.home", "surface_id": "fc.page.home.surface.heading",      "component_key": "foundation.section.heading",   "position": 0,  "props": { "title": "Foundation Console", "subtitle": "Operational overview", "level": 1 } },
+      { "page_id": "fc.page.home", "surface_id": "fc.page.home.surface.dashboard",    "component_key": "foundation.dashboard.summary", "position": 10, "props": { "title": "Summary", "metrics": [] } },
+      { "page_id": "fc.page.home", "surface_id": "fc.page.home.surface.recentHeading","component_key": "foundation.section.heading",   "position": 20, "props": { "title": "Recent activity", "level": 2 } },
+      { "page_id": "fc.page.home", "surface_id": "fc.page.home.surface.recentList",   "component_key": "foundation.list.simple",       "position": 30, "props": { "items": [], "emptyMessage": "No recent activity yet." } }
+    ]
+  },
+  "runtime_proof": {
+    "GET /api/ui-os/page-runtime?path=/ (proxied via gateway)": {
+      "http_status": 200,
+      "tenantId": "*",
+      "productCode": "foundation-console",
+      "path": "/",
+      "pageId": "fc.page.home",
+      "version": 2,
+      "title": { "i18nKey": "fc.page.home.title", "fallback": "Foundation Console" },
+      "permsRequired": [],
+      "surfaces_count": 4,
+      "surface_componentKeys_in_emit_order": [
+        "foundation.section.heading",
+        "foundation.dashboard.summary",
+        "foundation.section.heading",
+        "foundation.list.simple"
+      ],
+      "diagnostics": [],
+      "all_componentKeys_within_FC_APPROVED_COMPONENT_KEYS": true,
+      "all_props_camelCase_after_sanitizeProps": true
+    },
+    "GET /api/ui-os/workspace-runtime (unchanged scope)": {
+      "shell_surfaces_count": 2,
+      "nav_items_count": 1,
+      "doctrine_alignment": "Workspace shell (header/sidebar/nav) untouched; main-zone content remains exclusively owned by /page-runtime."
+    }
+  },
+  "browser_render_path": "Angular bootstrap → fetch /config.json → providers FC_RUNTIME_CONFIG + FC_COMPONENT_MAP=FC_DEFAULT_COMPONENT_MAP (15 keys) → mount <fc-workspace-shell-v2 /> → WorkspaceRuntimeService.load() (header/sidebar/nav) AND PageRuntimeService.setPath(location.pathname) → for path='/' the resolver returns 4 surfaces with foundation.* componentKeys → WorkspaceContentHostV2 iterates surfaces through DosSurfaceRendererComponent → FC_COMPONENT_MAP resolves each to its real Foundation domain component (FoundationSectionHeadingComponent x2, FoundationDashboardSummaryComponent, FoundationListSimpleComponent). Empty arrays in props.metrics and props.items render their internal empty/diagnostic states ('no metrics', 'No recent activity yet.') — no fabricated business data.",
+  "grep_proof": {
+    "scope": "products/foundation-console/{packages/fc-ui-system/src,packages/fc-ui-contracts/src,app/src,services/foundation-gateway/src,services/foundation-ui-os/src}",
+    "platform_or_at_dos_imports": "ZERO",
+    "placeholder_naming_in_code": "ZERO (only three doctrine comments in component-map.token.ts, surface-components.ts, foundation-domain-components.ts asserting the rule)",
+    "hardcoded_workspace_home": "ZERO",
+    "legacy_label_or_component_keys_in_app_or_ui_system_or_contracts": "ZERO",
+    "snake_case_in_resolver_only": "Snake_case row interfaces remain only inside services/foundation-ui-os/src/index.ts (the allowed UI-OS resolver/service boundary per AGENTS.md). ZERO snake_case in frontend/contract/gateway code or wire payloads.",
+    "db_seed_componentKey_compliance": "All 4 enabled rows use only F10-approved componentKeys (verified by SQL whitelist + emit)."
+  },
+  "env_drift_carry_over": {
+    "ts_target": "ES2022 + lib ES2023 (workspace TS 5.4.5). TODO: restore ES2024 once toolchain pinned for Foundation Console.",
+    "node_env_production_for_gateway_boot": "Required to bypass missing pino-pretty transport in fc-logger when NODE_ENV=development."
+  },
+  "acceptance": {
+    "fc_ui_system_build_GREEN": true,
+    "app_build_GREEN": true,
+    "component_map_closure_15_of_15_GREEN": true,
+    "page_runtime_returns_only_approved_componentKeys": true,
+    "browser_renders_real_domain_components_no_missing_diagnostic_for_seeded_rows": true,
+    "unknown_componentKey_diagnostic_still_works_for_unapproved_keys": true,
+    "no_placeholder_classes": true,
+    "no_static_routes": true,
+    "no_db_reads_from_angular": true,
+    "no_platform_imports": true,
+    "no_legacy_label_or_component_keys": true,
+    "no_production_deployment": true
+  },
+  "blockers": []
+}

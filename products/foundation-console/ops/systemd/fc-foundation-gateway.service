@@ -1,0 +1,32 @@
+[Unit]
+Description=Foundation Console — Gateway
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=fc_app
+Group=fc_app
+WorkingDirectory=/opt/foundation-console
+EnvironmentFile=/opt/foundation-console/.env
+# F12 hardening: force production posture; disable dev-session minter regardless of .env
+Environment=NODE_ENV=production
+Environment=FC_DEV_TEST_SESSION_ENABLED=false
+Environment=FC_LOG_PRETTY=false
+# F14.5: trust the shahin-ai.com self-signed origin cert at OS-env level so
+# Node 24 TLS context picks it up before any HTTPS request is made.
+Environment=NODE_EXTRA_CA_CERTS=/opt/foundation-console/var/ca/shahin-ai.pem
+ExecStart=/usr/local/bin/node24 --use-system-ca --env-file=/opt/foundation-console/.env /opt/foundation-console/services/foundation-gateway/dist/index.js
+Restart=on-failure
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=fc-foundation-gateway
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/foundation-console/var
+
+[Install]
+WantedBy=multi-user.target

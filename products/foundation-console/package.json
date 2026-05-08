@@ -1,0 +1,13 @@
+{
+  "name": "@fc/foundation-console",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Foundation Console — standalone product. Plug-and-play. Auth + DB only from host platform.",
+  "engines": { "node": ">=24.0.0" },
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/**\" --filter \"./services/**\" run build",
+    "dev": "pnpm -r --parallel --filter \"./services/**\" --filter \"./app\" run dev",
+    "migrate": "pnpm --filter @fc/db run migrate",
+    "lint": "pnpm -r run lint"
+  }
+}

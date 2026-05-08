@@ -29,6 +29,12 @@ packages:
   # NOTE: legacy 'products/shahin-ai/app/src/app' workspace entry retired
   # 2026-05-05 — directory deleted from disk; products/ is composition-only
   # (BE/manifest/jobs only, enforced by scripts/ci-guards/product-no-runtime.mjs).
+  # ── Foundation Console (standalone product, plug-and-play) ──────────
+  # Auth + DB shared with host platform; everything else is product-owned.
+  # See products/foundation-console/product.manifest.json.
+  - 'products/foundation-console/packages/*'
+  - 'products/foundation-console/services/*'
+  - 'products/foundation-console/app'
 ignoredBuiltDependencies: []
 onlyBuiltDependencies:
   - esbuild

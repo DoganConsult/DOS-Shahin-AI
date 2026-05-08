@@ -1,0 +1,114 @@
+{
+  "phase": "F7 — Foundation Console real COMPONENT_MAP closure for @fc/ui-system",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_placeholder_components": true,
+    "zero_fallback_renderer": true,
+    "zero_static_routes": true,
+    "zero_fallback_nav": true,
+    "zero_db_reads_from_angular": true,
+    "zero_platform_imports": true,
+    "zero_legacy_field_emission": true,
+    "missing_component_visible_diagnostic_only_for_unknown_keys": true
+  },
+  "scope_executed": [
+    "products/foundation-console/packages/fc-ui-system/src/component-map.token.ts (FC_COMPONENT_MAP InjectionToken + FC_APPROVED_COMPONENT_KEYS + FC_DEFAULT_COMPONENT_MAP)",
+    "products/foundation-console/packages/fc-ui-system/src/surface-components.ts (11 real renderer components — zero placeholder)",
+    "products/foundation-console/packages/fc-ui-system/src/dos-surface-renderer.component.ts (NgComponentOutlet resolution from injected FC_COMPONENT_MAP; missing-key diagnostic preserved)",
+    "products/foundation-console/packages/fc-ui-system/src/index.ts (exports for token, default map, approved keys, and 11 components)",
+    "products/foundation-console/packages/fc-ui-system/src/diagnostic-placeholder.component.ts DELETED (no placeholder allowed)",
+    "products/foundation-console/packages/fc-ui-system/test/component-map-closure.test.mjs (closure assertion + renderer resolution simulation)"
+  ],
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "OIDC pipeline (F6)",
+    "DB seeds for surfaces / nav (F8)",
+    "page runtime resolver (F9)",
+    "Angular app bootstrap providers (no FC_COMPONENT_MAP wiring required by F7 scope; FC_DEFAULT_COMPONENT_MAP exposed for F8 wiring)"
+  ],
+  "approved_component_keys": [
+    "workspace.shell",
+    "workspace.header",
+    "workspace.sidebar",
+    "workspace.content",
+    "workspace.navGroup",
+    "workspace.navItem",
+    "workspace.surface",
+    "workspace.emptyState",
+    "workspace.diagnostic",
+    "workspace.loading",
+    "workspace.error"
+  ],
+  "component_mapping": [
+    { "key": "workspace.shell",      "ctor": "WorkspaceShellSurfaceComponent" },
+    { "key": "workspace.header",     "ctor": "WorkspaceHeaderSurfaceComponent" },
+    { "key": "workspace.sidebar",    "ctor": "WorkspaceSidebarSurfaceComponent" },
+    { "key": "workspace.content",    "ctor": "WorkspaceContentSurfaceComponent" },
+    { "key": "workspace.navGroup",   "ctor": "WorkspaceNavGroupComponent" },
+    { "key": "workspace.navItem",    "ctor": "WorkspaceNavItemComponent" },
+    { "key": "workspace.surface",    "ctor": "WorkspaceSurfaceComponent" },
+    { "key": "workspace.emptyState", "ctor": "WorkspaceEmptyStateComponent" },
+    { "key": "workspace.diagnostic", "ctor": "WorkspaceDiagnosticComponent" },
+    { "key": "workspace.loading",    "ctor": "WorkspaceLoadingComponent" },
+    { "key": "workspace.error",      "ctor": "WorkspaceErrorComponent" }
+  ],
+  "build_proof": {
+    "fc_ui_system": "GREEN (tsc -p tsconfig.json) — emits dist/{component-map.token,surface-components,dos-surface-renderer.component,index,...}.js + .d.ts",
+    "fc_app_angular": "GREEN (ng build production) — main-5MUFHNMM.js 218.88 kB raw / 57.68 kB transfer; styles-GDC2C72E.css 124 B"
+  },
+  "closure_test_proof": {
+    "command": "node ./test/component-map-closure.test.mjs",
+    "result": "GREEN",
+    "preload": "import '@angular/compiler' (Angular 21 partially-compiled libs need JIT compiler when loaded outside Angular CLI)",
+    "summary": {
+      "approvedKeys": 11,
+      "mappedKeys": 11,
+      "knownResolves": "WorkspaceShellSurfaceComponent",
+      "unknownResolves": null
+    },
+    "assertions_passed": [
+      "FC_DEFAULT_COMPONENT_MAP is a Map",
+      "All 11 approved keys present",
+      "All values are constructors (typeof === 'function')",
+      "No mapped class name contains 'Placeholder'",
+      "Resolver returns constructor for known componentKey",
+      "Resolver returns null for unknown componentKey (DosSurfaceRendererComponent diagnostic state)",
+      "No extra unapproved keys in default map (closure size == approved size)"
+    ]
+  },
+  "renderer_proof": {
+    "dos_surface_renderer_logic": "@if (resolved(); as cmp) { <ng-container *ngComponentOutlet=\"cmp; inputs: outletInputs()\" /> } @else { <strong>Missing component:</strong> {{ surface().componentKey }} }",
+    "resolution_rule": "this.map.get(this.surface().componentKey) ?? null",
+    "outlet_inputs": "{ surface: this.surface() } — every mapped component receives the FcWorkspaceSurface as `surface` input",
+    "known_key_render": "constructor mapped → NgComponentOutlet instantiates real component (verified via closure test resolution simulation)",
+    "unknown_key_render": "null → diagnostic <section class=\"fc-surface fc-surface--missing\"> <strong>Missing component:</strong> <componentKey> (no fallback)"
+  },
+  "grep_proof": {
+    "scope": "products/foundation-console/packages/fc-ui-system/src",
+    "placeholder_naming_in_code": "ZERO (only two doctrine comments asserting the rule)",
+    "platform_or_at_dos_imports": "ZERO",
+    "hardcoded_product_routes": "ZERO",
+    "legacy_label_or_component_keys": "ZERO",
+    "fallback_nav_helpers": "ZERO (only one doctrine comment asserting the rule)"
+  },
+  "env_drift_carry_over": {
+    "ts_target": "ES2022 + lib ES2023 (workspace TS 5.4.5). TODO: restore ES2024 once toolchain pinned.",
+    "node_env_production_for_gateway_boot": "Required to bypass missing pino-pretty transport in fc-logger when NODE_ENV=development."
+  },
+  "acceptance": {
+    "fc_ui_system_build_GREEN": true,
+    "app_build_GREEN": true,
+    "component_map_closure_test_GREEN": true,
+    "all_11_approved_keys_have_real_renderers": true,
+    "no_placeholder_classes_in_default_map": true,
+    "known_componentKey_renders_real_component": true,
+    "unknown_componentKey_renders_missing_diagnostic": true,
+    "no_static_routes": true,
+    "no_fallback_nav": true,
+    "no_db_reads_from_angular": true,
+    "no_platform_imports": true,
+    "no_legacy_label_or_component_keys": true,
+    "no_production_deployment": true
+  },
+  "blockers": []
+}

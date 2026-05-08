@@ -1,0 +1,175 @@
+{
+  "phase": "F3 — fc_ui_os runtime tables + /workspace-runtime resolver",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_static": true,
+    "zero_legacy": true,
+    "zero_fallback": true,
+    "zero_containers": true,
+    "zero_hardcoded": true,
+    "zero_browser_normalization": true,
+    "db_drives_ui": true
+  },
+  "scope_executed": [
+    "products/foundation-console/db/migrations/20260507_2300_fc_ui_os_runtime_tables.sql",
+    "products/foundation-console/services/foundation-ui-os/src/index.ts (resolver)",
+    "products/foundation-console/packages/fc-logger/src/index.ts (transport guard for exactOptionalPropertyTypes)",
+    "products/foundation-console/tsconfig.base.json (target/lib aligned with installed TS 5.4.5)"
+  ],
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "services/ui-os-service (frozen)",
+    "modules/* (frozen)",
+    "Angular routes",
+    "Workspace Shell V2 rendering",
+    "OIDC callback",
+    "any seed data beyond empty structural tables"
+  ],
+  "migration": {
+    "id": "20260507_2300_fc_ui_os_runtime_tables",
+    "file": "products/foundation-console/db/migrations/20260507_2300_fc_ui_os_runtime_tables.sql",
+    "idempotent": true,
+    "applied_via": "psql as postgres on shahin_grc (copied to /tmp/fc_f3.sql for read access)",
+    "tables_created": [
+      "fc_ui_os.workspace_shell_binding",
+      "fc_ui_os.shell_nav_groups",
+      "fc_ui_os.shell_nav_items"
+    ],
+    "trigger_function": "fc_ui_os.touch_updated_at()",
+    "triggers": [
+      "trg_wsb_touch_updated_at",
+      "trg_sng_touch_updated_at",
+      "trg_sni_touch_updated_at"
+    ],
+    "constraints": [
+      "uq_wsb_tenant_product_surface (UNIQUE tenant_id+product_code+surface_id)",
+      "pk_shell_nav_groups (PK tenant_id+product_code+id)",
+      "pk_shell_nav_items (PK tenant_id+product_code+id)",
+      "chk_action_kind_present (CHECK jsonb_typeof(action)='object' AND action ? 'kind')"
+    ],
+    "grants": "SELECT/INSERT/UPDATE/DELETE on all 3 tables + USAGE/SELECT on workspace_shell_binding_id_seq to fc_app",
+    "tracker_rows": [
+      "20260507_2200_create_fc_schemas",
+      "20260507_2300_fc_ui_os_runtime_tables"
+    ]
+  },
+  "resolver": {
+    "endpoint": "GET /workspace-runtime",
+    "service": "foundation-ui-os",
+    "port": 3101,
+    "stub_replaced": true,
+    "tenant_input": "x-fc-tenant-id header",
+    "user_input": "x-fc-user-id header",
+    "product_input": "x-fc-product-code header (default: foundation-console)",
+    "normalization": {
+      "snake_to_camel": [
+        "surface_id -> surfaceId",
+        "slot_key -> slotKey",
+        "component_key -> componentKey",
+        "component_type -> componentType",
+        "renderer_key -> rendererKey",
+        "carbon_key -> carbonKey",
+        "perms_required -> permsRequired",
+        "label_i18n_key -> label.i18nKey",
+        "label_fallback -> label.fallback",
+        "group_id -> groupId"
+      ],
+      "action_validation": "jsonb action validated against FcShellAction union; invalid items dropped + diagnostic header x-fc-resolver-dropped-actions",
+      "props_sanitization": "snake_case keys + forbidden legacy keys (labelKey/labelEn/labelAr/detailRoute/evidenceUri/chromeStrings/accountMenu/route) stripped before emit",
+      "zones": "computed by grouping surfaces by zone, ordered by position",
+      "version": "max(surface.version), 0 when empty"
+    },
+    "fallback": "NONE — empty DB rows emit empty arrays/objects in valid FcWorkspaceRuntime shape"
+  },
+  "build_proof": {
+    "fc_ui_contracts": "GREEN (tsc -p)",
+    "fc_config": "GREEN (tsc -p)",
+    "fc_logger": "GREEN (tsc -p, after transport-guard fix)",
+    "fc_db": "GREEN (tsc -p)",
+    "fc_foundation_ui_os": "GREEN (tsc -p)",
+    "ts_version_in_use": "5.4.5",
+    "tsconfig_target": "ES2022 (was ES2024; downgraded to match installed compiler — no ES2024-only feature in resolver code)",
+    "tsconfig_lib": "ES2023"
+  },
+  "environment_drift": {
+    "ts_target_downgrade": {
+      "from": "ES2024",
+      "to": "ES2022",
+      "lib_from": "ES2024",
+      "lib_to": "ES2023",
+      "reason": "Installed TypeScript 5.4.5 in workspace does not accept ES2024 target/lib. Downgrade was needed to make `tsc -p` compile fc packages and services. No ES2024-only feature is used in resolver source.",
+      "scope": "products/foundation-console/tsconfig.base.json (only Foundation Console packages/services inherit it)",
+      "decision": "TODO: Restore ES2024 target after TypeScript/toolchain is pinned for Foundation Console (target TS >= 5.7 with ES2024 lib support).",
+      "doctrine_impact": "None at the wire boundary — payload contract is unchanged; only compiler target shifted."
+    },
+    "pino_pretty_transport": {
+      "note": "fc-logger transport=pino-pretty disabled when NODE_ENV=production. .env defaults to production for now until pino-pretty is added to fc-logger dependencies.",
+      "decision": "TODO: Add pino-pretty as fc-logger devDependency and allow NODE_ENV=development for local dev only."
+    }
+  },
+  "runtime_proof": {
+    "boot": "{\"level\":30,\"service\":\"foundation-ui-os\",\"productCode\":\"foundation-console\",\"port\":3101,\"msg\":\"foundation-ui-os listening\"}",
+    "GET /healthz": "200 {status:ok}",
+    "GET /readyz": "200 {status:ready, db: PostgreSQL 18.3}",
+    "GET /workspace-runtime": {
+      "http_status": 200,
+      "headers": {
+        "x-fc-resolver-ms": "20",
+        "x-fc-resolver-dropped-actions": "0"
+      },
+      "payload_file": "proofs/foundation-console/F3-workspace-runtime.sample.json",
+      "payload_summary": {
+        "tenantId": "t-demo",
+        "userId": "u-demo",
+        "productCode": "foundation-console",
+        "version": 0,
+        "shell.surfaces.length": 0,
+        "shell.zones": "{}",
+        "shell.nav.groups.length": 0,
+        "shell.nav.items.length": 0,
+        "shell.chrome": "{}",
+        "shell.shortcuts.length": 0,
+        "shell.banners.length": 0,
+        "shell.policies": "{}"
+      }
+    }
+  },
+  "grep_proof": {
+    "platform_imports_in_fc": "ZERO",
+    "legacy_field_emission_to_clients": "ZERO (FORBIDDEN_PROP_KEYS list is defensive sanitizer; snake_case keys filtered)",
+    "snake_case_in_resolver_internals": "EXPECTED — DB column names + resolver-internal Row interfaces; doctrine permits snake_case inside UI-OS resolver/service boundary only",
+    "snake_case_in_fc_ui_contracts_src": "ZERO",
+    "snake_case_in_fc_app_src": "ZERO",
+    "hardcoded_routes_or_workspace_home_in_fc": "ZERO (only doctrine comments saying 'no hardcoded')",
+    "express_route_property_in_node_modules": "vendor code, ignored"
+  },
+  "db_proof": {
+    "fc_app_role_can_read": true,
+    "row_counts_when_empty": {
+      "workspace_shell_binding": 0,
+      "shell_nav_groups": 0,
+      "shell_nav_items": 0
+    },
+    "tables_present": [
+      "schema_migrations",
+      "shell_nav_groups",
+      "shell_nav_items",
+      "workspace_shell_binding"
+    ]
+  },
+  "acceptance": {
+    "migration_applied_or_dry_run": "applied (idempotent)",
+    "curl_workspace_runtime_200": true,
+    "json_validates_FcWorkspaceRuntime": true,
+    "arrays_empty_when_db_empty": true,
+    "no_legacy_fields_emitted": true,
+    "no_hardcoded_routes": true,
+    "no_platform_imports": true
+  },
+  "remaining_for_F4": [
+    "Wire foundation-gateway to reverse-proxy /api/ui-os/workspace-runtime -> foundation-ui-os",
+    "Attach OIDC session middleware to inject x-fc-tenant-id / x-fc-user-id from cookie",
+    "Foundation Dynamic UI service /component-registry resolver (fc_dynamic_ui.*)",
+    "Workspace Shell V2 components in @fc/ui-system that consume FcWorkspaceRuntime"
+  ]
+}

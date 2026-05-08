@@ -1,0 +1,28 @@
+[Unit]
+Description=Foundation Console — Dynamic UI Runtime
+After=network-online.target postgresql.service
+Wants=network-online.target
+PartOf=fc-foundation-gateway.service
+
+[Service]
+Type=simple
+User=fc_app
+Group=fc_app
+WorkingDirectory=/opt/foundation-console
+EnvironmentFile=/opt/foundation-console/.env
+Environment=NODE_ENV=production
+Environment=FC_DEV_TEST_SESSION_ENABLED=false
+Environment=FC_LOG_PRETTY=false
+ExecStart=/usr/local/bin/node24 --env-file=/opt/foundation-console/.env /opt/foundation-console/services/foundation-dynamic-ui/dist/index.js
+Restart=on-failure
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=fc-foundation-dynamic-ui
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

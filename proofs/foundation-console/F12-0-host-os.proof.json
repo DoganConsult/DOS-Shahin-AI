@@ -1,0 +1,70 @@
+{
+  "phase": "F12-0 — Foundation Console host-readiness probe (Debian 12 bookworm acceptance gate)",
+  "status": "BLOCKED",
+  "host": {
+    "hostname_user_supplied": "ns31381104.ip-152-228-132.eu",
+    "ip": "152.228.132.7",
+    "ovh_chassis": "KS-7 | AMD Epyc 7451",
+    "ovh_region": "eu-west-sbg / eu-west-sbg-a"
+  },
+  "probed_from": {
+    "sandbox_hostname": "djfbeq2p.vm",
+    "sandbox_ip_eth0_internal": "172.16.1.162",
+    "sandbox_ip_eth1_public": "149.104.105.124",
+    "ts": "2026-05-07T23:37:51Z"
+  },
+  "directive_gate": "User authorized continuing on Debian 12 bookworm ONLY IF host is NOT OVH rescue mode and passes host-readiness proof. Hard stop on rescue mode.",
+  "gate_result": "FAIL — host is in OVH rescue12-customer mode (RAM-based). Persistent OS NOT installed.",
+  "evidence": {
+    "icmp_ping": "2/2 packets received, rtt avg=81.726 ms — host network reachable.",
+    "tcp_22": "OPEN",
+    "tcp_80": "CLOSED (Connection refused) — no nginx running, expected on rescue.",
+    "ssh_banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u7 rescue12-customer 12.2.0-82.sha.g8070ac6",
+    "banner_interpretation": "The literal token 'rescue12-customer' in the SSH server identification proves this is the OVH rescue image, not an installed-disk OS. Rescue runs entirely from RAM and is wiped on every reboot.",
+    "host_key_seen_now": {
+      "type": "ed25519",
+      "fingerprint_sha256": "BR7fKK1aWvG9zgmcxL2K0Ks0s5VfJ9Cg184wS3PQOEw",
+      "raw_key_user_supplied_for_rescue12": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFRvOTbnPJnxzQqnqCx1oWIB4vjhDD/WHBHegUFPmRox root@rescue12-customer-eu",
+      "note": "Supplied key has comment 'root@rescue12-customer-eu' confirming rescue origin; current presented key has different fingerprint (rescue images regenerate keys per boot)."
+    },
+    "user_supplied_authorized_pubkey_for_persistent_os": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGkfOT39yhfPE3WS5Eg4GjR2nxGeFlS1Bo4h3mHWnFMG dos-shahin-ai-prod@dogan",
+    "matching_private_key_in_sandbox": "NOT PRESENT — only ~/.ssh/authorized_keys + ~/.ssh/known_hosts exist; no id_ed25519/id_rsa private key. Sandbox cannot authenticate as dos-shahin-ai-prod@dogan."
+  },
+  "checks_attempted": {
+    "1_os_persistence":      "SKIPPED — gate failed before login (banner proves rescue).",
+    "2_ssh_root_sudo":       "SKIPPED — no usable credential (private key absent; password not supplied for new boot; previous rescue password invalidated by reboot per OVH).",
+    "3_disk_raid":           "SKIPPED — gate failed.",
+    "4_systemd":             "SKIPPED — gate failed.",
+    "5_firewall_network":    "EXTERNAL ONLY — TCP/22 OPEN, TCP/80 CLOSED. Firewall state on host not probed.",
+    "6_base_packages":       "SKIPPED — gate failed.",
+    "7_nginx_proof":         "SKIPPED — gate failed.",
+    "8_proof_file_written":  "THIS FILE"
+  },
+  "hard_stops_honored": [
+    "did NOT deploy Foundation Console",
+    "did NOT create fc-foundation systemd services",
+    "did NOT configure app nginx site",
+    "did NOT touch DNS",
+    "did NOT touch the old DOS/Shahin server"
+  ],
+  "blockers": [
+    {
+      "id": "FC-F12-0-BLOCK-001",
+      "severity": "hard",
+      "summary": "Target host 152.228.132.7 is in OVH rescue12-customer mode. No installed OS. Per user directive ('not OVH rescue mode'), F12-0 cannot pass host-readiness gate.",
+      "remediation": "From OVH Manager: install Debian 12 bookworm (or Ubuntu 24.04 LTS) on the bare-metal disk. During the install template, select/upload the public key 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGkfOT39yhfPE3WS5Eg4GjR2nxGeFlS1Bo4h3mHWnFMG dos-shahin-ai-prod@dogan' as the root SSH key. Reboot to disk. Reattempt F12-0."
+    },
+    {
+      "id": "FC-F12-0-BLOCK-002",
+      "severity": "hard",
+      "summary": "Sandbox lacks the private key matching dos-shahin-ai-prod@dogan; even if a persistent OS were installed, key-only SSH from this sandbox would fail.",
+      "remediation": "Either (a) install Debian + the dos-shahin-ai-prod@dogan public key AND provide the matching private key (or its content) to this sandbox at e.g. /root/.ssh/id_ed25519_dos_shahin_ai_prod with chmod 600; or (b) provide a one-shot password I can use with sshpass to install my own sandbox key into root's authorized_keys."
+    }
+  ],
+  "next_actions_pending_user": [
+    "Install Debian 12 bookworm on 152.228.132.7 (not rescue) with the dos-shahin-ai-prod@dogan public key embedded.",
+    "Provide the matching private key (or password) to this sandbox.",
+    "Confirm permission for me to allow inbound 22/tcp (already open) and pre-stage 80/443/tcp via ufw/nftables for F12-1.",
+    "Then re-run F12-0 — this proof will be replaced with a GREEN persistent-OS proof."
+  ]
+}

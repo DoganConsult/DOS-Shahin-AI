@@ -1,0 +1,25 @@
+{
+  "name": "@fc/foundation-dynamic-ui",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "dev": "node --env-file=../../.env --watch ./dist/index.js",
+    "start": "node --env-file=../../.env ./dist/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "@fc/config": "workspace:*",
+    "@fc/logger": "workspace:*",
+    "@fc/db": "workspace:*",
+    "@fc/ui-contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/express": "^4.17.0",
+    "@types/node": "^22.0.0"
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "phase": "F4 — Workspace Shell V2 renderer skeleton in @fc/ui-system",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_static_nav": true,
+    "zero_fallback_surfaces": true,
+    "zero_hardcoded_routes": true,
+    "zero_db_reads_from_angular": true,
+    "zero_domain_components": true,
+    "zero_oidc_yet": true
+  },
+  "scope_executed": [
+    "products/foundation-console/packages/fc-ui-system/src/tokens.ts",
+    "products/foundation-console/packages/fc-ui-system/src/workspace-runtime.service.ts",
+    "products/foundation-console/packages/fc-ui-system/src/dos-surface-renderer.component.ts",
+    "products/foundation-console/packages/fc-ui-system/src/workspace-header-v2.component.ts",
+    "products/foundation-console/packages/fc-ui-system/src/workspace-sidebar-v2.component.ts",
+    "products/foundation-console/packages/fc-ui-system/src/workspace-content-host-v2.component.ts",
+    "products/foundation-console/packages/fc-ui-system/src/workspace-shell-v2.component.ts",
+    "products/foundation-console/packages/fc-ui-system/src/index.ts",
+    "products/foundation-console/packages/fc-ui-system/package.json (added @angular/core, @angular/common, rxjs as devDeps)",
+    "products/foundation-console/packages/fc-ui-system/tsconfig.json (lib: ES2023+DOM)"
+  ],
+  "scope_untouched": [
+    "domain/Foundation components",
+    "OIDC integration",
+    "Angular app routes / app.config",
+    "DB seeds / static nav",
+    "platform/* (frozen)",
+    "@fc/foundation-module (next phase)"
+  ],
+  "components": {
+    "WorkspaceShellV2Component": {
+      "selector": "fc-workspace-shell-v2",
+      "responsibilities": [
+        "Calls WorkspaceRuntimeService.load() in ngOnInit",
+        "Branches on runtime state via @switch (idle/loading/ready/error)",
+        "Renders header + (sidebar + main) only when state==='ready'",
+        "Visible diagnostic on error — no silent fallback"
+      ],
+      "consumes": "FcWorkspaceRuntime via signal state",
+      "static_nav": "NONE"
+    },
+    "WorkspaceHeaderV2Component": {
+      "selector": "fc-workspace-header-v2",
+      "renders": "shell.surfaces filtered by zone === 'header'",
+      "fallback_brand": "NONE"
+    },
+    "WorkspaceSidebarV2Component": {
+      "selector": "fc-workspace-sidebar-v2",
+      "renders": [
+        "shell.surfaces filtered by zone === 'sidebar'",
+        "shell.nav.groups + shell.nav.items grouped by groupId",
+        "ungrouped items appended in a null-group bucket"
+      ],
+      "label_resolution": "label.label || label.fallback || id (no i18n-key invention, no hardcoded copy)"
+    },
+    "WorkspaceContentHostV2Component": {
+      "selector": "fc-workspace-content-host-v2",
+      "renders": "shell.surfaces filtered by zone === 'main'"
+    },
+    "DosSurfaceRendererComponent": {
+      "selector": "fc-surface-renderer",
+      "f4_state": "Structural slot only. resolved() === false ⇒ visible 'Missing component: <componentKey>' diagnostic.",
+      "f5_plan": "Inject COMPONENT_MAP from @fc/foundation-module and resolve componentKey → component class."
+    },
+    "WorkspaceRuntimeService": {
+      "transport": "fetch(cfg.endpoints.workspaceRuntime, { credentials: 'include' })",
+      "state_signal_kinds": ["idle", "loading", "ready", "error"],
+      "fallback_payload": "NONE — error state surfaces status + message to UI",
+      "db_access": "NONE — pure HTTP client"
+    }
+  },
+  "tokens": {
+    "FC_RUNTIME_CONFIG": "InjectionToken<FcRuntimeConfig> — value provided by app bootstrap from /config.json (no build-time baking)"
+  },
+  "build_proof": {
+    "fc_ui_system": "GREEN (tsc -p)",
+    "ts_version": "5.4.5",
+    "module_resolution": "NodeNext (relative imports use .js extension)",
+    "verbatim_module_syntax": "compliant (type-only imports split where TS 5.4 inline-type was rejected)",
+    "dist_emitted_files": [
+      "index.{js,d.ts,js.map}",
+      "tokens.{js,d.ts,js.map}",
+      "workspace-runtime.service.{js,d.ts,js.map}",
+      "dos-surface-renderer.component.{js,d.ts,js.map}",
+      "workspace-header-v2.component.{js,d.ts,js.map}",
+      "workspace-sidebar-v2.component.{js,d.ts,js.map}",
+      "workspace-content-host-v2.component.{js,d.ts,js.map}",
+      "workspace-shell-v2.component.{js,d.ts,js.map}"
+    ]
+  },
+  "grep_proof": {
+    "forbidden_patterns_in_fc_ui_system_src": "ZERO (label_key|labelKey|labelEn|labelAr|component_key|perms_required|detailRoute|evidenceUri|chromeStrings|shellActionFromLegacyRecord|/workspace-home|buildPlatformNav|buildFoundationGroup|FALLBACK_GROUP_ICON|FALLBACK_ITEM_ICON|labelFromKey|/settings/subscription|document.querySelector)",
+    "hardcoded_routes_in_navigate_strings": "ZERO",
+    "platform_imports": "ZERO",
+    "pg_postgres_knex_kysely_drizzle_imports": "ZERO",
+    "static_Home_or_Foundation_string_literals": "ZERO"
+  },
+  "doctrine_alignment": {
+    "no_static_nav": "Sidebar renders ONLY runtime.shell.nav.{groups,items}. Empty ⇒ visible 'no nav'.",
+    "no_fallback_surface": "Surface renderer shows missing-key diagnostic when component not registered.",
+    "no_hardcoded_routes": "ShellAction.navigate paths come from runtime DB rows; renderer never invents a path.",
+    "no_db_reads_from_angular": "WorkspaceRuntimeService uses fetch only; no pg/knex/kysely.",
+    "no_domain_components": "Only structural shell + diagnostic renderer. Foundation module wires into COMPONENT_MAP in F5.",
+    "no_OIDC": "Service uses fetch(credentials: 'include'); session attachment lands in F4.5/F5."
+  },
+  "f3_closeout": {
+    "env_drift_recorded_in": "proofs/foundation-console/F3-workspace-runtime.proof.json (environment_drift block)",
+    "tsconfig_decision_note_in": "products/foundation-console/tsconfig.base.json (//env-drift comment)",
+    "reverify": {
+      "GET /workspace-runtime": "200",
+      "payload": "pure camelCase",
+      "empty_db_emits_empty_runtime": true,
+      "platform_imports_in_fc": "none"
+    }
+  },
+  "remaining_for_F5": [
+    "Wire foundation-gateway → reverse-proxy /api/ui-os/workspace-runtime to foundation-ui-os:3101",
+    "OIDC session middleware → inject x-fc-tenant-id / x-fc-user-id from cookie",
+    "@fc/foundation-module COMPONENT_MAP + register first domain component",
+    "DosSurfaceRenderer → resolve componentKey via injected COMPONENT_MAP",
+    "Angular app: add /workspace-v2 route mounting WorkspaceShellV2Component, provide FC_RUNTIME_CONFIG from /config.json"
+  ]
+}

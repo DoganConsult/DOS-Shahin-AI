@@ -1,0 +1,85 @@
+{
+  "phase": "F12-local — Foundation Console nginx/systemd/install artifact preparation + local validation on build server",
+  "status": "GREEN",
+  "track_split": {
+    "F12-local": "this — prepare + validate ops artifacts on the current build server only",
+    "F12-0":     "new production server OS provisioning (BLOCKED — host in OVH rescue, see F12-0-host-os.proof.json)",
+    "F12-1":     "apply Foundation Console nginx/systemd wiring on new production server (BLOCKED on F12-0)",
+    "F15":       "production deployment gate (BLOCKED on F12-1)"
+  },
+  "host_context": {
+    "build_server_hostname": "djfbeq2p.vm",
+    "build_server_ips":      ["172.16.1.162 (eth0)", "149.104.105.124 (eth1)"],
+    "production_server":     "152.228.132.7 / ns31381104.ip-152-228-132.eu — NOT TOUCHED (still in OVH rescue)"
+  },
+  "doctrine_locked": {
+    "no_production_cutover_on_old_server":   true,
+    "no_dns_mutation":                        true,
+    "no_legacy_pm2_reactivation":             true,
+    "no_restart_of_legacy_shahin_dos_services": true,
+    "no_install_on_old_server_assuming_it_is_final_production": true,
+    "fc_only_ports_used":                     "gateway 3000, ui-os 3101 (dynamic-ui 3102 reserved, app dev 4000 reserved)",
+    "stage_posture_when_services_run":        "NODE_ENV=production, FC_DEV_TEST_SESSION_ENABLED=false, FC_LOG_PRETTY=false (used to validate /auth/dev-session is unreachable)"
+  },
+  "artifact_inventory_validated": {
+    "systemd": [
+      "products/foundation-console/ops/systemd/fc-foundation-gateway.service",
+      "products/foundation-console/ops/systemd/fc-foundation-ui-os.service",
+      "products/foundation-console/ops/systemd/fc-foundation-dynamic-ui.service"
+    ],
+    "nginx":   ["products/foundation-console/ops/nginx/foundation-console.conf"],
+    "install": ["products/foundation-console/ops/install/install-fc-app.sh"]
+  },
+  "validation_carried_over_from_F12_local_run": {
+    "node_runtime_pin":           "/usr/local/bin/node24 -> /opt/node24/bin/node (verified)",
+    "systemd_analyze_verify":     "GREEN for all 3 fc-foundation-*.service files (only unrelated host warnings: snapd RestartMode key, /etc/systemd/system/tei.service nobody)",
+    "nginx_t":                    "GREEN — nginx -t -c /tmp/fc-nginx-test/nginx.conf (wrapper http{} including ops/nginx/foundation-console.conf)",
+    "stage_posture_curl_matrix":  "see proofs/foundation-console/F12-nginx-systemd-stage.proof.json",
+    "grep_legacy_in_ops":         "0 hits for shahin/@dos/platform.{core,ui-system,config-center}; 0 hits for /workspace-home, /settings/subscription, /foundation/; 0 hits for legacy ports 4200/3001/3002"
+  },
+  "files_changed_in_this_local_phase_(carry-over)": [
+    "products/foundation-console/ops/systemd/fc-foundation-gateway.service     (ExecStart=/usr/local/bin/node24, NODE_ENV=production override, FC_DEV_TEST_SESSION_ENABLED=false override)",
+    "products/foundation-console/ops/systemd/fc-foundation-ui-os.service       (same hardening)",
+    "products/foundation-console/ops/systemd/fc-foundation-dynamic-ui.service  (same hardening)",
+    "products/foundation-console/ops/install/install-fc-app.sh                 (any /usr/bin/node refs swapped to /usr/local/bin/node24)"
+  ],
+  "running_services_on_build_server": {
+    "foundation-ui-os": { "pid": 692795, "port": 3101, "posture": "stage" },
+    "foundation-gateway": { "pid": 692796, "port": 3000, "posture": "stage" }
+  },
+  "still_waiting_on_new_production_server": [
+    "/opt/foundation-console install (rsync from this build server)",
+    "systemctl enable --now fc-foundation-{gateway,ui-os,dynamic-ui}.service on production host",
+    "nginx site activation (sites-enabled symlink + reload) on production host",
+    "OVH Manager: install Debian 12 bookworm + embed dos-shahin-ai-prod@dogan public key",
+    "Sandbox: matching private key (or one-shot password) to authenticate as root on production host",
+    "Pre-stage 80/443/tcp on production host firewall (ufw or nftables)",
+    "PostgreSQL provisioning on production host (or shared DB endpoint) for fc_ui_os + fc_dynamic_ui schemas + fc_app role",
+    "Public DNS / cutover (deferred to F15)"
+  ],
+  "blockers": [
+    {
+      "id": "FC-F12-0-BLOCK-001",
+      "summary": "Production target 152.228.132.7 is in OVH rescue mode. Persistent OS install required.",
+      "ref": "proofs/foundation-console/F12-0-host-os.proof.json"
+    },
+    {
+      "id": "FC-F12-0-BLOCK-002",
+      "summary": "Sandbox lacks the dos-shahin-ai-prod@dogan private key — cannot authenticate to production host even after install.",
+      "ref": "proofs/foundation-console/F12-0-host-os.proof.json"
+    }
+  ],
+  "next_local_phases_continuing_in_parallel": [
+    "F13 local browser proof (Workspace Shell V2 + page-runtime render with dev-session)",
+    "F14 doctrine hard gate (CI-style lint script + run)"
+  ],
+  "acceptance": {
+    "ops_artifacts_present_and_internally_consistent": true,
+    "systemd_unit_syntax_validated_locally":            true,
+    "nginx_config_syntax_validated_locally":            true,
+    "stage_posture_proven_against_local_services":      true,
+    "no_remote_writes_attempted":                       true,
+    "no_legacy_services_touched":                       true,
+    "no_production_cutover":                            true
+  }
+}

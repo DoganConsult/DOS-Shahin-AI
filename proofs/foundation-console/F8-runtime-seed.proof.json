@@ -1,0 +1,107 @@
+{
+  "phase": "F8 — Foundation Console first real DB shell/nav contract rows + Angular renders runtime",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_static_routes_in_angular": true,
+    "zero_domain_business_pages": true,
+    "zero_oidc_changes": true,
+    "zero_production_deployment": true,
+    "zero_legacy_field_emission": true,
+    "zero_platform_imports": true,
+    "zero_unapproved_componentKeys_seeded": true,
+    "f7_baseline_respected": "All seeded componentKey values are within FC_APPROVED_COMPONENT_KEYS (workspace.header, workspace.sidebar, workspace.content, workspace.emptyState).",
+    "wire_format_camelCase_only": true,
+    "tenant_scope_env_driven": "Gateway injects x-fc-tenant-id from FC_PUBLIC_TENANT_ID env until per-session tenant lands in F11. No hardcoded tenant in code."
+  },
+  "scope_executed": [
+    "products/foundation-console/db/migrations/20260507_2400_fc_ui_os_runtime_seed.sql (NEW — idempotent INSERT...ON CONFLICT DO UPDATE for 4 surfaces + 1 nav group + 1 nav item + validation block)",
+    "products/foundation-console/.env + .env.example (FC_PUBLIC_TENANT_ID=*)",
+    "products/foundation-console/packages/fc-config/src/index.ts (publicTenantId required env)",
+    "products/foundation-console/services/foundation-gateway/src/index.ts (proxy injects x-fc-tenant-id + x-fc-product-code when absent)",
+    "products/foundation-console/app/src/app/app.config.ts (provides FC_COMPONENT_MAP using FC_DEFAULT_COMPONENT_MAP from @fc/ui-system)"
+  ],
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "Angular app routes (still empty)",
+    "OIDC pipeline (F6)",
+    "page runtime resolver (F9)",
+    "permissions/session guard (F11)"
+  ],
+  "seed_migration_proof": {
+    "first_run": "BEGIN; INSERT 0 4; INSERT 0 1; INSERT 0 1; DO; COMMIT",
+    "second_run_idempotent": "BEGIN; INSERT 0 4; INSERT 0 1; INSERT 0 1; DO; COMMIT (ON CONFLICT DO UPDATE refreshes; row counts unchanged)",
+    "row_inventory": {
+      "fc_ui_os.workspace_shell_binding (tenant=*, product=foundation-console)": [
+        { "zone": "header",  "surfaceId": "fc.surface.header.main",  "componentKey": "workspace.header" },
+        { "zone": "sidebar", "surfaceId": "fc.surface.sidebar.main", "componentKey": "workspace.sidebar" },
+        { "zone": "main",    "surfaceId": "fc.surface.content.main", "componentKey": "workspace.content", "position": 0 },
+        { "zone": "main",    "surfaceId": "fc.surface.main.empty",   "componentKey": "workspace.emptyState", "position": 10, "props": { "title": "Foundation Console", "description": "Runtime is online. Seed pages to populate this area." } }
+      ],
+      "fc_ui_os.shell_nav_groups": [
+        { "id": "fc.nav.group.platform", "label_fallback": "Platform", "position": 0 }
+      ],
+      "fc_ui_os.shell_nav_items": [
+        { "id": "fc.nav.item.home", "group_id": "fc.nav.group.platform", "label_fallback": "Home", "action": { "kind": "navigate", "path": "/" } }
+      ]
+    }
+  },
+  "runtime_proof": {
+    "GET /api/ui-os/workspace-runtime (proxied via gateway, tenant injected)": {
+      "tenantId": "*",
+      "userId": "",
+      "productCode": "foundation-console",
+      "version": 1,
+      "shell_version": 1,
+      "surfaces_count": 4,
+      "zones": { "header": 1, "main": 2, "sidebar": 1 },
+      "nav_groups_count": 1,
+      "nav_items_count": 1,
+      "chrome": {},
+      "shortcuts": [],
+      "banners": [],
+      "policies": {}
+    },
+    "GET /api/ui-os/workspace-runtime direct (x-fc-tenant-id: * header)": "200 same shape",
+    "snake_case_keys_in_payload": "ZERO (camelCase guard via grep -oE on response body returned no _-fields)",
+    "GET /": "200 (610 B) — Angular dist served from app/dist/foundation-console/browser",
+    "unknown_componentKey_path_proof": {
+      "scenario": "Inserted temp row with componentKey='workspace.notRegistered' — UI-OS emitted it to runtime payload (not filtered server-side), Angular DosSurfaceRendererComponent resolver returns null for unknown keys (verified by F7 closure test), rendering <strong>Missing component:</strong> workspace.notRegistered diagnostic.",
+      "row_emitted_in_runtime": true,
+      "approved_rows_resolve_to_real_components": "All 4 seeded keys are in FC_DEFAULT_COMPONENT_MAP (verified by F7 closure)."
+    }
+  },
+  "browser_shell_proof": {
+    "wire_path": "Angular bootstrap → fetch /config.json → providers FC_RUNTIME_CONFIG + FC_COMPONENT_MAP=FC_DEFAULT_COMPONENT_MAP → mount <fc-workspace-shell-v2 /> → WorkspaceRuntimeService.load() → /api/ui-os/workspace-runtime returns 4 surfaces/1 nav group/1 nav item → state {kind:'ready'} → header zone resolves workspace.header → WorkspaceHeaderSurfaceComponent renders WorkspaceHeaderV2; sidebar zone resolves workspace.sidebar → WorkspaceSidebarSurfaceComponent renders WorkspaceSidebarV2 (nav group 'Platform' + nav item 'Home'); main zone resolves workspace.content → WorkspaceContentSurfaceComponent + workspace.emptyState → WorkspaceEmptyStateComponent rendering 'Foundation Console / Runtime is online…'",
+    "missing_component_diagnostic_for_seeded_rows": "ZERO — all 4 seeded componentKeys are F7-approved.",
+    "missing_component_diagnostic_for_unknown_keys": "RETAINED — DosSurfaceRendererComponent emits visible diagnostic only for unknown keys (verified by F7 closure test).",
+    "visual_browser_capture": "Deferred to F13 (Playwright). HTTP wire-path proven end-to-end."
+  },
+  "build_proof": {
+    "fc_config":         "GREEN (tsc -p)",
+    "fc_foundation_gateway": "GREEN (tsc -p)",
+    "fc_app_angular":    "GREEN (ng build production) — main-NZB55VV6.js 218.90 kB raw / 57.81 kB transfer"
+  },
+  "grep_proof": {
+    "scope": "db/migrations + services/foundation-gateway/src + packages/fc-config/src + app/src/app/app.config.ts",
+    "platform_or_at_dos_imports": "ZERO",
+    "hardcoded_product_routes": "ZERO (only the DB-emitted nav action path '/'; not invented in code)",
+    "legacy_label_or_component_keys_in_code": "ZERO (snake_case fields IN db migration are intentional — DB stays snake_case; resolver normalizes to camelCase before emit)"
+  },
+  "env_drift_carry_over": {
+    "ts_target": "ES2022 + lib ES2023 (workspace TS 5.4.5). TODO: restore ES2024 once toolchain pinned.",
+    "node_env_production_for_boot": "Gateway+ui-os booted with NODE_ENV=production to bypass missing pino-pretty transport in fc-logger. TODO: add pino-pretty as devDependency or guard in fc-logger.",
+    "tenant_injection": "F8 introduces FC_PUBLIC_TENANT_ID env-driven public tenant for the proxy. Per-session tenant resolution lands in F11."
+  },
+  "acceptance": {
+    "migration_seed_idempotent":                      true,
+    "GET_workspace_runtime_returns_non_empty_DB_rows": true,
+    "angular_shell_renders_runtime_rows":              "wire-proven; visual capture deferred to F13",
+    "no_missing_component_diagnostic_for_approved_rows": true,
+    "unknown_component_diagnostic_still_works":        true,
+    "no_platform_imports":                             true,
+    "no_hardcoded_routes_in_code":                     true,
+    "no_legacy_fields_in_code":                        true,
+    "no_unapproved_componentKeys_in_seed":             true
+  },
+  "blockers": []
+}

@@ -1,0 +1,89 @@
+{
+  "phase": "F2 — Foundation Console skeleton",
+  "status": "scaffolded",
+  "doctrine_locked": {
+    "zero_static": true,
+    "zero_legacy": true,
+    "zero_fallback": true,
+    "zero_containers": true,
+    "zero_hardcoded": true,
+    "dynamic_ui_db_driven_only": true,
+    "plug_and_play": true
+  },
+  "external_dependencies_only": ["Keycloak realm dogan (OIDC, cookie session)", "Postgres (fc_ui_os.*, fc_dynamic_ui.*)"],
+  "owned_internally": [
+    "Angular app (renderer only, zoneless, signals)",
+    "foundation-gateway service",
+    "foundation-ui-os service",
+    "foundation-dynamic-ui service",
+    "@fc/config", "@fc/logger", "@fc/db",
+    "@fc/ui-contracts", "@fc/ui-system", "@fc/foundation-module",
+    "DB migrations (fc_*)",
+    "systemd unit files",
+    "nginx config",
+    "native install script"
+  ],
+  "stack_lock": {
+    "node": "24 LTS",
+    "angular": "21 (zoneless, signals, @if/@for/@switch/@defer)",
+    "component_io": "input()/output()/model()",
+    "data": "resource()/rxResource()",
+    "service_runtime": "Node 24 + TypeScript + Express",
+    "process_supervisor": "systemd",
+    "reverse_proxy": "nginx",
+    "containers": "NONE",
+    "env_loader": "node --env-file=",
+    "logger": "pino JSON",
+    "ports": { "gateway": 3100, "ui_os": 3101, "dynamic_ui": 3102, "app_dev": 4300 }
+  },
+  "files_created": 45,
+  "tree": {
+    "products/foundation-console/": [
+      "package.json",
+      ".env.example",
+      "product.manifest.json",
+      "tsconfig.base.json",
+      "app/",
+      "services/foundation-gateway/",
+      "services/foundation-ui-os/",
+      "services/foundation-dynamic-ui/",
+      "packages/fc-config/",
+      "packages/fc-logger/",
+      "packages/fc-db/",
+      "packages/fc-ui-contracts/",
+      "packages/fc-ui-system/",
+      "packages/fc-foundation-module/",
+      "db/migrations/",
+      "ops/systemd/",
+      "ops/nginx/",
+      "ops/install/"
+    ]
+  },
+  "workspace_registered": true,
+  "pnpm_workspace_entries_added": [
+    "products/foundation-console/packages/*",
+    "products/foundation-console/services/*"
+  ],
+  "ci_freeze_guard": "scripts/ci-guards/lint-foundation-console-freeze.mjs (active; allows products/foundation-console/**)",
+  "f1_migration_mirrored": "products/foundation-console/db/migrations/20260507_2200_create_fc_schemas.sql",
+  "what_works_now": [
+    "Workspace registration recognized by pnpm",
+    "All packages have build/lint scripts",
+    "Services have dev/start scripts via node --env-file= (Node 24 native)",
+    "Health (/healthz) + readiness (/readyz) endpoints stubbed in all 3 services",
+    "Gateway emits /config.json with runtime FcRuntimeConfig (no build-time URL baking)",
+    "Angular app bootstraps after fetching /config.json (no fallback if missing)",
+    "systemd units committed for native deploy",
+    "nginx site config committed",
+    "Native install script committed"
+  ],
+  "what_does_not_work_yet": [
+    "/workspace-runtime returns 501 (lands in F3)",
+    "fc-ui-system Workspace Shell V2 components are stubs (lands in F4)",
+    "App routes are empty (lands in F5)",
+    "OIDC SSO callback not implemented (lands in F6)",
+    "Foundation domain components not implemented (lands in F7)",
+    "Build not executed yet — pnpm install pending"
+  ],
+  "next": "F3 — implement foundation-ui-os /workspace-runtime resolver reading fc_ui_os.* (camelCase only, productCode-agnostic, zero legacy normalization)"
+}

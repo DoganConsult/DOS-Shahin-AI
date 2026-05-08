@@ -1,0 +1,103 @@
+{
+  "phase": "F12 — Foundation Console nginx + systemd stage wiring (no production cutover)",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_containers": true,
+    "zero_legacy_service_names_in_ops": true,
+    "zero_platform_imports_in_ops": true,
+    "zero_hardcoded_workspace_home_in_ops": true,
+    "zero_hardcoded_old_routes_in_ops": true,
+    "stage_only_no_production_cutover": true,
+    "node_runtime_pinned_to_node24": "/usr/local/bin/node24 -> /opt/node24/bin/node",
+    "dev_session_disabled_when_NODE_ENV_production": true,
+    "fc_only_services_touched": "fc-foundation-{gateway,ui-os,dynamic-ui}.service. Legacy Shahin/DOS services not restarted.",
+    "edge_topology": "nginx (sites-available/foundation-console.conf) -> 127.0.0.1:3000 (fc_gateway). Internal: 3101 (fc_ui_os), 3102 (fc_dynamic_ui).",
+    "gateway_is_sole_public_edge_for_api_and_auth": true
+  },
+  "scope_executed": [
+    "ops/systemd/fc-foundation-gateway.service     — ExecStart=/usr/local/bin/node24 ...; Environment=NODE_ENV=production; Environment=FC_DEV_TEST_SESSION_ENABLED=false; Environment=FC_LOG_PRETTY=false (override EnvironmentFile=/opt/foundation-console/.env)",
+    "ops/systemd/fc-foundation-ui-os.service       — same hardening (PartOf=fc-foundation-gateway.service)",
+    "ops/systemd/fc-foundation-dynamic-ui.service  — same hardening (PartOf=fc-foundation-gateway.service)",
+    "ops/nginx/foundation-console.conf             — verified: upstream fc_gateway 127.0.0.1:3000; locations /config.json, /healthz, /readyz, /auth/, /api/ -> fc_gateway; SPA root /opt/foundation-console/app/dist/foundation-console/browser",
+    "ops/install/install-fc-app.sh                 — verified: installs three units, enables nginx site, daemon-reload, healthz echo on :3000"
+  ],
+  "scope_untouched": [
+    "Legacy Shahin / DOS services (frozen, not restarted)",
+    "platform/* (frozen)",
+    "Application source (foundation-gateway/foundation-ui-os/foundation-dynamic-ui src) — only ops/* hardening + restart",
+    "OIDC pipeline (F6) — code untouched",
+    "F11 session/permission guard — code untouched",
+    "Foundation domain components (F10)",
+    "DB schemas + seeds — F12 is edge wiring only",
+    "Production deployment (deferred to F15)"
+  ],
+  "validation": {
+    "systemd_analyze_verify": "GREEN — ExecStart resolves; only unrelated host warnings (snapd RestartMode key, /etc/systemd/system/tei.service nobody) reported.",
+    "nginx_t": "GREEN — `nginx -t -c /tmp/fc-nginx-test/nginx.conf` (wrapper http{} including ops/nginx/foundation-console.conf): syntax ok, test successful."
+  },
+  "runtime_proof_stage_posture": {
+    "env": "NODE_ENV=production, FC_DEV_TEST_SESSION_ENABLED=false, FC_LOG_PRETTY=false",
+    "1_healthz": {
+      "request": "GET http://127.0.0.1:3000/healthz",
+      "http_status": 200,
+      "body_excerpt": "{\"status\":\"ok\",\"service\":\"foundation-gateway\",\"ts\":\"2026-05-07T23:18:00.106Z\"}"
+    },
+    "2_readyz": {
+      "request": "GET http://127.0.0.1:3000/readyz",
+      "http_status": 200,
+      "body": "{\"status\":\"ready\",\"service\":\"foundation-gateway\"}"
+    },
+    "3_config_json": {
+      "request": "GET http://127.0.0.1:3000/config.json",
+      "http_status": 200,
+      "body_excerpt": "{\"productCode\":\"foundation-console\",\"gatewayUrl\":\"http://localhost:3000\",\"oidc\":{\"issuerUrl\":\"http://localhost:8180/login/realms/dogan\",\"realm\":\"dogan\",\"clientId\":\"foundation-console\",\"redirectUri\":\"http://localhost:3000/auth/callback\"},\"endpoints\":{\"workspaceRuntime\":\"/api/ui-os/workspace-runtime\",\"pageRuntime\":\"/api/ui-os/page-runtime\",...}}"
+    },
+    "4_unauth_workspace_runtime_returns_401_json": {
+      "request": "GET http://127.0.0.1:3000/api/ui-os/workspace-runtime  (no cookie)",
+      "http_status": 401,
+      "body": "{\"error\":\"unauthenticated\"}"
+    },
+    "5_unauth_page_runtime_returns_401_json": {
+      "request": "GET http://127.0.0.1:3000/api/ui-os/page-runtime?path=/  (no cookie)",
+      "http_status": 401,
+      "body": "{\"error\":\"unauthenticated\"}"
+    },
+    "6_unauth_session_returns_401_json": {
+      "request": "GET http://127.0.0.1:3000/auth/session  (no cookie)",
+      "http_status": 401,
+      "body": "{\"error\":\"unauthenticated\"}"
+    },
+    "7_dev_session_disabled_under_stage_posture": {
+      "request": "POST http://127.0.0.1:3000/auth/dev-session  body={\"sub\":\"f12-test\"}",
+      "http_status": 404,
+      "body_excerpt": "Cannot POST /auth/dev-session",
+      "explanation": "Endpoint is registered ONLY when (FC_DEV_TEST_SESSION_ENABLED=true AND NODE_ENV !== 'production'). Stage posture sets NODE_ENV=production AND FC_DEV_TEST_SESSION_ENABLED=false, so the route is never registered. Express returns its default 404 — proof that the minter is unreachable."
+    }
+  },
+  "grep_proof": {
+    "scope": "products/foundation-console/ops/**",
+    "legacy_service_names_shahin_dos_platform_at_dos_platform_core": 0,
+    "hardcoded_workspace_home": 0,
+    "hardcoded_old_routes_foundation_settings_subscription": 0,
+    "legacy_ports_4200_3001_3002": 0
+  },
+  "files_changed": [
+    "products/foundation-console/ops/systemd/fc-foundation-gateway.service     (ExecStart pinned to /usr/local/bin/node24)",
+    "products/foundation-console/ops/systemd/fc-foundation-ui-os.service       (ExecStart pinned to /usr/local/bin/node24)",
+    "products/foundation-console/ops/systemd/fc-foundation-dynamic-ui.service  (ExecStart pinned to /usr/local/bin/node24)",
+    "products/foundation-console/ops/install/install-fc-app.sh                 (any /usr/bin/node refs swapped to /usr/local/bin/node24)"
+  ],
+  "acceptance": {
+    "systemd_unit_validation_GREEN": true,
+    "services_start_GREEN": true,
+    "nginx_config_test_GREEN": true,
+    "healthz_200_through_gateway": true,
+    "unauth_workspace_runtime_returns_401_json": true,
+    "config_json_returns_runtime_config": true,
+    "dev_session_unavailable_when_FC_DEV_TEST_SESSION_ENABLED_false": true,
+    "grep_legacy_zero_in_ops": true,
+    "no_production_cutover": true,
+    "no_legacy_services_restarted": true
+  },
+  "blockers": []
+}

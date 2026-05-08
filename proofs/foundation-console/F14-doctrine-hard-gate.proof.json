@@ -1,0 +1,113 @@
+{
+  "phase": "F14 — Foundation Console doctrine hard gate (pre-remote-deploy)",
+  "status": "GREEN",
+  "doctrine_gate_summary": {
+    "scanner": "scripts/ci-guards/lint-fc-doctrine.mjs",
+    "scanned_roots": [
+      "products/foundation-console/app/src",
+      "products/foundation-console/packages",
+      "products/foundation-console/services",
+      "products/foundation-console/ops",
+      "products/foundation-console/db/migrations"
+    ],
+    "scanned_files": 57,
+    "scanned_bytes": 136963,
+    "rules_total": 29,
+    "violations_total": 0
+  },
+  "gate_categories": {
+    "1_static_or_fallback_violations": {
+      "static_nav_fallback_helpers (buildPlatformNav/buildFoundationGroup/buildFoundationNavChildren)": 0,
+      "hardcoded_page_route_table": 0,
+      "fake_home_page_or_workspace_home_invention": 0,
+      "fabricated_business_data": "none — empty props render diagnostic-safe empty states",
+      "placeholder_components_naming": 0
+    },
+    "2_legacy_violations": {
+      "/workspace-home_in_product_code": 0,
+      "old_shahin_or_dos_route_reuse": 0,
+      "label_key_in_app_or_ui_system_or_contracts": 0,
+      "labelKey_in_app_or_ui_system_or_contracts": 0,
+      "component_key_outside_resolver_or_SQL_boundary": 0,
+      "perms_required_outside_resolver_or_SQL_boundary": 0,
+      "snake_case_outside_allowed_resolver_or_db_boundary": 0
+    },
+    "3_boundary_violations": {
+      "@dos_imports_in_FC_code": 0,
+      "@platform_imports_in_FC_code": 0,
+      "platform/(core|ui-system|config-center)_imports_in_FC_code": 0,
+      "DB_driver_imports_in_Angular_or_ui_system": 0,
+      "legacy_pm2_or_service_names_in_runtime_config": 0
+    },
+    "4_auth_violations": {
+      "browser_bearer_injection": 0,
+      "localStorage_token_auth_truth": 0,
+      "sessionStorage_token_auth_truth": 0,
+      "grc_token_in_FC_code": 0,
+      "FC_DEV_TEST_SESSION_ENABLED_value_in_systemd_units": "false (forced override on all 3 fc-foundation-*.service units, regardless of EnvironmentFile)",
+      "auth_dev_session_route_status_in_stage_posture": "404 (route NOT registered when NODE_ENV=production AND FC_DEV_TEST_SESSION_ENABLED=false). Log line 'dev-session endpoint enabled' grep count = 0 (absent)."
+    },
+    "5_runtime_contract_violations": {
+      "workspace_runtime_emits_pure_camelCase": true,
+      "page_runtime_emits_pure_camelCase": true,
+      "workspace_runtime_forbidden_token_count": 0,
+      "page_runtime_forbidden_token_count": 0,
+      "snake_case_keys_in_emitted_payload": 0,
+      "all_emitted_componentKeys_in_FC_APPROVED_COMPONENT_KEYS": true,
+      "componentKeys_emitted_workspace": ["workspace.header", "workspace.sidebar"],
+      "componentKeys_emitted_page": [
+        "foundation.section.heading",
+        "foundation.dashboard.summary",
+        "foundation.section.heading",
+        "foundation.list.simple"
+      ],
+      "unapproved_componentKey_count": 0,
+      "component_map_closure_test": "GREEN — 15 approved keys, 15 mapped (test/component-map-closure.test.mjs prints 'F7 closure GREEN')",
+      "unknown_componentKey_diagnostic_remains_controlled": true
+    },
+    "6_build_runtime_proof": {
+      "@fc/ui-contracts_build": "GREEN",
+      "@fc/ui-system_build": "GREEN",
+      "@fc/foundation-ui-os_build": "GREEN",
+      "@fc/foundation-gateway_build": "GREEN",
+      "angular_app_build": "GREEN (production, ~234 kB initial bundle, 3.096s)",
+      "curl_healthz": "200",
+      "curl_config_json": "200",
+      "unauth_workspace_runtime_curl": "401 JSON {error:'unauthenticated'}",
+      "unauth_page_runtime_curl": "401 JSON {error:'unauthenticated'}",
+      "unauth_session_curl": "401 JSON {error:'unauthenticated'}",
+      "stage_posture_dev_session_curl": "404 (POST /auth/dev-session). Endpoint NOT registered. Verified with NODE_ENV=production FC_DEV_TEST_SESSION_ENABLED=false on a temporary stage gateway (port 3500). Log line 'dev-session endpoint enabled' absent."
+    }
+  },
+  "doctrine_guard_inline_allowance_used": [
+    "products/foundation-console/services/foundation-ui-os/src/index.ts FORBIDDEN_PROP_KEYS Set members tagged with `// fc-doctrine-allow` — these tokens (labelKey/labelEn/labelAr/detailRoute/evidenceUri/chromeStrings) are the ENFORCER blocklist itself, not legacy field usage. The `accountMenu` and `route` tokens have no inline allow because they are not on the doctrine forbidden-token rule list (props['accountMenu'] is the forbidden form; bare `accountMenu` string in a Set is enforcement)."
+  ],
+  "files_changed_in_F14": [
+    "scripts/ci-guards/lint-fc-doctrine.mjs (added products/foundation-console/db/migrations to SCAN_ROOTS and to ALLOWED_DIR_FOR_SNAKE_CASE — DB SQL canonically uses snake_case)",
+    "products/foundation-console/services/foundation-ui-os/src/index.ts (FORBIDDEN_PROP_KEYS members tagged with `// fc-doctrine-allow` — no behavior change; tags only)"
+  ],
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "Angular app routes (still empty)",
+    "OIDC pipeline (F6)",
+    "F11 session/permission guard",
+    "Foundation domain components (F10)",
+    "DB schemas + seeds (no change)",
+    "production deployment (deferred to F15)",
+    "Public DNS / cutover (deferred to F15)",
+    "New production server 152.228.132.7 (still in OVH rescue per F12-0; not touched)"
+  ],
+  "blockers": [],
+  "next_phase_gate": "F15 production deployment is the next gate, but it remains BLOCKED on F12-0 (production server OS install + sandbox SSH key for dos-shahin-ai-prod@dogan). F14 itself is GREEN and CI-enforceable.",
+  "acceptance": {
+    "all_static_or_fallback_violations_zero": true,
+    "all_legacy_violations_zero": true,
+    "all_boundary_violations_zero": true,
+    "all_auth_violations_zero": true,
+    "all_runtime_contract_violations_zero": true,
+    "all_builds_GREEN": true,
+    "all_runtime_curls_pass": true,
+    "dev_session_disabled_in_stage_posture": true,
+    "F14_status": "GREEN — doctrine hard gate passes; ready for F15 once F12-0 unblocks."
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "phase": "F14.5 closeout — Foundation Console SSO end-to-end blocker (operator-owned Keycloak)",
+  "status": "FC_GREEN_BLOCKED_ON_KEYCLOAK_OPERATOR",
+  "summary": "Foundation Console gateway emits a fully env-driven OIDC authorize URL (no hardcoded client_id/redirect_uri/issuer in FC source). End-to-end SSO is blocked by two operator-owned conditions on the upstream Keycloak realm 'dogan' published behind https://shahin-ai.com/login/.",
+  "fc_env_driven_proof": {
+    "FC_OIDC_CLIENT_ID_source": "products/foundation-console/.env line 17 (FC_OIDC_CLIENT_ID=foundation-console)",
+    "FC_OIDC_REDIRECT_URI_source": "products/foundation-console/.env line 19 (https://f.shahin-ai.com/auth/callback)",
+    "FC_OIDC_ISSUER_URL_source": "products/foundation-console/.env line 15 (https://shahin-ai.com/login/realms/dogan)",
+    "no_hardcoded_oidc_in_source": true,
+    "auth_login_redirect_observed": "https://shahin-ai.com/login/realms/dogan/protocol/openid-connect/auth?client_id=foundation-console&redirect_uri=https%3A%2F%2Ff.shahin-ai.com%2Fauth%2Fcallback&response_type=code&scope=openid+profile+email&state=<random>&code_challenge=<S256>&code_challenge_method=S256",
+    "auth_login_http_status": 302,
+    "pkce_s256": true
+  },
+  "operator_blockers": [
+    {
+      "id": "keycloak_unreachable_502",
+      "description": "Probes to https://shahin-ai.com/login/realms/dogan/.well-known/openid-configuration and the authorize endpoint return HTTP 502. The Cloudflare-published upstream for shahin-ai.com (http://127.0.0.1:80) is not currently routing to a live Keycloak instance.",
+      "owner": "host-platform infrastructure / Keycloak operator",
+      "fc_action": "none — FC gateway code/env is correct; no FC change can fix upstream availability"
+    },
+    {
+      "id": "keycloak_client_not_registered",
+      "description": "When Keycloak is reachable, realm 'dogan' previously responded 'Client not found' for client_id=foundation-console. The Keycloak admin must register a client with id 'foundation-console', enable Standard Flow + PKCE S256, set Valid Redirect URI 'https://f.shahin-ai.com/auth/callback' and Web Origin 'https://f.shahin-ai.com'.",
+      "owner": "Keycloak realm 'dogan' admin",
+      "fc_action": "none — FC gateway env-driven URL is already correct"
+    }
+  ],
+  "fc_local_proof_matrix": {
+    "local_healthz": 200,
+    "f_shahin_ai_com_config_json": 200,
+    "f_shahin_ai_com_auth_login": 302,
+    "shahin_ai_com_discovery": 502,
+    "shahin_ai_com_authorize_endpoint": 502
+  },
+  "files_touched_in_closeout": [
+    "products/foundation-console/ops/systemd/fc-foundation-gateway.service (NODE_EXTRA_CA_CERTS Environment line confirmed present for prod posture parity with .env)"
+  ],
+  "doctrine_held": {
+    "zero_hardcoded_oidc_values_in_source": true,
+    "zero_static_fallback_added_to_workaround_keycloak_outage": true,
+    "zero_dev_session_minter_in_stage_posture": true,
+    "fc_dev_test_session_enabled": false,
+    "node_env": "production",
+    "wire_format_camelCase_only": true
+  },
+  "next_action_required": "Operator (a) restore Keycloak service behind https://shahin-ai.com/login/, (b) register OIDC client 'foundation-console' in realm 'dogan' with redirect URI https://f.shahin-ai.com/auth/callback and web origin https://f.shahin-ai.com. After both, re-run /auth/login → complete SSO → /auth/session 200 → fc_sid cookie issued → /api/ui-os/workspace-runtime authenticated 200.",
+  "downstream_phases_unblocked_by_this_closeout": [
+    "F12-0 (production server OS install) — independent",
+    "F15 (production deploy gate) — still depends on F12-0"
+  ]
+}

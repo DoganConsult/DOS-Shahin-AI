@@ -1,0 +1,126 @@
+{
+  "phase": "F9 — Foundation Console DB-backed page/runtime resolver + Angular content host wiring",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "page_runtime_is_source_of_truth_for_main_zone": true,
+    "zero_static_routes_in_angular": true,
+    "zero_static_home_page": true,
+    "zero_angular_route_fallback": true,
+    "zero_domain_business_components": true,
+    "zero_oidc_changes": true,
+    "zero_production_deployment": true,
+    "zero_db_reads_from_angular": true,
+    "zero_platform_imports": true,
+    "zero_legacy_field_emission_on_wire": true,
+    "zero_unapproved_componentKeys_seeded": true,
+    "wire_format_camelCase_only": true,
+    "missing_path_returns_diagnostic_not_static_page": true,
+    "f8_main_shell_placeholders_removed": "Migration DELETEs fc.surface.content.main + fc.surface.main.empty (idempotent: DELETE 2 first run, DELETE 0 after) so main zone is owned exclusively by /page-runtime."
+  },
+  "scope_executed": [
+    "products/foundation-console/db/migrations/20260507_2500_fc_ui_os_pages.sql (NEW — pages + page_surfaces tables, FK + uniqueness + grants + idempotent seed for path '/' + cleanup of F8 main placeholders + validation)",
+    "products/foundation-console/packages/fc-ui-contracts/src/index.ts (FcPageRuntime + FcPageDiagnostic + FcRuntimeConfig.endpoints.pageRuntime)",
+    "products/foundation-console/services/foundation-ui-os/src/index.ts (GET /page-runtime?path=… resolver: invalid_path / page_not_found / page_disabled / page_empty diagnostics; surfaces normalized to camelCase FcWorkspaceSurface with zone='page.main')",
+    "products/foundation-console/services/foundation-gateway/src/index.ts (/config.json now exposes endpoints.pageRuntime — existing /api/ui-os/* regex already proxies it)",
+    "products/foundation-console/packages/fc-ui-system/src/page-runtime.service.ts (NEW — PageRuntimeService signal {idle|loading|ready|error}, fetch credentials:'include')",
+    "products/foundation-console/packages/fc-ui-system/src/workspace-content-host-v2.component.ts (replaced shell-main rendering with PageRuntimeService.state-driven page surface rendering through DosSurfaceRendererComponent + visible diagnostic for page_not_found / page_empty)",
+    "products/foundation-console/packages/fc-ui-system/src/workspace-shell-v2.component.ts (ngOnInit additionally drives PageRuntimeService.setPath(window.location.pathname) — initial path = real browser URL, no hardcoded '/')",
+    "products/foundation-console/packages/fc-ui-system/src/workspace-sidebar-v2.component.ts (nav items rendered as <button>; click on action.kind==='navigate' calls PageRuntimeService.setPath(action.path) + history.pushState; non-navigate kinds ignored at this phase)",
+    "products/foundation-console/packages/fc-ui-system/src/index.ts (exports PageRuntimeService + FcPageState)"
+  ],
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "Angular app routes (still empty)",
+    "OIDC pipeline (F6)",
+    "permissions/session guard (F11)",
+    "domain business components"
+  ],
+  "migration_seed_proof": {
+    "first_run": "BEGIN; CREATE TABLE pages; CREATE INDEX; COMMENT; CREATE TABLE page_surfaces; CREATE INDEX; COMMENT; DO; GRANT(x3); DELETE 2 (F8 main placeholders); INSERT 0 1 (page); INSERT 0 1 (page_surface); DO; COMMIT",
+    "second_run_idempotent": "BEGIN; relations exist (skip CREATE); DO; GRANT(x3); DELETE 0 (already cleaned); INSERT 0 1 (ON CONFLICT DO UPDATE refresh page); INSERT 0 1 (ON CONFLICT DO UPDATE refresh page_surface); DO; COMMIT",
+    "row_inventory": {
+      "fc_ui_os.pages (tenant=*, product=foundation-console)": [
+        { "id": "fc.page.home", "path": "/", "title_fallback": "Home", "enabled": true, "version": 1 }
+      ],
+      "fc_ui_os.page_surfaces (tenant=*, product=foundation-console, page=fc.page.home)": [
+        { "surfaceId": "fc.page.home.surface.welcome", "componentKey": "workspace.emptyState", "props": { "title": "Foundation Console — Home", "description": "Page runtime is live. Add page surfaces in fc_ui_os.page_surfaces." } }
+      ]
+    },
+    "approved_componentKey_compliance": "Only 'workspace.emptyState' seeded — within F7 FC_APPROVED_COMPONENT_KEYS baseline."
+  },
+  "runtime_proof": {
+    "GET /api/ui-os/page-runtime?path=/ (proxied via gateway)": {
+      "http_status": 200,
+      "tenantId": "*",
+      "productCode": "foundation-console",
+      "path": "/",
+      "pageId": "fc.page.home",
+      "version": 1,
+      "title": { "i18nKey": "fc.page.home.title", "fallback": "Home" },
+      "permsRequired": [],
+      "surfaces_count": 1,
+      "surface_componentKey": "workspace.emptyState",
+      "diagnostics": []
+    },
+    "GET /api/ui-os/page-runtime?path=/does-not-exist": {
+      "http_status": 200,
+      "pageId": null,
+      "surfaces_count": 0,
+      "diagnostics": [{ "kind": "page_not_found", "path": "/does-not-exist" }]
+    },
+    "GET /api/ui-os/page-runtime?path= (empty)": {
+      "http_status": 200,
+      "pageId": null,
+      "surfaces_count": 0,
+      "diagnostics": [{ "kind": "invalid_path", "path": "" }]
+    },
+    "GET /api/ui-os/workspace-runtime (post-cleanup)": {
+      "http_status": 200,
+      "shell_surfaces_count": 2,
+      "zones": { "header": 1, "sidebar": 1 },
+      "main_surface_ids": [],
+      "nav_groups_count": 1,
+      "nav_items_count": 1,
+      "doctrine_alignment": "Main zone is now empty in workspace-runtime; main content is exclusively published by /page-runtime — page is the source of truth."
+    },
+    "GET /config.json": "endpoints.pageRuntime = '/api/ui-os/page-runtime' (camelCase, env-driven via @fc/config)",
+    "snake_case_keys_in_emitted_payloads": "ZERO (all wire keys are camelCase; row property names like component_key live only in resolver row interfaces inside services/foundation-ui-os/src/index.ts)",
+    "browser_render_path": "Angular bootstrap → fetch /config.json → providers FC_RUNTIME_CONFIG + FC_COMPONENT_MAP → mount <fc-workspace-shell-v2 /> → ngOnInit calls WorkspaceRuntimeService.load() AND PageRuntimeService.setPath(location.pathname). Sidebar nav buttons (DB-driven) dispatch navigate actions through PageRuntimeService.setPath() + history.pushState — no Angular Router routes, no static home component. Content host renders page surfaces through DosSurfaceRendererComponent → COMPONENT_MAP → real component for approved keys; visible diagnostic for unknown keys/paths.",
+    "approved_keys_resolve_to_real_components": true,
+    "missing_componentKey_diagnostic_for_unapproved": "RETAINED (verified by F7 closure)",
+    "page_not_found_diagnostic_visible_not_fake_page": "WorkspaceContentHostV2 renders <section class='fc-page-diagnostic' data-kind='page_not_found'> for diagnostic entries; no fake page synthesized."
+  },
+  "build_proof": {
+    "fc_ui_contracts":     "GREEN (tsc -p)",
+    "fc_ui_system":        "GREEN (tsc -p)",
+    "fc_foundation_ui_os": "GREEN (tsc -p)",
+    "fc_foundation_gateway":"GREEN (tsc -p)",
+    "fc_app_angular":      "GREEN (ng build production) — main-QENQID6Y.js 224.10 kB raw / 59.03 kB transfer; styles-GDC2C72E.css 124 B"
+  },
+  "grep_proof": {
+    "scope": "app/src + packages/fc-ui-system/src + packages/fc-ui-contracts/src + packages/fc-config/src + services/foundation-gateway/src + services/foundation-ui-os/src",
+    "platform_or_at_dos_imports":          "ZERO",
+    "hardcoded_workspace_home":            "ZERO",
+    "hardcoded_product_routes_in_app_src": "ZERO (only the bootstrap fetch '/config.json' in main.ts; nav paths come from DB)",
+    "hardcoded_routes_in_ui_system_src":   "ZERO",
+    "legacy_label_or_component_keys_in_app_or_ui_system": "ZERO",
+    "snake_case_in_resolver_only":         "All snake_case hits (label_key/label_fallback/component_key/perms_required/title_i18n_key/title_fallback) are inside services/foundation-ui-os/src/index.ts — the allowed UI-OS resolver/service boundary per AGENTS.md. ZERO snake_case in frontend/contract/gateway code or wire payloads.",
+    "FORBIDDEN_PROP_KEYS_doctrine_array":  "Located at services/foundation-ui-os/src/index.ts:88 — sanitizeProps drops labelKey/labelEn/labelAr/detailRoute/evidenceUri/chromeStrings/accountMenu/route from emitted props (this is the doctrine enforcer, not a violation)."
+  },
+  "env_drift_carry_over": {
+    "ts_target": "ES2022 + lib ES2023 (workspace TS 5.4.5). TODO: restore ES2024 once toolchain pinned.",
+    "node_env_production_for_boot": "Required to bypass missing pino-pretty transport in fc-logger when NODE_ENV=development. TODO: add pino-pretty as devDependency or guard in fc-logger.",
+    "tenant_injection": "Per-session tenant resolution still deferred to F11 (FC_PUBLIC_TENANT_ID env scope used for now)."
+  },
+  "acceptance": {
+    "migration_seed_idempotent":                                       true,
+    "curl_/api/ui-os/page-runtime?path=/_returns_200_from_DB":         true,
+    "unknown_path_returns_controlled_diagnostic_not_fake_page":        true,
+    "Angular_renders_DB_page_surfaces_through_COMPONENT_MAP":          "wire-proven; visual capture deferred to F13",
+    "no_missing-component_diagnostic_for_approved_page_rows":          true,
+    "no_platform_imports":                                             true,
+    "no_hardcoded_routes_in_frontend_or_gateway_runtime_payloads":     true,
+    "no_legacy_fields_in_wire_payload":                                true
+  },
+  "blockers": []
+}

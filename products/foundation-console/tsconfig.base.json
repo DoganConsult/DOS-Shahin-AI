@@ -1,0 +1,21 @@
+{
+  "//env-drift": "ENV-DRIFT (F3 closeout): target/lib downgraded ES2024 -> ES2022/ES2023 because workspace TS is 5.4.5. TODO: Restore ES2024 once toolchain is pinned for Foundation Console (TS >= 5.7).",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "declaration": true,
+    "sourceMap": true,
+    "resolveJsonModule": true
+  }
+}

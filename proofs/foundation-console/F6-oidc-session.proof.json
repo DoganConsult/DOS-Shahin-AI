@@ -1,0 +1,75 @@
+{
+  "phase": "F6 — Foundation Console OIDC + cookie session via foundation-gateway",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_bearer_in_browser": true,
+    "zero_localstorage_session_token": true,
+    "zero_legacy_auth_service_reuse": true,
+    "zero_hardcoded_idp_urls": true,
+    "zero_platform_imports": true,
+    "session_cookie_httponly": true,
+    "session_cookie_encrypted": "AES-256-GCM with PBKDF SHA-256(FC_SESSION_SECRET)",
+    "pkce_s256": true,
+    "no_new_dependencies": "node:crypto + global fetch only"
+  },
+  "scope_executed": [
+    "products/foundation-console/services/foundation-gateway/src/auth.ts (NEW — 260 LOC: discovery cache, AES-GCM encrypted cookies, PKCE S256, parseCookies, /auth/login, /auth/callback, /auth/session, /auth/logout GET+POST)",
+    "products/foundation-console/services/foundation-gateway/src/index.ts (registerAuthRoutes wired BEFORE proxy + SPA catch-all)",
+    "products/foundation-console/.env + .env.example (FC_OIDC_ISSUER_URL corrected to http://localhost:8180/login/realms/dogan to match Keycloak http-relative-path=/login mount)"
+  ],
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "Angular app sources",
+    "fc-ui-system / fc-ui-contracts",
+    "DB seeds",
+    "ui-os resolver"
+  ],
+  "build_proof": {
+    "fc_foundation_gateway": "GREEN (tsc -p) — emits dist/index.js + dist/auth.js"
+  },
+  "runtime_proof": {
+    "boot_log": "{\"level\":30,\"service\":\"foundation-gateway\",\"port\":3000,\"distDir\":\"products/foundation-console/app/dist/foundation-console/browser\",\"msg\":\"foundation-gateway listening\"}",
+    "GET /auth/session (unauth)": "401 {\"error\":\"unauthenticated\"}",
+    "GET /auth/login": "302 Location: https://shahin-ai.com/login/realms/dogan/protocol/openid-connect/auth?client_id=foundation-console&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fcallback&response_type=code&scope=openid+profile+email&state=...&code_challenge=...&code_challenge_method=S256 ; Set-Cookie: fc_oauth_state=<aes-gcm>; Path=/; HttpOnly; SameSite=Lax; Max-Age=300; Secure",
+    "GET /auth/callback (no params)": "400 {\"error\":\"auth_callback_missing_params\"}",
+    "GET /auth/callback?code=abc&state=xyz (no state cookie)": "400 {\"error\":\"auth_callback_missing_params\"}",
+    "POST /auth/logout": "200 {\"ok\":true} ; Set-Cookie: fc_sid=; Max-Age=0; HttpOnly; Set-Cookie: fc_oauth_state=; Max-Age=0; HttpOnly",
+    "GET /auth/logout": "302 Location: / ; Set-Cookie: fc_sid=; Max-Age=0; HttpOnly; Set-Cookie: fc_oauth_state=; Max-Age=0; HttpOnly"
+  },
+  "cookie_proof": {
+    "fc_oauth_state": "HttpOnly; SameSite=Lax; Max-Age=300; Secure (production); AES-256-GCM JSON {state,codeVerifier,iat}",
+    "fc_sid": "HttpOnly; SameSite=Lax; Max-Age=expires_in or 3600; Secure (production); AES-256-GCM JSON {sub,email?,name?,iat,exp}",
+    "Domain": "skipped when FC_SESSION_COOKIE_DOMAIN=localhost (browser rejection guard)",
+    "tokens_never_in_browser": "id_token/access_token decoded server-side; only sub/email/name/iat/exp are persisted in encrypted cookie"
+  },
+  "grep_proof": {
+    "scope": "products/foundation-console/services/foundation-gateway/src",
+    "localStorage_or_sessionStorage_runtime_hits": "ZERO (only doctrine comment in auth.ts header)",
+    "Authorization_Bearer_injection": "ZERO",
+    "platform_or_at_dos_imports": "ZERO",
+    "hardcoded_workspace_home": "ZERO",
+    "legacy_label_or_component_keys": "ZERO",
+    "hardcoded_http_urls": "ZERO (all URLs derived from FC_OIDC_ISSUER_URL/FC_OIDC_REDIRECT_URI/FC_GATEWAY_URL via @fc/config)"
+  },
+  "env_drift_carry_over": {
+    "ts_target": "ES2022 + lib ES2023 (workspace TS 5.4.5 limit). TODO: restore ES2024 once toolchain pinned.",
+    "node_env_production_for_boot": "Required to bypass missing pino-pretty transport in fc-logger when NODE_ENV=development. TODO: add pino-pretty as devDependency or guard in fc-logger.",
+    "oidc_issuer_url_correction": "FC_OIDC_ISSUER_URL pointed to http://localhost:8180/realms/dogan but Keycloak runs with http-relative-path=/login → corrected to http://localhost:8180/login/realms/dogan. Discovery now returns 200 and /auth/login successfully redirects to https://shahin-ai.com/login/realms/dogan/... (KC hostname-strict)."
+  },
+  "acceptance": {
+    "gateway_build_GREEN": true,
+    "auth_session_unauth_returns_401_json": true,
+    "auth_login_redirects_to_idp_authorize": true,
+    "auth_callback_handles_missing_or_invalid_safely": true,
+    "cookies_are_HttpOnly": true,
+    "cookies_are_Secure_in_production": true,
+    "cookies_are_SameSite_Lax": true,
+    "session_token_AES_GCM_encrypted": true,
+    "pkce_S256_enforced": true,
+    "no_localStorage_or_sessionStorage_token": true,
+    "no_Bearer_token_injection_in_browser_path": true,
+    "no_old_shahin_auth_service_reuse": true,
+    "no_production_deployment": true
+  },
+  "blockers": []
+}

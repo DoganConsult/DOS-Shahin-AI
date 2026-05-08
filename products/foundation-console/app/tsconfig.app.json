@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc/app",
+    "types": []
+  },
+  "files": ["src/main.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "../packages/fc-ui-system/src/**/*.ts",
+    "../packages/fc-ui-contracts/src/**/*.ts"
+  ]
+}

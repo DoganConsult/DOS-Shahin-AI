@@ -1,0 +1,167 @@
+{
+  "phase": "F11 — Foundation Console session/permission guard for runtime endpoints",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_browser_bearer_token": true,
+    "zero_localStorage_or_sessionStorage_token": true,
+    "zero_angular_db_reads": true,
+    "zero_angular_static_routes": true,
+    "zero_production_deployment": true,
+    "zero_platform_imports": true,
+    "zero_legacy_field_emission_on_wire": true,
+    "zero_static_fallback_when_perms_insufficient": true,
+    "wire_format_camelCase_only": true,
+    "gateway_is_sole_identity_authority": "Gateway strips ALL client-supplied x-fc-* identity headers + cookie before proxying and re-injects sanitized session-derived headers. Client header spoofing is impossible.",
+    "unauthenticated_returns_401_json_not_redirect": true,
+    "insufficient_perms_returns_controlled_diagnostic_not_data": true,
+    "empty_session_perms_filter_correctly": "perms_required=[] always passes; perms_required != [] requires ALL listed perms held by session.",
+    "dev_session_endpoint_env_gated": "Enabled only when FC_DEV_TEST_SESSION_ENABLED=true AND NODE_ENV !== 'production'."
+  },
+  "scope_executed": [
+    "products/foundation-console/services/foundation-gateway/src/auth.ts (added SessionData.perms?+tenantId? optional fields; added Express Request augmentation with req.fcSession; added makeRequireSession(cfg): RequestHandler middleware — parses fc_sid cookie, decrypts via AES-256-GCM, validates sub/exp, returns 401 JSON {error:'unauthenticated'|'session_invalid'|'session_expired'} on failure, attaches sanitized SessionData to req.fcSession; added env-gated POST /auth/dev-session endpoint that mints a real fc_sid cookie via the same encryption path — used to prove the 200 path without OIDC roundtrip)",
+    "products/foundation-console/services/foundation-gateway/src/index.ts (proxy() now strips ALL client-supplied identity headers (x-fc-user-id, x-fc-tenant-id, x-fc-perms, x-fc-user-email, x-fc-user-name, cookie) and re-injects sanitized session-derived headers: x-fc-product-code, x-fc-tenant-id (session > FC_PUBLIC_TENANT_ID), x-fc-user-id, x-fc-user-email, x-fc-user-name, x-fc-perms (CSV); applied requireSession middleware to /api/ui-os/* via app.all(/^\\/api\\/ui-os\\/.*/, requireSession, ...))",
+    "products/foundation-console/services/foundation-ui-os/src/index.ts (added parseSessionPerms(req) helper reading x-fc-perms CSV; added hasAllPerms(required, held) — empty required = always allowed; /workspace-runtime now filters surfaces + nav items by perms_required vs session perms, drops empty groups (groups with no remaining items), exposes drop counters via response headers x-fc-resolver-dropped-{surfaces-perm,items-perm,groups-empty}; /page-runtime adds page-level perm guard (insufficient → controlled page_disabled diagnostic with HTTP 200 + x-fc-resolver-perm-denied header, NOT data) and per-surface perm filter)",
+    "products/foundation-console/packages/fc-logger/src/index.ts (added FC_LOG_PRETTY env override so dev-session can be exercised without requiring pino-pretty package — non-doctrine env-toggle only)",
+    "products/foundation-console/.env (added FC_DEV_TEST_SESSION_ENABLED=true and FC_LOG_PRETTY=false for the dev/test environment only — NOT for production)"
+  ],
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "Angular app routes (still empty)",
+    "OIDC pipeline (F6) — auth/login, auth/callback, auth/session, auth/logout untouched",
+    "Foundation domain components (F10)",
+    "DB schemas + seeds — guard is a runtime read-side filter, not a schema change",
+    "production deployment (F15)"
+  ],
+  "build_proof": {
+    "fc_logger":            "GREEN (tsc -p)",
+    "fc_foundation_gateway":"GREEN (tsc -p)",
+    "fc_foundation_ui_os":  "GREEN (tsc -p)"
+  },
+  "runtime_proof": {
+    "1_unauth_workspace_runtime": {
+      "request": "GET /api/ui-os/workspace-runtime  (no cookie)",
+      "http_status": 401,
+      "body": { "error": "unauthenticated" }
+    },
+    "2_unauth_page_runtime": {
+      "request": "GET /api/ui-os/page-runtime?path=/  (no cookie)",
+      "http_status": 401,
+      "body": { "error": "unauthenticated" }
+    },
+    "3_invalid_cookie": {
+      "request": "GET /api/ui-os/workspace-runtime  (Cookie: fc_sid=invalid_garbage)",
+      "http_status": 401,
+      "body": { "error": "session_invalid" }
+    },
+    "4_dev_session_mint_no_perms": {
+      "request": "POST /auth/dev-session  body={\"sub\":\"f11-noperm\",\"email\":\"f11np@dos.local\"}",
+      "http_status": 200,
+      "set_cookie": "fc_sid=<aes-256-gcm encrypted JSON, 144 chars>; Path=/; HttpOnly; SameSite=Lax; Max-Age=3600",
+      "body": { "ok": true, "sub": "f11-noperm", "exp": 1778197087 }
+    },
+    "5_auth_workspace_runtime_no_perms": {
+      "request": "GET /api/ui-os/workspace-runtime  (Cookie: fc_sid=<noperm>)",
+      "http_status": 200,
+      "headers": {
+        "x-fc-resolver-dropped-actions": "0",
+        "x-fc-resolver-dropped-surfaces-perm": "0",
+        "x-fc-resolver-dropped-items-perm": "0",
+        "x-fc-resolver-dropped-groups-empty": "0"
+      },
+      "payload_summary": {
+        "tenantId": "*",
+        "userId": "f11-noperm",
+        "shell.surfaces": 2,
+        "shell.zones": ["header", "sidebar"],
+        "shell.nav.groups": 1,
+        "shell.nav.items": 1
+      }
+    },
+    "6_auth_page_runtime_no_perms": {
+      "request": "GET /api/ui-os/page-runtime?path=/  (Cookie: fc_sid=<noperm>)",
+      "http_status": 200,
+      "headers": {
+        "x-fc-resolver-dropped-surfaces-perm": "0"
+      },
+      "payload_summary": {
+        "pageId": "fc.page.home",
+        "permsRequired": [],
+        "surfaces": 4,
+        "componentKeys": [
+          "foundation.section.heading",
+          "foundation.dashboard.summary",
+          "foundation.section.heading",
+          "foundation.list.simple"
+        ],
+        "diagnostics": []
+      }
+    },
+    "7_perm_filter_drops_gated_nav_item_for_noperm_session": {
+      "test_setup": "Inserted fc.nav.item.f11test with perms_required={foundation.admin}",
+      "noperm_session_result": {
+        "x-fc-resolver-dropped-items-perm": "1",
+        "items_visible": ["fc.nav.item.home"]
+      },
+      "allperm_session_result": {
+        "x-fc-resolver-dropped-items-perm": "0",
+        "items_visible": ["fc.nav.item.home", "fc.nav.item.f11test"]
+      },
+      "cleanup": "DELETE 1 — gated nav item removed after assertion"
+    },
+    "8_page_disabled_diagnostic_for_insufficient_perms": {
+      "test_setup": "Inserted fc.page.f11gated at path=/gated with perms_required={foundation.admin}",
+      "request": "GET /api/ui-os/page-runtime?path=/gated  (noperm session)",
+      "http_status": 200,
+      "headers": { "x-fc-resolver-perm-denied": "1" },
+      "body": {
+        "pageId": "fc.page.f11gated",
+        "surfaces_count": 0,
+        "diagnostics": [{ "kind": "page_disabled", "path": "/gated", "pageId": "fc.page.f11gated" }]
+      },
+      "doctrine_alignment": "No fake/static page returned. Controlled diagnostic only.",
+      "cleanup": "DELETE 1 — gated page removed after assertion"
+    },
+    "9_client_identity_spoof_blocked": {
+      "request": "GET /api/ui-os/workspace-runtime  with attacker headers x-fc-user-id, x-fc-tenant-id, x-fc-perms (using legitimate noperm session cookie)",
+      "expected": "Gateway must strip client-supplied identity headers and re-inject only session-derived ones.",
+      "actual": {
+        "userId_in_payload": "f11-noperm (from session, NOT attacker)",
+        "tenantId_in_payload": "* (from FC_PUBLIC_TENANT_ID, NOT attacker-tenant)",
+        "items_count": 1
+      },
+      "result": "Spoof rejected. Gateway is the sole identity authority."
+    }
+  },
+  "grep_proof": {
+    "scope_app_packages": "products/foundation-console/{app/src,packages/*/src}",
+    "scope_services": "products/foundation-console/services/*/src",
+    "localStorage_or_sessionStorage_token_in_client": 0,
+    "Bearer_or_Authorization_injection_in_client": 0,
+    "platform_or_@dos_imports_in_product_code": 0,
+    "hardcoded_workspace_home_in_product_code": 0,
+    "legacy_frontend_fields_in_app_or_ui_system_or_contracts": 0,
+    "legacy_snake_case_in_resolver_only": "29 hits — ALL inside services/foundation-ui-os/src/index.ts (the allowed UI-OS resolver/service boundary per AGENTS.md). ZERO snake_case in frontend/contract/gateway code or wire payloads."
+  },
+  "env_drift_carry_over": {
+    "ts_target": "ES2022 + lib ES2023 (workspace TS 5.4.5). TODO: restore ES2024 once toolchain pinned for Foundation Console.",
+    "fc_log_pretty_env_added": "FC_LOG_PRETTY env override added to fc-logger so dev/test runs work without pino-pretty package. Production behavior unchanged (pretty disabled when NODE_ENV=production)."
+  },
+  "acceptance": {
+    "unauth_workspace_runtime_returns_401_json": true,
+    "unauth_page_runtime_returns_401_json": true,
+    "valid_dev_session_returns_200_runtime": true,
+    "perm_filter_drops_unauthorized_nav_items_with_drop_counter": true,
+    "perm_filter_drops_unauthorized_surfaces_with_drop_counter": true,
+    "page_disabled_diagnostic_for_insufficient_perms_no_data_leak": true,
+    "client_identity_header_spoof_blocked": true,
+    "config_json_and_healthz_remain_public": true,
+    "fc_logger_build_GREEN": true,
+    "fc_foundation_gateway_build_GREEN": true,
+    "fc_foundation_ui_os_build_GREEN": true,
+    "zero_browser_bearer_token": true,
+    "zero_localStorage_token": true,
+    "zero_platform_imports": true,
+    "zero_legacy_fields_in_emission": true,
+    "F11_status": "GREEN — ready for F12"
+  }
+}

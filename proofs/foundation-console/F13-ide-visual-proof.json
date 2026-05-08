@@ -1,0 +1,128 @@
+{
+  "phase": "F13 — Foundation Console local IDE visual proof (Workspace Shell V2 + page-runtime render)",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_static_nav_fallback": true,
+    "zero_legacy_fields_in_browser": true,
+    "zero_platform_imports_in_product_code": true,
+    "zero_localStorage_or_sessionStorage_token": true,
+    "zero_browser_bearer_injection": true,
+    "zero_workspace_home_invention": true,
+    "zero_placeholder_components": true,
+    "zero_production_cutover": true,
+    "wire_format_camelCase_only": true,
+    "page_runtime_is_source_of_truth_for_main_zone": true
+  },
+  "bug_found_and_fixed": {
+    "summary": "Initial render showed infinite recursive <banner> nesting (>120 levels deep) for header/sidebar zones.",
+    "root_cause": "FC_DEFAULT_COMPONENT_MAP mapped componentKeys 'workspace.header'/'workspace.sidebar'/'workspace.content' to surface components that re-instantiated the OUTER <fc-workspace-header-v2> / <fc-workspace-sidebar-v2> / <fc-workspace-content-host-v2> layout. Those V2 layout components themselves iterate zone surfaces and resolve them via DosSurfaceRenderer → infinite mutual recursion.",
+    "doctrine_resolution": "The V2 layout (shell/header/sidebar/content-host) is the ZONE container composed at the SHELL ROOT and iterates inner surfaces. The keys 'workspace.shell|header|sidebar|content' must map to IN-ZONE CONTENT renderers (brand strip / section heading / inert markers reading display text from surface.props in camelCase only) — never to the outer layout.",
+    "fix": "Rewrote products/foundation-console/packages/fc-ui-system/src/surface-components.ts WorkspaceShellSurfaceComponent / WorkspaceHeaderSurfaceComponent / WorkspaceSidebarSurfaceComponent / WorkspaceContentSurfaceComponent to inert content renderers. Removed imports of WorkspaceShellV2Component / WorkspaceHeaderV2Component / WorkspaceSidebarV2Component / WorkspaceContentHostV2Component from surface-components.ts. No DB seed change required; no contract change; no API change."
+  },
+  "files_changed": [
+    "products/foundation-console/packages/fc-ui-system/src/surface-components.ts (workspace.shell/header/sidebar/content surface components no longer recurse into the V2 layout — they render inert content from surface.props only; doctrine comment block updated)"
+  ],
+  "scope_untouched": [
+    "DB schemas / seeds (no change)",
+    "FC_APPROVED_COMPONENT_KEYS (still 15 keys)",
+    "FC_DEFAULT_COMPONENT_MAP (same key→component mapping; only the components themselves changed)",
+    "Workspace runtime resolver (services/foundation-ui-os)",
+    "Page runtime resolver",
+    "Gateway proxy + session guard (F11)",
+    "OIDC pipeline (F6)",
+    "Foundation domain components (F10)",
+    "platform/* (frozen)"
+  ],
+  "build_proof": {
+    "fc_ui_contracts": "GREEN",
+    "fc_ui_system": "GREEN",
+    "fc_foundation_ui_os": "GREEN",
+    "fc_foundation_gateway": "GREEN",
+    "fc_app_angular_production": "GREEN — main-TIPWXYJV.js 234.53 kB raw / 60.47 kB transfer; styles 124 B; build 3.333s"
+  },
+  "runtime_endpoint_proof": {
+    "1_healthz": { "request": "GET http://127.0.0.1:3000/healthz", "http_status": 200 },
+    "2_unauth_session": { "request": "GET /auth/session (no cookie)", "http_status": 401, "body": "{\"error\":\"unauthenticated\"}" },
+    "3_dev_session_mint": {
+      "request": "POST /auth/dev-session  body={sub:f13-visual,perms:[foundation.admin,foundation.read],tenantId:*}",
+      "http_status": 200,
+      "set_cookie": "fc_sid=ROex_P2MR89fOAbtILKlMHNvnp239...; HttpOnly; SameSite=Lax; Max-Age=3600"
+    },
+    "4_authenticated_workspace_runtime": {
+      "request": "GET /api/ui-os/workspace-runtime  (Cookie: fc_sid)",
+      "http_status": 200,
+      "shell.surfaces": 2,
+      "shell.surfaces.componentKeys": ["workspace.header", "workspace.sidebar"],
+      "shell.zones": ["header", "sidebar"],
+      "shell.nav.groups": 1,
+      "shell.nav.items": 1,
+      "nav.item.action": { "kind": "navigate", "path": "/" }
+    },
+    "5_authenticated_page_runtime": {
+      "request": "GET /api/ui-os/page-runtime?path=/",
+      "http_status": 200,
+      "pageId": "fc.page.home",
+      "surfaces_count": 4,
+      "componentKeys": [
+        "foundation.section.heading",
+        "foundation.dashboard.summary",
+        "foundation.section.heading",
+        "foundation.list.simple"
+      ],
+      "diagnostics": []
+    }
+  },
+  "browser_proof": {
+    "url_opened": "http://127.0.0.1:3000/",
+    "page_title": "Foundation Console",
+    "console_errors": 0,
+    "console_warnings": 0,
+    "localStorage_keys": [],
+    "sessionStorage_keys": [],
+    "rendered_zones": ["header (banner)", "sidebar (navigation)", "main"],
+    "rendered_nav_group_label": "Platform",
+    "rendered_nav_items": ["Home"],
+    "rendered_main_surfaces": [
+      "heading 'Foundation Console' (foundation.section.heading)",
+      "paragraph 'Operational overview'",
+      "heading 'Summary' (foundation.dashboard.summary) + 'no metrics (props.metrics is empty)'",
+      "heading 'Recent activity' (foundation.section.heading)",
+      "list 'No recent activity yet.' (foundation.list.simple)"
+    ],
+    "no_missing_component_diagnostic_for_approved_rows": true,
+    "no_workspace_home_redirect": true,
+    "no_recursive_banner_nesting": true,
+    "screenshots": [
+      "proofs/foundation-console/F13-screenshots/desktop-1440.png",
+      "proofs/foundation-console/F13-screenshots/tablet-768.png",
+      "proofs/foundation-console/F13-screenshots/mobile-430.png",
+      "proofs/foundation-console/F13-screenshots/mobile-390.png"
+    ]
+  },
+  "grep_proof": {
+    "scope_app_packages_contracts_uisystem": {
+      "/workspace-home": 0,
+      "labelKey": 0,
+      "component_key": 0,
+      "perms_required": 0,
+      "label_key": 0,
+      "label_fallback": 0
+    },
+    "scope_app_packages_services": {
+      "platform_namespace_imports": 0,
+      "@dos_imports": 0
+    },
+    "snake_case_outside_resolver_boundary": 0
+  },
+  "acceptance": {
+    "all_builds_GREEN": true,
+    "shell_renders_from_runtime_only": true,
+    "page_renders_via_COMPONENT_MAP_only": true,
+    "no_missing_component_diagnostic_for_approved_rows": true,
+    "no_console_errors": true,
+    "no_browser_token_storage": true,
+    "no_recursion_bug": true,
+    "responsive_screenshots_captured": true,
+    "F13_status": "GREEN — ready for F14 doctrine hard gate"
+  }
+}

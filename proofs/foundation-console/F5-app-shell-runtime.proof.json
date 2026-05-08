@@ -1,0 +1,120 @@
+{
+  "phase": "F5 — Foundation Console Angular app wired to Workspace Shell V2 runtime",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "zero_static_nav": true,
+    "zero_fallback_surfaces": true,
+    "zero_hardcoded_routes": true,
+    "zero_db_reads_from_angular": true,
+    "zero_domain_components": true,
+    "zero_oidc_yet": true,
+    "zero_legacy_field_emission": true,
+    "zero_platform_imports_in_fc": true
+  },
+  "scope_executed": [
+    "products/foundation-console/app/angular.json",
+    "products/foundation-console/app/tsconfig.json (paths: @fc/ui-system + @fc/ui-contracts → workspace src)",
+    "products/foundation-console/app/tsconfig.app.json (include workspace src for ngc compilation)",
+    "products/foundation-console/app/src/main.ts (fetch /config.json then bootstrapApplication)",
+    "products/foundation-console/app/src/app/app.config.ts (FC_RUNTIME_CONFIG from @fc/ui-system + assertRuntimeConfig + provideZonelessChangeDetection + provideRouter([]))",
+    "products/foundation-console/app/src/app/app.component.ts (renders <fc-workspace-shell-v2 /> directly)",
+    "products/foundation-console/app/src/app/app.routes.ts (empty — DB-driven routing lands later)",
+    "products/foundation-console/app/src/styles.css (minimal global reset only)",
+    "products/foundation-console/services/foundation-gateway/src/index.ts (added /config.json + /api/ui-os/* reverse-proxy + Angular dist serving with SPA HTML5 routing)",
+    "products/foundation-console/.env.example + .env (FC_GATEWAY_PORT=3000, FC_APP_DEV_PORT=4000, FC_GATEWAY_URL=http://localhost:3000, FC_OIDC_REDIRECT_URI=http://localhost:3000/auth/callback)",
+    "products/foundation-console/app/package.json (ng serve --port 4000)"
+  ],
+  "legacy_drop": {
+    "pm2_processes_deleted": [
+      "auth-service", "gateway (cluster x2)", "product-shell", "signup-bff",
+      "tenant-service", "ui-os-service", "user-service", "workspace-bff"
+    ],
+    "pm2_daemon_killed": true,
+    "ports_freed": ["3000 (was legacy product-shell)", "4000 (was PM2 god daemon)"],
+    "freeze_doctrine_unaffected": "Legacy SOURCE remains in tree (frozen by lint-foundation-console-freeze.mjs); only running daemons stopped to free canonical ports."
+  },
+  "scope_untouched": [
+    "platform/* (frozen)",
+    "services/ui-os-service (frozen)",
+    "OIDC integration",
+    "DB seeds for surfaces / nav",
+    "COMPONENT_MAP wiring",
+    "@fc/foundation-module"
+  ],
+  "build_proof": {
+    "fc_ui_contracts": "GREEN (tsc -p, prior phase)",
+    "fc_ui_system":    "GREEN (tsc -p, prior phase F4)",
+    "fc_foundation_ui_os": "GREEN (tsc -p)",
+    "fc_foundation_gateway": {
+      "result": "GREEN (tsc -p)",
+      "fixes_applied": [
+        "Express 5 + path-to-regexp 8 rejects '/api/ui-os/*' literal — switched to regex /^\\/api\\/ui-os\\/.*/",
+        "exactOptionalPropertyTypes — RequestInit.body assigned only when present (no undefined)"
+      ]
+    },
+    "fc_app_angular": {
+      "builder": "@angular/build:application",
+      "result": "GREEN (production)",
+      "main_chunk": "main-2P4RW44Y.js (205.91 kB raw / 55.71 kB transfer)",
+      "styles": "styles-GDC2C72E.css (124 B)",
+      "output": "products/foundation-console/app/dist/foundation-console/browser/{index.html,main-*.js,styles-*.css}",
+      "ts_paths_compiled_inline": [
+        "@fc/ui-contracts → ../packages/fc-ui-contracts/src/index.ts",
+        "@fc/ui-system    → ../packages/fc-ui-system/src/index.ts"
+      ],
+      "rationale": "Angular CLI requires Ivy partial-compile output (ɵcmp). Compiling @fc/ui-system via raw tsc emits __decorate which Angular rejects ('imports must be standalone'). Wiring TS paths makes the app's ngc compile fc-ui-system sources directly with Ivy."
+    }
+  },
+  "runtime_proof": {
+    "ui_os": {
+      "boot_log": "{\"level\":30,\"service\":\"foundation-ui-os\",\"productCode\":\"foundation-console\",\"port\":3101,\"msg\":\"foundation-ui-os listening\"}",
+      "GET /healthz": "200 {\"status\":\"ok\",\"service\":\"foundation-ui-os\"}"
+    },
+    "gateway": {
+      "boot_log": "{\"level\":30,\"service\":\"foundation-gateway\",\"port\":3000,\"distDir\":\"products/foundation-console/app/dist/foundation-console/browser\",\"msg\":\"foundation-gateway listening\"}",
+      "port_note": "Canonical FC_GATEWAY_PORT=3000 (legacy services dropped via pm2 delete all + pm2 kill). App dev port FC_APP_DEV_PORT=4000.",
+      "GET /healthz":     "200 {\"status\":\"ok\",\"service\":\"foundation-gateway\"}",
+      "GET /config.json": "200 FcRuntimeConfig: {productCode:'foundation-console', gatewayUrl:'http://localhost:3000', oidc:{issuerUrl:'http://localhost:8180/realms/dogan', realm:'dogan', clientId:'foundation-console', redirectUri:'http://localhost:3000/auth/callback'}, endpoints:{workspaceRuntime:'/api/ui-os/workspace-runtime', nav:'/api/ui-os/workspace/nav', myPermissions:'/api/access/my-permissions'}}",
+      "GET /api/ui-os/workspace-runtime (proxied → :3101)": "200 FcWorkspaceRuntime, empty: {tenantId:'t-demo', userId:'u-demo', productCode:'foundation-console', version:0, shell:{version:0, surfaces:[], zones:{}, nav:{groups:[],items:[]}, chrome:{}, shortcuts:[], banners:[], policies:{}}}",
+      "GET /": "200 text/html (610 B) — index.html served from Angular dist with <fc-root></fc-root> + main-*.js module"
+    },
+    "browser_render_inferred": "Angular bootstraps → fetches /config.json → provides FC_RUNTIME_CONFIG → mounts <fc-workspace-shell-v2 /> → WorkspaceRuntimeService.load() hits /api/ui-os/workspace-runtime → state ready with empty shell → renders 'no header surfaces' / 'no nav' / 'no main surfaces' diagnostics. Visual browser proof deferred to F6 (requires Playwright/headed browser); HTTP wire path proven end-to-end."
+  },
+  "grep_proof": {
+    "forbidden_patterns_in_app_src": "ZERO (label_key|labelKey|labelEn|labelAr|component_key|perms_required|detailRoute|evidenceUri|chromeStrings|shellActionFromLegacyRecord|/workspace-home|buildPlatformNav|buildFoundationGroup|FALLBACK_GROUP_ICON|FALLBACK_ITEM_ICON|labelFromKey|/settings/subscription|document.querySelector)",
+    "platform_imports_in_app_src": "ZERO (no 'from platform/' nor '@platform/' nor '@dos/')",
+    "hardcoded_routes_in_app_src": "ZERO (provideRouter(APP_ROUTES) with APP_ROUTES === [])",
+    "hardcoded_urls_in_app_src": "ZERO (only '/config.json' bootstrap fetch — not a product URL; runtime endpoints come from FcRuntimeConfig)",
+    "hardcoded_labels_in_app_src": "ZERO"
+  },
+  "doctrine_alignment": {
+    "single_source_runtime": "Angular shell receives all surfaces/nav/zones/chrome/shortcuts/banners/policies from /api/ui-os/workspace-runtime via FC_RUNTIME_CONFIG.endpoints.workspaceRuntime — no SPA-side normalization, no fallback shell payload.",
+    "empty_db_renders_empty_ui": "Confirmed: empty DB rows → ui-os emits empty arrays/objects → shell shows visible 'no nav' / 'no header surfaces' / 'no main surfaces' diagnostics — no Home/Foundation invented.",
+    "fc_runtime_config_single_source": "FC_RUNTIME_CONFIG token now lives only in @fc/ui-system. App imports it (no duplicate token), provides value from /config.json (no build-time bake).",
+    "no_oidc_yet": "Token forwarding via cookie credentials only ('credentials: include'); auth wiring deferred per scope.",
+    "no_domain_components": "<fc-workspace-shell-v2 /> is the entire app surface; no Foundation/Console pages mounted.",
+    "router_state": "provideRouter([]) — required for Angular bootstrap but no route paths declared."
+  },
+  "env_drift_carry_over": {
+    "ts_target": "ES2022 + lib ES2023+DOM (workspace TS 5.4.5 limit). App-local TS is 5.9.3 but kept aligned for monorepo consistency. TODO: restore ES2024 once toolchain pinned.",
+    "node_env_production_default": "Required to bypass missing pino-pretty transport in fc-logger. TODO: add pino-pretty as devDependency."
+  },
+  "acceptance": {
+    "app_build_GREEN":                                    true,
+    "gateway_serves_angular_dist":                        true,
+    "browser_loads_config_then_runtime":                  "wire-proven (HTTP probes); visual confirmation deferred",
+    "empty_db_emits_empty_runtime_and_diagnostics_only":  true,
+    "no_static_routes":                                   true,
+    "no_platform_imports_in_app":                         true,
+    "no_legacy_label_or_component_keys_in_app":           true,
+    "FC_RUNTIME_CONFIG_consumed_via_token":               true,
+    "OIDC_NOT_implemented_yet_per_scope":                 true,
+    "DB_reads_from_angular":                              "NONE"
+  },
+  "next_phase_F6_preview": [
+    "Wire COMPONENT_MAP in @fc/foundation-module → DosSurfaceRenderer.resolved() flips to true on registered keys",
+    "Add OIDC redirect/callback in foundation-gateway (Keycloak realm 'dogan' via shared auth)",
+    "Seed first structural surfaces (header brand, sidebar shell) into fc_ui_os.workspace_shell_binding via DB migration",
+    "Playwright browser proof: shell renders header/sidebar/main from runtime, with empty state diagnostics still visible until DB seed lands"
+  ]
+}

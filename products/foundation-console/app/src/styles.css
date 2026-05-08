@@ -1,0 +1,3 @@
+/* Foundation Console — global reset only. No theme tokens hardcoded; UI-OS owns chrome. */
+html, body { margin: 0; padding: 0; height: 100%; }
+body { font-family: system-ui, -apple-system, sans-serif; color: #161616; background: #ffffff; }

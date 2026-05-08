@@ -1,0 +1,37 @@
+{
+  "productCode": "foundation-console",
+  "displayName": "Foundation Console",
+  "version": "0.0.1",
+  "owner": "Foundation Platform Team",
+  "doctrine": {
+    "zeroStatic": true,
+    "zeroLegacy": true,
+    "zeroFallback": true,
+    "zeroContainers": true,
+    "zeroHardcoded": true,
+    "dynamicUiOnly": true
+  },
+  "externalDependencies": {
+    "auth": { "kind": "keycloak-oidc", "realm": "dogan" },
+    "db":   { "kind": "postgres", "schemas": ["fc_ui_os", "fc_dynamic_ui"] }
+  },
+  "services": [
+    { "name": "foundation-gateway",     "port": 3100, "kind": "edge"     },
+    { "name": "foundation-ui-os",       "port": 3101, "kind": "internal" },
+    { "name": "foundation-dynamic-ui",  "port": 3102, "kind": "internal" }
+  ],
+  "packages": [
+    "@fc/config",
+    "@fc/logger",
+    "@fc/db",
+    "@fc/ui-contracts",
+    "@fc/ui-system",
+    "@fc/foundation-module"
+  ],
+  "plugAndPlay": {
+    "embedRoute": "/console/foundation",
+    "publicApiPrefix": "/api/foundation",
+    "ssoCallback": "/auth/callback",
+    "runtimeConfigEndpoint": "/config.json"
+  }
+}

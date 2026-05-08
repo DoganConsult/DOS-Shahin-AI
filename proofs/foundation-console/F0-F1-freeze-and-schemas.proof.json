@@ -1,0 +1,70 @@
+{
+  "phase": "F0 + F1",
+  "freeze_active": true,
+  "freeze_effective_utc": "2026-05-07T20:17:00Z",
+  "snapshot": {
+    "path": "ops/db-snapshots/shahin_grc_pre-foundation-console-freeze_20260507T201653Z.sql.gz",
+    "size_bytes": 87040
+  },
+  "ci_guard": {
+    "script": "scripts/ci-guards/lint-foundation-console-freeze.mjs",
+    "frozen_prefixes": [
+      "platform/core/platform/shell/",
+      "platform/core/platform/navigation/",
+      "platform/core/platform/dynamic-ui/",
+      "platform/core/services/platform/",
+      "platform/ui-system/dos-ui-system/src/shell/",
+      "platform/ui-system/dos-ui-contracts/src/",
+      "platform/foundation/ui/",
+      "platform/app/",
+      "services/ui-os-service/",
+      "services/dynamic-ui-service/",
+      "modules/",
+      "products/shahin-ai/",
+      "products/dogan-ai/",
+      "products/doganconsult/",
+      "products/doganhub/",
+      "products/doganlab/",
+      "products/tuwaiq-ai/"
+    ],
+    "allowed_prefixes": [
+      "products/foundation-console/",
+      "platform/dos/migrations/foundation-console/",
+      "scripts/ci-guards/",
+      "proofs/",
+      "ops/db-snapshots/",
+      "AGENTS.md"
+    ],
+    "bypass_label": "[SECURITY] commit subject prefix",
+    "bypass_env": "FREEZE_OFF=1 (emergency only)"
+  },
+  "db": {
+    "host": "localhost",
+    "database": "shahin_grc",
+    "schemas_created": ["fc_ui_os", "fc_dynamic_ui"],
+    "role_created": "fc_app",
+    "migration_id": "20260507_2200_create_fc_schemas",
+    "migration_path": "platform/dos/migrations/foundation-console/20260507_2200_create_fc_schemas.sql",
+    "legacy_dos_schema_touched": false,
+    "verification": {
+      "fc_ui_os_exists": true,
+      "fc_dynamic_ui_exists": true,
+      "fc_app_role_exists": true,
+      "fc_ui_os_migration_logged": true,
+      "fc_dynamic_ui_migration_logged": true
+    }
+  },
+  "doctrine": {
+    "shared_with_legacy": ["Keycloak realm dogan", "Postgres instance"],
+    "isolated_from_legacy": [
+      "UI-OS service (foundation-ui-os, fresh)",
+      "Dynamic UI service (foundation-dynamic-ui, fresh)",
+      "Shell components (fc-ui-system, fresh Carbon V2)",
+      "Contracts (fc-ui-contracts, fresh)",
+      "DB schemas (fc_ui_os.*, fc_dynamic_ui.*, no dos.* writes)",
+      "Gateway (foundation-gateway, own port)",
+      "App (products/foundation-console/app/)"
+    ]
+  },
+  "next_phase": "F2 — products/foundation-console/ skeleton + pnpm workspace registration"
+}

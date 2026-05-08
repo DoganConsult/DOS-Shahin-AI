@@ -1294,7 +1294,7 @@ importers:
     dependencies:
       axios:
         specifier: ^1.7.7
-        version: 1.15.2
+        version: 1.15.2(debug@4.4.3)
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -1717,6 +1717,197 @@ importers:
       typescript:
         specifier: 5.4.5
         version: 5.4.5
+
+  products/foundation-console/app:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.0.0
+        version: 21.2.11(@angular/core@21.2.11(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core':
+        specifier: ^21.0.0
+        version: 21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/platform-browser':
+        specifier: ^21.0.0
+        version: 21.2.11(@angular/animations@21.2.11(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.2.11(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@angular/router':
+        specifier: ^21.0.0
+        version: 21.2.11(@angular/common@21.2.11(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.2.11(@angular/animations@21.2.11(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.2.11(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      '@carbon/icons-angular':
+        specifier: ^11.0.0
+        version: 11.2.2(@angular/core@21.2.11(rxjs@7.8.2))
+      '@fc/foundation-module':
+        specifier: workspace:*
+        version: link:../packages/fc-foundation-module
+      '@fc/ui-contracts':
+        specifier: workspace:*
+        version: link:../packages/fc-ui-contracts
+      '@fc/ui-system':
+        specifier: workspace:*
+        version: link:../packages/fc-ui-system
+      rxjs:
+        specifier: ^7.8.0
+        version: 7.8.2
+    devDependencies:
+      '@angular/cli':
+        specifier: ^21.0.0
+        version: 21.2.9(@cfworker/json-schema@4.1.1)(@types/node@25.6.0)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.0.0
+        version: 21.2.11(@angular/compiler@21.2.11)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/packages/fc-config:
+    devDependencies:
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/packages/fc-db:
+    dependencies:
+      '@fc/config':
+        specifier: workspace:*
+        version: link:../fc-config
+      '@fc/logger':
+        specifier: workspace:*
+        version: link:../fc-logger
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
+    devDependencies:
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.20.0
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/packages/fc-foundation-module:
+    dependencies:
+      '@fc/ui-contracts':
+        specifier: workspace:*
+        version: link:../fc-ui-contracts
+    devDependencies:
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/packages/fc-logger:
+    dependencies:
+      pino:
+        specifier: ^9.0.0
+        version: 9.14.0
+    devDependencies:
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/packages/fc-ui-contracts:
+    devDependencies:
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/packages/fc-ui-system:
+    dependencies:
+      '@fc/ui-contracts':
+        specifier: workspace:*
+        version: link:../fc-ui-contracts
+    devDependencies:
+      '@angular/common':
+        specifier: ^21.0.0
+        version: 21.2.11(@angular/core@21.2.11(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core':
+        specifier: ^21.0.0
+        version: 21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)(zone.js@0.15.1)
+      rxjs:
+        specifier: ^7.8.0
+        version: 7.8.2
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/services/foundation-dynamic-ui:
+    dependencies:
+      '@fc/config':
+        specifier: workspace:*
+        version: link:../../packages/fc-config
+      '@fc/db':
+        specifier: workspace:*
+        version: link:../../packages/fc-db
+      '@fc/logger':
+        specifier: workspace:*
+        version: link:../../packages/fc-logger
+      '@fc/ui-contracts':
+        specifier: workspace:*
+        version: link:../../packages/fc-ui-contracts
+      express:
+        specifier: ^4.21.0
+        version: 4.22.1
+    devDependencies:
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.17
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/services/foundation-gateway:
+    dependencies:
+      '@fc/config':
+        specifier: workspace:*
+        version: link:../../packages/fc-config
+      '@fc/logger':
+        specifier: workspace:*
+        version: link:../../packages/fc-logger
+      '@fc/ui-contracts':
+        specifier: workspace:*
+        version: link:../../packages/fc-ui-contracts
+      express:
+        specifier: ^4.21.0
+        version: 4.22.1
+    devDependencies:
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.17
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
+  products/foundation-console/services/foundation-ui-os:
+    dependencies:
+      '@fc/config':
+        specifier: workspace:*
+        version: link:../../packages/fc-config
+      '@fc/db':
+        specifier: workspace:*
+        version: link:../../packages/fc-db
+      '@fc/logger':
+        specifier: workspace:*
+        version: link:../../packages/fc-logger
+      '@fc/ui-contracts':
+        specifier: workspace:*
+        version: link:../../packages/fc-ui-contracts
+      express:
+        specifier: ^4.21.0
+        version: 4.22.1
+    devDependencies:
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.17
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
 
   services/admin-console-bff:
     dependencies:
@@ -2408,7 +2599,7 @@ importers:
         version: 8.18.1
       axios:
         specifier: ^1.7.7
-        version: 1.15.2
+        version: 1.15.2(debug@4.4.3)
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -18537,14 +18728,6 @@ snapshots:
       postcss: 8.5.12
       postcss-value-parser: 4.2.0
 
-  axios@1.15.2:
-    dependencies:
-      follow-redirects: 1.16.0(debug@4.3.7)
-      form-data: 4.0.5
-      proxy-from-env: 2.1.0
-    transitivePeerDependencies:
-      - debug
-
   axios@1.15.2(debug@4.4.3):
     dependencies:
       follow-redirects: 1.16.0(debug@4.4.3)
@@ -20410,7 +20593,7 @@ snapshots:
   http-proxy-middleware@2.0.9(@types/express@4.17.25):
     dependencies:
       '@types/http-proxy': 1.17.17
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(debug@4.4.3)
       is-glob: 4.0.3
       is-plain-obj: 3.0.0
       micromatch: 4.0.8
@@ -20429,14 +20612,6 @@ snapshots:
       micromatch: 4.0.8
     transitivePeerDependencies:
       - supports-color
-
-  http-proxy@1.18.1:
-    dependencies:
-      eventemitter3: 4.0.7
-      follow-redirects: 1.16.0(debug@4.3.7)
-      requires-port: 1.0.0
-    transitivePeerDependencies:
-      - debug
 
   http-proxy@1.18.1(debug@4.4.3):
     dependencies:

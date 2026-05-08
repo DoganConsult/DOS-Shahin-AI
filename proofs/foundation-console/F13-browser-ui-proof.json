@@ -1,0 +1,103 @@
+{
+  "phase": "F13 — Foundation Console browser UI proof (Workspace Shell V2 + page-runtime render after recursion patch)",
+  "status": "GREEN",
+  "patch_accepted": {
+    "summary": "workspace.shell/header/sidebar/content surface components are inert in-zone content renderers and never re-mount WorkspaceShellV2/HeaderV2/SidebarV2/ContentHostV2.",
+    "doctrine_alignment": [
+      "workspace.shell becomes inert when emitted inside a zone",
+      "workspace.header renders only header-zone content (brand strip from props)",
+      "workspace.sidebar renders only sidebar-zone content (section heading from props)",
+      "workspace.content renders only main-zone content (section heading from props)",
+      "no component re-mounts WorkspaceShellV2/HeaderV2/SidebarV2/ContentHostV2",
+      "display text still comes only from surface.props (camelCase)",
+      "no platform/* or @dos imports",
+      "no hardcoded product route"
+    ],
+    "files_changed": [
+      "products/foundation-console/packages/fc-ui-system/src/surface-components.ts"
+    ]
+  },
+  "acceptance": {
+    "1_fc_ui_system_build_GREEN": true,
+    "2_angular_build_GREEN": true,
+    "3_component_map_closure_GREEN": "15/15 approved keys mapped (test/component-map-closure.test.mjs => 'F7 closure GREEN')",
+    "4_workspace_runtime_emits_approved_keys_only": {
+      "endpoint": "GET /api/ui-os/workspace-runtime",
+      "http_status": 200,
+      "componentKeys_emitted": ["workspace.header", "workspace.sidebar"],
+      "all_in_FC_APPROVED_COMPONENT_KEYS": true
+    },
+    "5_page_runtime_emits_approved_keys_only": {
+      "endpoint": "GET /api/ui-os/page-runtime?path=/",
+      "http_status": 200,
+      "componentKeys_emitted": [
+        "foundation.section.heading",
+        "foundation.dashboard.summary",
+        "foundation.section.heading",
+        "foundation.list.simple"
+      ],
+      "all_in_FC_APPROVED_COMPONENT_KEYS": true
+    },
+    "6_browser_render": {
+      "url": "http://127.0.0.1:3000/",
+      "title": "Foundation Console",
+      "header_count": 1,
+      "sidebar_count": 1,
+      "main_count": 1,
+      "missing_component_diagnostic_count": 0,
+      "console_errors": 0,
+      "blank_page": false,
+      "recursive_shell": false,
+      "dom_depth": 10,
+      "no_workspace_home_redirect": true,
+      "localStorage_keys": [],
+      "sessionStorage_keys": [],
+      "axTree_summary": {
+        "banner": "header zone present (1 instance)",
+        "navigation": "Platform > Home (1 nav group, 1 nav item)",
+        "main": [
+          "heading 'Foundation Console' (foundation.section.heading)",
+          "paragraph 'Operational overview'",
+          "heading 'Summary' + diag 'no metrics (props.metrics is empty)' (foundation.dashboard.summary)",
+          "heading 'Recent activity' (foundation.section.heading)",
+          "list 'No recent activity yet.' (foundation.list.simple)"
+        ]
+      }
+    },
+    "7_screenshots_at_390_430_768_1440": [
+      "proofs/foundation-console/F13-screenshots/mobile-390.png",
+      "proofs/foundation-console/F13-screenshots/mobile-430.png",
+      "proofs/foundation-console/F13-screenshots/tablet-768.png",
+      "proofs/foundation-console/F13-screenshots/desktop-1440.png"
+    ],
+    "8_proof_file_path": "proofs/foundation-console/F13-browser-ui-proof.json"
+  },
+  "grep_proof": {
+    "scope_app_packages_contracts_uisystem": {
+      "/workspace-home": 0,
+      "labelKey": 0,
+      "component_key": 0,
+      "perms_required": 0,
+      "label_key": 0,
+      "label_fallback": 0
+    },
+    "scope_app_packages_services": {
+      "platform_namespace_imports": 0,
+      "@dos_imports": 0
+    }
+  },
+  "doctrine_locked": {
+    "zero_static_nav_fallback": true,
+    "zero_legacy_fields_in_browser": true,
+    "zero_platform_imports_in_product_code": true,
+    "zero_localStorage_or_sessionStorage_token": true,
+    "zero_browser_bearer_injection": true,
+    "zero_workspace_home_invention": true,
+    "zero_placeholder_components": true,
+    "zero_production_cutover": true,
+    "wire_format_camelCase_only": true,
+    "page_runtime_is_source_of_truth_for_main_zone": true,
+    "no_recursive_shell_remount": true
+  },
+  "next_phase_gate": "F14 doctrine hard gate is now unblocked (F13 GREEN)."
+}

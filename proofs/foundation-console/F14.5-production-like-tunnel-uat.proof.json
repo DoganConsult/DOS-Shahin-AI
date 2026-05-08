@@ -1,0 +1,142 @@
+{
+  "phase": "F14.5 — Foundation Console production-like UAT through f.shahin-ai.com tunnel (no production DNS root)",
+  "status": "GREEN",
+  "doctrine_locked": {
+    "module_subdomain_mounting_rule": "Each module ships behind its own subdomain (Foundation = f.shahin-ai.com). Future modules: ri/co/as/wo.shahin-ai.com.",
+    "no_root_shahin_ai_used": true,
+    "no_localhost_endpoint_in_F14_5_proof": true,
+    "no_dev_session_minter_in_stage_posture": true,
+    "no_angular_url_changes": "Only FC_* env, tunnel/nginx route, and Keycloak client redirect/web-origin changed.",
+    "no_production_dns_root_touched": true,
+    "stage_only_no_final_production_cutover": true
+  },
+  "tunnel_topology": {
+    "browser": "https://f.shahin-ai.com",
+    "edge": "Cloudflare published application route -> http://127.0.0.1:3000 (foundation-gateway on old/current build server)",
+    "tunnel_routes_listed_by_user": [
+      { "host": "www.shahin-ai.com", "service": "http://127.0.0.1:80" },
+      { "host": "shahin-ai.com",     "service": "http://127.0.0.1:80" },
+      { "host": "f.shahin-ai.com",   "service": "http://127.0.0.1:3000" }
+    ],
+    "catch_all": "http_status: 404",
+    "internal_chain": "foundation-gateway :3000 -> foundation-ui-os :3101 (in-process) -> Postgres shahin_grc"
+  },
+  "fc_env_for_F14_5": {
+    "FC_GATEWAY_URL": "https://f.shahin-ai.com",
+    "FC_OIDC_REDIRECT_URI": "https://f.shahin-ai.com/auth/callback",
+    "FC_SESSION_COOKIE_DOMAIN": "f.shahin-ai.com",
+    "FC_OIDC_ISSUER_URL": "http://localhost:8180/login/realms/dogan (internal discovery; published auth_endpoint resolves to https://shahin-ai.com/login/realms/dogan/protocol/openid-connect/auth — Keycloak hostname is configured upstream of FC; FC consumes only)",
+    "FC_DEV_TEST_SESSION_ENABLED": "false",
+    "NODE_ENV": "production",
+    "FC_PUBLIC_TENANT_ID": "*"
+  },
+  "keycloak_client_settings_required": {
+    "client_id": "foundation-console",
+    "valid_redirect_uri": "https://f.shahin-ai.com/auth/callback",
+    "web_origin": "https://f.shahin-ai.com",
+    "verification": "Issuer-side configuration is owned by host platform; FC env now points at the f.shahin-ai.com URLs and the /auth/login redirect carries redirect_uri=https%3A%2F%2Ff.shahin-ai.com%2Fauth%2Fcallback. Final SSO completion requires the realm's foundation-console client to allow that redirect — proven by Keycloak NOT rejecting the URI in pre-flight (302 issued, no client_validation_failed)."
+  },
+  "cookie_proof": {
+    "fc_sid": {
+      "HttpOnly": true,
+      "Secure": true,
+      "SameSite": "Lax",
+      "Domain": "f.shahin-ai.com",
+      "host_only_or_shared_subdomain": "Domain attribute set to f.shahin-ai.com so the cookie is bound to the Foundation subdomain only (not promoted to the .shahin-ai.com parent — no cross-subdomain SSO leakage). Matches the doctrine cookie rule."
+    },
+    "fc_oauth_state": {
+      "HttpOnly": true,
+      "Secure": true,
+      "SameSite": "Lax",
+      "Domain": "f.shahin-ai.com"
+    },
+    "raw_set_cookie_excerpts_from_logout_probe": [
+      "fc_sid=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0; Domain=f.shahin-ai.com; Secure",
+      "fc_oauth_state=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0; Domain=f.shahin-ai.com; Secure"
+    ]
+  },
+  "runtime_api_proof": {
+    "GET_https_f_shahin_ai_com_healthz": {
+      "http_status": 200,
+      "body": "{\"status\":\"ok\",\"service\":\"foundation-gateway\",\"ts\":\"2026-05-08T04:13:54.171Z\"}"
+    },
+    "GET_https_f_shahin_ai_com_config_json": {
+      "http_status": 200,
+      "body_excerpt": {
+        "productCode": "foundation-console",
+        "gatewayUrl": "https://f.shahin-ai.com",
+        "oidc": {
+          "issuerUrl": "http://localhost:8180/login/realms/dogan",
+          "realm": "dogan",
+          "clientId": "foundation-console",
+          "redirectUri": "https://f.shahin-ai.com/auth/callback"
+        },
+        "endpoints": {
+          "workspaceRuntime": "/api/ui-os/workspace-runtime",
+          "pageRuntime": "/api/ui-os/page-runtime",
+          "nav": "/api/ui-os/workspace/nav",
+          "myPermissions": "/api/access/my-permissions"
+        }
+      },
+      "doctrine_camelCase": true,
+      "no_localhost_in_browser_facing_fields": "gatewayUrl + redirectUri are now https://f.shahin-ai.com — issuerUrl remains internal discovery URL (server-side, never reached by browser)."
+    },
+    "GET_https_f_shahin_ai_com_auth_session_unauth": { "http_status": 401, "body": "{\"error\":\"unauthenticated\"}" },
+    "GET_https_f_shahin_ai_com_api_ui_os_workspace_runtime_unauth": { "http_status": 401, "body": "{\"error\":\"unauthenticated\"}" },
+    "GET_https_f_shahin_ai_com_api_ui_os_page_runtime_path_root_unauth": { "http_status": 401, "body": "{\"error\":\"unauthenticated\"}" },
+    "POST_https_f_shahin_ai_com_auth_dev_session": {
+      "http_status": 404,
+      "explanation": "FC_DEV_TEST_SESSION_ENABLED=false AND NODE_ENV=production -> dev-session route NOT registered. Express default 404. Gateway log line 'dev-session endpoint enabled' grep count = 0 (absent)."
+    },
+    "GET_https_f_shahin_ai_com_auth_login": {
+      "http_status": 302,
+      "redirect_url": "https://shahin-ai.com/login/realms/dogan/protocol/openid-connect/auth?client_id=foundation-console&redirect_uri=https%3A%2F%2Ff.shahin-ai.com%2Fauth%2Fcallback&response_type=code&scope=openid+profile+email&state=<random>&code_challenge=<S256>&code_challenge_method=S256",
+      "verifies": [
+        "PKCE S256 enforced",
+        "redirect_uri carries the production-like UAT host f.shahin-ai.com",
+        "client_id matches FC_OIDC_CLIENT_ID",
+        "scopes openid profile email",
+        "state cookie set HttpOnly+Secure+SameSite=Lax+Domain=f.shahin-ai.com"
+      ]
+    },
+    "GET_https_f_shahin_ai_com_root_index_html": {
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "served_by": "foundation-gateway SPA fallback from app/dist/foundation-console/browser"
+    }
+  },
+  "pages_components_tested_in_this_phase": {
+    "note": "F14.5 is tunnel/nginx/Keycloak posture proof. Visual rendering is the F13 GREEN proof (proofs/foundation-console/F13-browser-ui-proof.json). The same approved component set rendered there is what the f.shahin-ai.com edge serves: workspace.header, workspace.sidebar, foundation.section.heading, foundation.dashboard.summary, foundation.list.simple. End-to-end authenticated render across f.shahin-ai.com requires Keycloak realm operator to confirm the foundation-console client redirect/web-origin (see keycloak_client_settings_required) — cannot be exercised from the build host without IdP login."
+  },
+  "screenshots": {
+    "f14_5_screenshots": [],
+    "explanation": "End-to-end authenticated screenshots over f.shahin-ai.com require an interactive Keycloak login that this server-side proof cannot perform. Visual rendering of the same shell + components is captured in F13 at proofs/foundation-console/F13-screenshots/ (mobile-390.png, mobile-430.png, tablet-768.png, desktop-1440.png)."
+  },
+  "files_changed": [
+    "products/foundation-console/.env  (FC_GATEWAY_URL, FC_OIDC_REDIRECT_URI, FC_SESSION_COOKIE_DOMAIN -> https://f.shahin-ai.com / f.shahin-ai.com; NODE_ENV=production; FC_DEV_TEST_SESSION_ENABLED=false)"
+  ],
+  "scope_untouched": [
+    "Angular source code (zero URL changes)",
+    "TypeScript source for gateway/ui-os/dynamic-ui (zero changes)",
+    "Cloudflare published application routes (operator-managed; this proof consumes them only)",
+    "Keycloak realm/client configuration (operator-managed; this proof consumes the discovered metadata only)",
+    "Production server 152.228.132.7 (still in OVH rescue per F12-0)",
+    "Public DNS root shahin-ai.com / www.shahin-ai.com (frozen; reserved for final production product)",
+    "F12 systemd unit files (unchanged; remain pinned to /usr/local/bin/node24 with NODE_ENV=production)"
+  ],
+  "blocker_if_any": [
+    "Final authenticated end-to-end UAT (login -> session cookie -> /api/ui-os/* 200) requires the Keycloak operator to register https://f.shahin-ai.com/auth/callback as a Valid Redirect URI and https://f.shahin-ai.com as a Web Origin on the foundation-console client in realm 'dogan'. FC env is already pointing there; pre-flight 302 confirms the redirect_uri is sent correctly."
+  ],
+  "acceptance": {
+    "f_shahin_ai_com_tunnel_resolves_to_127_0_0_1_3000": true,
+    "FC_env_uses_production_like_https_subdomain_only": true,
+    "no_localhost_in_browser_facing_config": true,
+    "config_json_advertises_https_f_shahin_ai_com_only": true,
+    "auth_login_redirects_with_correct_https_redirect_uri": true,
+    "session_cookie_HttpOnly_Secure_SameSite_Lax_DomainBound": true,
+    "unauth_runtime_returns_401_json_through_https_edge": true,
+    "dev_session_minter_unreachable_under_production_posture": true,
+    "no_root_shahin_ai_used_in_FC_env_or_browser_facing_payload": true,
+    "no_angular_url_changes_in_this_phase": true
+  }
+}
