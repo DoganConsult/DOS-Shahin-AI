@@ -2200,3 +2200,51 @@ Workflow §6.5 approval; A2 deferred to a dedicated wave; A6 verified empty.
   UNIQUE constraint immunises against future drift; sync trigger
   negative-path tested. Open follow-up: triage the 7 unregistered-but-
   live `tenant_*` schemas (do NOT drop without confirming each is dead).
+
+## Cursor Cloud specific instructions
+
+### Quick reference
+
+| What | Command |
+|------|---------|
+| Install deps | `pnpm install` |
+| Full build | `pnpm build` |
+| Build SPA only | `pnpm --filter shahin-ai-grc-frontend build` |
+| Build a service | `pnpm --filter @dos/<service-name> build` |
+| Run tests | `pnpm -r run test` (note: SPA has no test files, will exit 1) |
+| Run CI guards | `node scripts/ci-guards/carbon-dynamic-ui-coherence.mjs` etc. |
+| Start services | `pm2 start platform/config-center/ops/ecosystem.platform.config.js` |
+| Service logs | `pm2 logs <service-name>` |
+
+### Environment setup (already done by update script)
+
+- **Node.js 24.15.0** via nvm (`.nvmrc` specifies this)
+- **pnpm 9.15.4** via corepack
+- **PM2** installed globally
+- **PostgreSQL 16** on localhost:5432 (user `dos_auth` / password `dos_auth_pass_2026`, database `shahin_grc`)
+- **Redis** on localhost:6379 (password `d57921272933f2d3a94a6f1fbf42982791b8afdd74f96f89`)
+
+### Service startup caveats
+
+1. **Keycloak is NOT available** in Cloud Agent VMs. Services referencing Keycloak JWKS (`:8180`) will log warnings but most can still boot. Gateway's `/health` works regardless.
+
+2. **mTLS certs** at `/root/DOS-Platform/platform/config-center/secrets/` do not exist in Cloud Agent VMs. Set `MTLS_ENFORCE=0` and `MTLS_HTTPS_LISTEN=0` when starting services that reference them (gateway, auth-service, rollout-service).
+
+3. **user-service** references `FOUNDATION_MODULE_DIST=/root/DOS-Platform/platform/foundation/dist` in its env file. The actual path is `/workspace/platform/foundation/dist`. Override via PM2 env or direct start.
+
+4. **Migration ordering bug**: The migration runner (`platform/config-center/migration/migration-runner.ts up`) sorts files by filename lexicographically across all module directories. This causes FK failures on fresh databases because `modules/audit/db/.../001_extracted_from_001_evidence_tables.sql` (creates `audit_findings` referencing `dos.evidences`) runs before `modules/evidence/db/.../001_extracted_from_001_evidence_tables.sql` (creates `dos.evidences`). Workaround: pre-create FK target tables (`dos.evidences`, `dos.risk_incidents`, `dos.remediation_actions`) before running the runner, or apply the evidence/risk/remediation module migrations manually first.
+
+5. **Core services for dev**: Only `product-shell` (:3000), `gateway` (:4000), and `ui-os-service` (:4015) are needed for the SPA to load and render. Start these via: `pm2 start platform/config-center/ops/ecosystem.platform.config.js --only product-shell,gateway,ui-os-service`
+
+6. **SPA output location**: Angular build outputs to `products/shahin-ai/app/dist/shahin-ai/browser/`. This is where product-shell's fallback path (`SPA_DIR_DEFAULT`) points.
+
+### Running the full build
+
+```
+pnpm build
+```
+This runs builds in dependency order: packages → services → platform → modules → SPA (~90s total). The SPA build (`ng build`) takes ~13s.
+
+### Lint
+
+ESLint config is at `products/shahin-ai/app/eslint.config.js`. The `pnpm lint` script attempts `ng lint` which requires `angular-eslint`. Use `npx eslint` directly against the SPA source if needed.
