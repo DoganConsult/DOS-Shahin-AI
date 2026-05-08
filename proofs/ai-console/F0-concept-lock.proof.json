@@ -1,0 +1,182 @@
+{
+  "phase": "F0 — AI Console concept lock (16-gate sequence, mirrors Foundation Console gate model)",
+  "status": "DRAFT_AWAITING_APPROVAL",
+  "generated_at": "2026-05-08T07:58:00Z",
+  "gate_model_reference": "products/foundation-console (feat/foundation-console-init) — same 16-gate sequence F0..F15",
+  "branch": "feat/ai-console-init",
+  "branch_base": "feat/foundation-console-init @ 6829a0308a8d506abd80b00b8d50f5d74f36f301",
+
+  "product_identity": {
+    "product_code": "ai-console",
+    "module_code": "ai",
+    "display_name": "AI Console",
+    "app_path": "products/ai-console",
+    "manifest_path": "products/ai-console/product.manifest.json (to be written in F2)",
+    "doctrine": "ZERO STATIC / ZERO LEGACY / ZERO FALLBACK / ZERO MIRROR / ZERO BROWSER NORMALIZATION / ZERO CONTAINERS — same as Foundation Console; AGENTS.md applies"
+  },
+
+  "subdomain_target": {
+    "host": "ai.shahin-ai.com",
+    "scheme": "https",
+    "edge": "Cloudflare published application route -> http://127.0.0.1:<AI_GATEWAY_PORT> (stage on build host) / new production host once F12-1 + F15 are gated",
+    "module_subdomain_mounting_rule": "AI = ai.shahin-ai.com (one of the reserved module subdomains: f/ri/co/as/wo/ai). No use of root shahin-ai.com or www.shahin-ai.com.",
+    "no_root_dns_touched": true,
+    "no_dns_cutover_in_F0": true
+  },
+
+  "oidc_client": {
+    "client_id": "ai-console",
+    "realm": "dogan",
+    "issuer_url": "https://shahin-ai.com/login/realms/dogan",
+    "redirect_uri": "https://ai.shahin-ai.com/auth/callback",
+    "web_origin": "https://ai.shahin-ai.com",
+    "valid_post_logout_redirect_uris": ["https://ai.shahin-ai.com/*"],
+    "client_type": "OpenID Connect",
+    "access_type": "confidential or public (decided in F6 alongside gateway implementation; aligned with Foundation Console outcome)",
+    "standard_flow": true,
+    "pkce_s256": true,
+    "session_cookie": {
+      "name": "ai_sid",
+      "domain": "ai.shahin-ai.com",
+      "http_only": true,
+      "secure": true,
+      "same_site": "Lax",
+      "host_only_no_parent_domain_promotion": true
+    },
+    "no_browser_token_storage": true,
+    "no_bearer_injection_from_browser": true,
+    "operator_action_required_before_F14_5": [
+      "Register Keycloak client 'ai-console' in realm 'dogan' (parallel to 'foundation-console')",
+      "Add Valid Redirect URI https://ai.shahin-ai.com/auth/callback",
+      "Add Web Origin https://ai.shahin-ai.com"
+    ]
+  },
+
+  "db_runtime_namespace": {
+    "rule": "AI Console owns its own schemas. No reuse of fc_* schemas. No coupling to Foundation tables.",
+    "owned_schemas": ["ai_ui_os", "ai_dynamic_ui"],
+    "owned_role": "ai_app",
+    "host_db": "shahin_grc (shared host Postgres; namespace-isolated by schema, not by database — same pattern as Foundation Console)",
+    "migration_path": "products/ai-console/db/migrations (to be created in F1/F2; idempotent forward + assertion at end)",
+    "snapshot_before_first_migration": "required (per AGENTS.md MIGRATION PROOF RULE)",
+    "no_destructive_drops": true,
+    "no_cross_schema_writes_to_fc_or_dos": true
+  },
+
+  "consumed_dogan_ai_os_services": {
+    "doctrine": "AI Console consumes shared host services through its own gateway only. No direct browser → host service. No Foundation source coupling.",
+    "shared_host_services": [
+      {
+        "id": "dauth",
+        "purpose": "OIDC issuer / authentication",
+        "host_url": "https://shahin-ai.com/login/realms/dogan",
+        "consumed_by": "ai-gateway only (server-side OIDC discovery + token exchange)",
+        "browser_visibility": "redirect endpoint only via 302 from ai-gateway"
+      },
+      {
+        "id": "host_postgres",
+        "purpose": "DB persistence for ai_ui_os + ai_dynamic_ui schemas",
+        "consumed_by": "ai-ui-os, ai-dynamic-ui (server-side)",
+        "browser_visibility": "none"
+      }
+    ],
+    "ai_owned_services_to_be_built_in_F1": [
+      "ai-gateway (Express/TypeScript; OIDC + reverse-proxy + static SPA serve; ports AI_GATEWAY_PORT)",
+      "ai-ui-os (workspace-runtime + page-runtime resolver; ai_ui_os schema only)",
+      "ai-dynamic-ui (Dynamic UI resolver; ai_dynamic_ui schema only)"
+    ],
+    "no_foundation_source_coupling": {
+      "no_import_from_products_foundation_console": true,
+      "no_import_from_at_fc_namespace": true,
+      "no_import_from_at_dos_or_at_platform_namespace": true,
+      "no_reuse_of_fc_ui_os_or_fc_dynamic_ui_schemas": true
+    },
+    "no_shahin_shell_in_ai_app": {
+      "no_legacy_shell_host_component_imported": true,
+      "no_workspace_home_fallback": true,
+      "no_static_nav_arrays": true
+    }
+  },
+
+  "ports_proposal_to_be_locked_in_F1": {
+    "AI_GATEWAY_PORT": 3200,
+    "AI_UI_OS_PORT": 3201,
+    "AI_DYNAMIC_UI_PORT": 3202,
+    "AI_APP_DEV_PORT": 4200,
+    "rule": "Ports must not collide with Foundation Console (3000/3101/3102/4000) or any legacy DOS/Shahin service. Final values locked in F1 manifest."
+  },
+
+  "env_contract_proposal_to_be_locked_in_F2": {
+    "namespace": "AI_*",
+    "no_FC_underscore_or_DOS_underscore_or_PLATFORM_underscore_env_consumed": true,
+    "required_env_keys": [
+      "AI_GATEWAY_PORT", "AI_UI_OS_PORT", "AI_DYNAMIC_UI_PORT",
+      "AI_GATEWAY_URL", "AI_UI_OS_URL", "AI_DYNAMIC_UI_URL",
+      "AI_DB_URL", "AI_DB_SCHEMAS",
+      "AI_OIDC_ISSUER_URL", "AI_OIDC_REALM", "AI_OIDC_CLIENT_ID",
+      "AI_OIDC_CLIENT_SECRET", "AI_OIDC_REDIRECT_URI",
+      "AI_SESSION_COOKIE_NAME", "AI_SESSION_COOKIE_DOMAIN", "AI_SESSION_SECRET",
+      "AI_PUBLIC_TENANT_ID", "AI_LOG_LEVEL",
+      "AI_DEV_TEST_SESSION_ENABLED"
+    ],
+    "stage_default_AI_DEV_TEST_SESSION_ENABLED": "true (development host only)",
+    "production_default_AI_DEV_TEST_SESSION_ENABLED": "false (forced by systemd Environment line at F12)"
+  },
+
+  "16_gate_sequence_for_ai_console": {
+    "F0":   "AI app concept lock — THIS DOCUMENT",
+    "F1":   "Skeleton/scaffold — products/ai-console/{app,packages,services,db,ops} layout only",
+    "F2":   "Contracts/doctrine lock — manifest, runtime contracts (@ai/ui-contracts), env contract, AGENTS rules",
+    "F3":   "DB-backed workspace runtime resolver (ai_ui_os) — empty runtime OK, no fallback",
+    "F4":   "Shell V2 skeleton — renderer shell only",
+    "F5":   "App consumes runtime — Angular loads /config.json + /api/ui-os/workspace-runtime",
+    "F6":   "OIDC/cookie session — real DAuth/Keycloak flow, no browser tokens",
+    "F7":   "Real COMPONENT_MAP closure — no placeholders",
+    "F8":   "DB seed for shell/nav/page rows — only approved mapped keys",
+    "F9":   "DB-backed page runtime resolver — no static Angular pages",
+    "F10":  "AI domain components — real AI components only; empty states explicit",
+    "F11":  "Permission/session guard — DAuth permissions, no data leak",
+    "F12":  "nginx/systemd stage wiring — no production cutover",
+    "F13":  "Browser/UI visual proof — 390/430/768/1440 screenshots",
+    "F14":  "Doctrine hard gate — zero static/fallback/legacy/platform-leakage/browser-token-auth (lint-ai-doctrine.mjs)",
+    "F14.5":"Production-like UAT — HTTPS subdomain ai.shahin-ai.com, real DAuth, real DB/runtime",
+    "F15":  "Production cutover gate — only after all previous gates green AND Foundation Console F15 also green"
+  },
+
+  "hard_rules_acknowledged": {
+    "separate_app": true,
+    "separate_branch": "feat/ai-console-init (created off feat/foundation-console-init @ 6829a0308 to inherit FC doctrine artifacts; no FC source code copied into AI tree)",
+    "separate_oidc_client": "ai-console (NOT foundation-console)",
+    "separate_db_runtime_namespace": "ai_ui_os + ai_dynamic_ui (NOT fc_ui_os/fc_dynamic_ui)",
+    "no_foundation_source_coupling": true,
+    "no_shahin_shell_implementation_inside_ai_app": true,
+    "no_static_routes": true,
+    "no_fake_data": true,
+    "no_placeholder_components": true,
+    "no_browser_localStorage_or_sessionStorage_token": true,
+    "no_bearer_injection_from_browser": true,
+    "no_production_deploy_before_F15": true
+  },
+
+  "do_not_start_until_F0_approved": {
+    "no_implementation_in_this_phase": true,
+    "no_scaffolding_yet": true,
+    "no_pnpm_workspace_registration_yet": true,
+    "no_db_migrations_yet": true,
+    "no_oidc_client_registration_request_yet": "Operator-owned; will be requested at F6/F14.5 boundary",
+    "files_created_in_F0": [
+      "proofs/ai-console/F0-concept-lock.proof.json (this file)"
+    ]
+  },
+
+  "scope_isolation_from_other_active_work": {
+    "foundation_console_F12_1": "untouched — separate branch (feat/foundation-console-init), separate proof dir (proofs/foundation-console/), separate runtime tree (products/foundation-console/)",
+    "foundation_console_F14_5_keycloak_blocker": "operator-owned, independent of AI Console",
+    "foundation_console_F15": "still gated; AI Console F15 is independent and additionally gated on AI's own F0..F14.5",
+    "build_host_postgres_sigbus_blocker": "operator-owned host infra issue; affects neither FC nor AI source state"
+  },
+
+  "approval_required_to_advance_to_F1": true,
+  "blockers": [],
+  "next_phase": "F1 — only after operator approval of this concept lock. F1 creates the empty products/ai-console/{app,packages,services,db,ops} skeleton and registers AI workspaces in pnpm-workspace.yaml under a separate, additive entry."
+}
