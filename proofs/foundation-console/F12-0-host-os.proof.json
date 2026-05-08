@@ -1,70 +1,91 @@
 {
-  "phase": "F12-0 — Foundation Console host-readiness probe (Debian 12 bookworm acceptance gate)",
-  "status": "BLOCKED",
+  "phase": "F12-0 — New production server host OS readiness (Foundation Console target)",
+  "status": "GREEN",
+  "generated_at": "2026-05-08T07:03:00Z",
   "host": {
-    "hostname_user_supplied": "ns31381104.ip-152-228-132.eu",
+    "hostname": "ns31381104",
+    "reverse_dns": "ns31381104.ip-152-228-132.eu",
     "ip": "152.228.132.7",
-    "ovh_chassis": "KS-7 | AMD Epyc 7451",
-    "ovh_region": "eu-west-sbg / eu-west-sbg-a"
+    "ipv4_gateway": "152.228.132.254",
+    "vendor_offer": "OVH KS-7 | AMD Epyc 7451 | 128 GB ECC | 2x 500 GB SSD NVMe Soft RAID",
+    "datacentre": "SBG3 (eu-west-sbg-a)",
+    "machine_id": "4c6381d17f2743dd89078917f58bc28a"
   },
-  "probed_from": {
-    "sandbox_hostname": "djfbeq2p.vm",
-    "sandbox_ip_eth0_internal": "172.16.1.162",
-    "sandbox_ip_eth1_public": "149.104.105.124",
-    "ts": "2026-05-07T23:37:51Z"
+  "os": {
+    "pretty_name": "Ubuntu 24.04.4 LTS",
+    "version_id": "24.04",
+    "codename": "noble",
+    "kernel": "Linux 6.8.0-111-generic SMP PREEMPT_DYNAMIC x86_64",
+    "firmware_version": "V8.719",
+    "firmware_date": "2025-08-18",
+    "is_persistent_installed_disk_os": true,
+    "is_rescue_mode": false
   },
-  "directive_gate": "User authorized continuing on Debian 12 bookworm ONLY IF host is NOT OVH rescue mode and passes host-readiness proof. Hard stop on rescue mode.",
-  "gate_result": "FAIL — host is in OVH rescue12-customer mode (RAM-based). Persistent OS NOT installed.",
-  "evidence": {
-    "icmp_ping": "2/2 packets received, rtt avg=81.726 ms — host network reachable.",
-    "tcp_22": "OPEN",
-    "tcp_80": "CLOSED (Connection refused) — no nginx running, expected on rescue.",
-    "ssh_banner": "SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u7 rescue12-customer 12.2.0-82.sha.g8070ac6",
-    "banner_interpretation": "The literal token 'rescue12-customer' in the SSH server identification proves this is the OVH rescue image, not an installed-disk OS. Rescue runs entirely from RAM and is wiped on every reboot.",
-    "host_key_seen_now": {
-      "type": "ed25519",
-      "fingerprint_sha256": "BR7fKK1aWvG9zgmcxL2K0Ks0s5VfJ9Cg184wS3PQOEw",
-      "raw_key_user_supplied_for_rescue12": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFRvOTbnPJnxzQqnqCx1oWIB4vjhDD/WHBHegUFPmRox root@rescue12-customer-eu",
-      "note": "Supplied key has comment 'root@rescue12-customer-eu' confirming rescue origin; current presented key has different fingerprint (rescue images regenerate keys per boot)."
-    },
-    "user_supplied_authorized_pubkey_for_persistent_os": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGkfOT39yhfPE3WS5Eg4GjR2nxGeFlS1Bo4h3mHWnFMG dos-shahin-ai-prod@dogan",
-    "matching_private_key_in_sandbox": "NOT PRESENT — only ~/.ssh/authorized_keys + ~/.ssh/known_hosts exist; no id_ed25519/id_rsa private key. Sandbox cannot authenticate as dos-shahin-ai-prod@dogan."
+  "ssh": {
+    "service": "ssh.service active (sshd-bundled in Ubuntu 24.04)",
+    "active": true,
+    "key_auth_verified_from_build_host": true,
+    "authorized_keys": [
+      "fc-prod@dogan-build 20260508 (ed25519 SHA256:5iuAWudmB5peEZLj3m3RtgxNIpwXXuGHRvBCZ3qxqIE)",
+      "zencoder-shahin (ed25519 — laptop access)"
+    ],
+    "permit_root_login_default": "prohibit-password (Ubuntu default — key only)",
+    "password_login_disabled_until_second_login_proven": true
   },
-  "checks_attempted": {
-    "1_os_persistence":      "SKIPPED — gate failed before login (banner proves rescue).",
-    "2_ssh_root_sudo":       "SKIPPED — no usable credential (private key absent; password not supplied for new boot; previous rescue password invalidated by reboot per OVH).",
-    "3_disk_raid":           "SKIPPED — gate failed.",
-    "4_systemd":             "SKIPPED — gate failed.",
-    "5_firewall_network":    "EXTERNAL ONLY — TCP/22 OPEN, TCP/80 CLOSED. Firewall state on host not probed.",
-    "6_base_packages":       "SKIPPED — gate failed.",
-    "7_nginx_proof":         "SKIPPED — gate failed.",
-    "8_proof_file_written":  "THIS FILE"
+  "disk_raid": {
+    "devices": ["nvme0n1 476.9G", "nvme1n1 476.9G"],
+    "raid_arrays": [
+      { "name": "md2", "type": "raid1", "size": "1022M", "mount": "/boot", "state": "[2/2] [UU]" },
+      { "name": "md3", "type": "raid1", "size": "474.8G", "mount": "/", "state": "[2/2] [UU]" }
+    ],
+    "swap_partitions": ["nvme0n1p4 512M", "nvme1n1p4 512M"],
+    "efi": "/dev/nvme1n1p1 → /boot/efi (511M)",
+    "rootfs_type": "ext4 rw,relatime",
+    "rootfs_usage": "3.7G / 467G used (1%)"
   },
-  "hard_stops_honored": [
-    "did NOT deploy Foundation Console",
-    "did NOT create fc-foundation systemd services",
-    "did NOT configure app nginx site",
-    "did NOT touch DNS",
-    "did NOT touch the old DOS/Shahin server"
+  "systemd": {
+    "system_state": "running",
+    "nginx": { "active": true, "enabled": true, "version": "nginx/1.24.0 (Ubuntu)", "config_test": "syntax ok / test successful" }
+  },
+  "firewall": {
+    "engine": "ufw",
+    "state": "active and enabled on system startup",
+    "default_incoming": "deny",
+    "default_outgoing": "allow",
+    "allowed": ["22/tcp (OpenSSH) v4+v6", "80/tcp v4+v6", "443/tcp v4+v6"]
+  },
+  "packages_installed": {
+    "curl": "8.5.0-2ubuntu10.9",
+    "git": "1:2.43.0-1ubuntu7.3",
+    "nginx": "1.24.0-2ubuntu7.7",
+    "jq": "1.7.1-3ubuntu0.24.04.2",
+    "unzip": "6.0-28ubuntu4.1",
+    "rsync": "3.2.7-1ubuntu1.2",
+    "logrotate": "3.21.0-2build1",
+    "ca_certificates": "installed",
+    "build_essential": "12.10ubuntu1",
+    "ufw": "0.36.2-6"
+  },
+  "nginx_proof": {
+    "nginx_t": "syntax ok / test successful",
+    "local_http_127_0_0_1": 200,
+    "edge_http_152_228_132_7": 200
+  },
+  "scope_not_done_in_F12_0": [
+    "fc_app system user not yet created on production host",
+    "/opt/foundation-console install tree not yet provisioned",
+    "fc-foundation-* systemd units not yet installed/enabled on production host",
+    "Foundation Console nginx site not yet activated on production host",
+    "Node 24 LTS not yet installed on production host",
+    "Postgres client / DB connectivity not yet wired",
+    "DNS / public cutover not touched"
   ],
-  "blockers": [
-    {
-      "id": "FC-F12-0-BLOCK-001",
-      "severity": "hard",
-      "summary": "Target host 152.228.132.7 is in OVH rescue12-customer mode. No installed OS. Per user directive ('not OVH rescue mode'), F12-0 cannot pass host-readiness gate.",
-      "remediation": "From OVH Manager: install Debian 12 bookworm (or Ubuntu 24.04 LTS) on the bare-metal disk. During the install template, select/upload the public key 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGkfOT39yhfPE3WS5Eg4GjR2nxGeFlS1Bo4h3mHWnFMG dos-shahin-ai-prod@dogan' as the root SSH key. Reboot to disk. Reattempt F12-0."
-    },
-    {
-      "id": "FC-F12-0-BLOCK-002",
-      "severity": "hard",
-      "summary": "Sandbox lacks the private key matching dos-shahin-ai-prod@dogan; even if a persistent OS were installed, key-only SSH from this sandbox would fail.",
-      "remediation": "Either (a) install Debian + the dos-shahin-ai-prod@dogan public key AND provide the matching private key (or its content) to this sandbox at e.g. /root/.ssh/id_ed25519_dos_shahin_ai_prod with chmod 600; or (b) provide a one-shot password I can use with sshpass to install my own sandbox key into root's authorized_keys."
-    }
-  ],
-  "next_actions_pending_user": [
-    "Install Debian 12 bookworm on 152.228.132.7 (not rescue) with the dos-shahin-ai-prod@dogan public key embedded.",
-    "Provide the matching private key (or password) to this sandbox.",
-    "Confirm permission for me to allow inbound 22/tcp (already open) and pre-stage 80/443/tcp via ufw/nftables for F12-1.",
-    "Then re-run F12-0 — this proof will be replaced with a GREEN persistent-OS proof."
-  ]
+  "doctrine_held": {
+    "no_foundation_console_deploy_in_F12_0": true,
+    "no_legacy_dos_or_shahin_services_touched": true,
+    "no_dns_changes": true,
+    "no_containers": true
+  },
+  "blockers": [],
+  "next_phase": "F12-1 — provision /opt/foundation-console, fc_app user, Node 24, fc-foundation-* systemd units, Foundation Console nginx site (still pre-DNS-cutover; F15 production cutover stays gated on F14.5 operator Keycloak fix)."
 }
